@@ -4,18 +4,19 @@ USE dentsys;
 -- DENTIST TABLE
 CREATE TABLE IF NOT EXISTS dentists (
     dentist_id INT AUTO_INCREMENT PRIMARY KEY,
-    dentist_first_name VARCHAR(50) NOT NULL,
-    dentist_last_name VARCHAR(50) NOT NULL,
+    dentist_firstName VARCHAR(50) NOT NULL,
+    dentist_lastName VARCHAR(50) NOT NULL,
+    dentist_username VARCHAR(50) NOT NULL,
     dentist_email VARCHAR(50) NOT NULL,
-    dentist_phone VARCHAR(50) NOT NULL
+    dentist_password VARCHAR(50) NOT NULL
 );
 
 -- PATIENT TABLE
 CREATE TABLE IF NOT EXISTS patients (
     patient_id INT AUTO_INCREMENT PRIMARY KEY,
-    patient_first_name VARCHAR(50) NOT NULL,
-    patient_last_name VARCHAR(50) NOT NULL,
-    patient_middle_name VARCHAR(50) NOT NULL,
+    patient_firstName VARCHAR(50) NOT NULL,
+    patient_lastName VARCHAR(50) NOT NULL,
+    patient_middleName VARCHAR(50) NOT NULL,
     patient_nickname VARCHAR(50) NOT NULL,
     patient_birthdate DATE,
     patient_age INT NOT NULL,
@@ -24,7 +25,7 @@ CREATE TABLE IF NOT EXISTS patients (
     patient_religion VARCHAR(50) NOT NULL,
     patient_occupation VARCHAR(50) NOT NULL,
     patient_reason VARCHAR(100) NOT NULL, -- Increased size from 50 to 100
-    patient_total_bal FLOAT NOT NULL, -- Changed to FLOAT for balance
+    patient_totalBal FLOAT NOT NULL, -- Changed to FLOAT for balance
     patient_parentName VARCHAR(50) NOT NULL,
     patient_parentOccupation VARCHAR(50) NOT NULL
 );
@@ -92,8 +93,6 @@ CREATE TABLE IF NOT EXISTS pricing_types (
     prType_id INT AUTO_INCREMENT PRIMARY KEY,
     prType_name VARCHAR(50) NOT NULL
 );
-
---- LAST TO BE ADDED COZ THEIR FOREIGN KEYS ARE DEPENDENT ON OTHER TABLES
 
 -- PROCEDURES TABLE
 CREATE TABLE IF NOT EXISTS procedures (
