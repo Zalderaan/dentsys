@@ -12,7 +12,7 @@ app.use(express.json()); // Built-in middleware for parsing JSON
 app.use(express.urlencoded({ extended: true }));
 
 // Routing
-app.use('/api', routes);
+app.use('/dentsys-api', routes);
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
