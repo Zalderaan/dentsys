@@ -12,11 +12,24 @@ export default class Dentist {
     }
 
     static async createDentist(data) {
-        // Log the data for debugging
-        console.log('Received data:', data);
+        // // Log the data for debugging
+        // console.log('Received data:', data);
 
         // Extract data
         const { firstName, lastName, username, email, password } = data;
+        
+        // check if all fields are present
+        if (!firstName || !lastName || !username || !email || !password) {
+            throw new Error('All fields are required');
+        }
+
+        // validate email
+        const emailRegex = /\S+@\S+\.\S+/;
+        if (!emailRegex.test(email)) {
+            throw new Error('Invalid email format');
+        }
+
+        // Hash password
         const hashedPassword = await bcrypt.hash(data.password, 10);
 
         // Ensure password exists in the request body
@@ -25,13 +38,13 @@ export default class Dentist {
         }
 
         // prepare statement
-        const query_str = 'INSERT INTO dentists (dentist_firstName, dentist_lastName, dentist_username, dentist_email, dentist_password) VALUES (?, ?, ?, ?, ?)';
+        const queryStr = 'INSERT INTO dentists (dentist_firstName, dentist_lastName, dentist_username, dentist_email, dentist_password) VALUES (?, ?, ?, ?, ?)';
         const values = [firstName, lastName, username, email, hashedPassword];
 
         // execute
         try {
-            const [result] = await pool.query(query_str, values);
-            console.log('Dentist created successfully', result.insertId);
+            const [result] = await pool.query(queryStr, values);
+            console.log('Dentist created successfully from model', result.insertId);
             return result.insertId;
         } catch (error) {
             console.error('Error creating dentist', error);

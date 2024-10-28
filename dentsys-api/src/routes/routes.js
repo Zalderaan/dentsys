@@ -4,7 +4,7 @@ import DentistController from '../controllers/dentist-controller.js';
 const router = express.Router();
 
 // auth routes
-router.post('/add-dentist', DentistController.registerDentist);
+router.post('/register', DentistController.registerDentist);
 // router.post('/login', login);
 // router.post('/logout', logout);
 
