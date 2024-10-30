@@ -1,11 +1,11 @@
 import express from 'express';
-import DentistController from '../controllers/dentist-controller.js';
+import UserController from '../controllers/user-controller.js';
 
 const router = express.Router();
 
 // auth routes
-router.post('/register', DentistController.registerDentist);
-// router.post('/login', login);
+router.post('/register', UserController.registerUser);
+router.post('/login', UserController.loginUser);
 // router.post('/logout', logout);
 
 // // patient routes

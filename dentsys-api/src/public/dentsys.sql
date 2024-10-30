@@ -1,14 +1,14 @@
 CREATE DATABASE IF NOT EXISTS dentsys;
 USE dentsys;
 
--- DENTIST TABLE
-CREATE TABLE IF NOT EXISTS dentists (
-    dentist_id INT AUTO_INCREMENT PRIMARY KEY,
-    dentist_firstName VARCHAR(50) NOT NULL,
-    dentist_lastName VARCHAR(50) NOT NULL,
-    dentist_username VARCHAR(50) NOT NULL,
-    dentist_email VARCHAR(50) NOT NULL,
-    dentist_password VARCHAR(50) NOT NULL
+-- USER TABLE
+CREATE TABLE IF NOT EXISTS users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_firstName VARCHAR(50) NOT NULL,
+    user_lastName VARCHAR(50) NOT NULL,
+    user_username VARCHAR(50) UNIQUE NOT NULL,
+    user_email VARCHAR(50) NOT NULL,
+    user_password VARCHAR(50) NOT NULL
 );
 
 -- PATIENT TABLE
@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS procedures (
 CREATE TABLE IF NOT EXISTS treatment_record (
     treatment_id INT AUTO_INCREMENT PRIMARY KEY,
     patient_id INT NOT NULL,
-    dentist_id INT NOT NULL,
+    user_id INT NOT NULL,
     prcd_id INT NOT NULL,
     treatment_date DATE NOT NULL,
     treatment_toothNo VARCHAR(50) NOT NULL,
@@ -119,7 +119,7 @@ CREATE TABLE IF NOT EXISTS treatment_record (
     treatment_balance FLOAT NOT NULL,
     treatment_discount FLOAT NOT NULL,
     FOREIGN KEY (patient_id) REFERENCES patients(patient_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (dentist_id) REFERENCES dentists(dentist_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (prcd_id) REFERENCES procedures(prcd_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
