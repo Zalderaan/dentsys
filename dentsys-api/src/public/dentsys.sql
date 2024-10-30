@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     user_firstName VARCHAR(50) NOT NULL,
     user_lastName VARCHAR(50) NOT NULL,
-    user_username VARCHAR(50) NOT NULL,
+    user_username VARCHAR(50) UNIQUE NOT NULL,
     user_email VARCHAR(50) NOT NULL,
     user_password VARCHAR(50) NOT NULL
 );

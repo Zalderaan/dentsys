@@ -5,7 +5,7 @@ const router = express.Router();
 
 // auth routes
 router.post('/register', UserController.registerUser);
-// router.post('/login', login);
+router.post('/login', UserController.loginUser);
 // router.post('/logout', logout);
 
 // // patient routes
