@@ -4,6 +4,10 @@ import 'package:yns_prms/screens/login/app_styles.dart';
 import 'package:yns_prms/screens/login/app_icons.dart';
 import 'package:yns_prms/screens/login/responsive_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
+// users imports
+import '../../controllers/user_controller.dart'; 
+import '../../models/user_model.dart';
+import '../../services/user_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -13,6 +17,45 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  late final UserController userController;
+
+  @override
+  void initState() {
+    super.initState();
+    final userService = UserService();
+    userController = UserController(userService);
+  }
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _handleLogin() async {
+    // get input values
+    String username = _usernameController.text.trim();
+    String password = _passwordController.text.trim();
+
+    // create user instance
+    User user = User.loginCons(username: username, password: password);
+
+    // Call login method and display result
+    String result = await userController.login(user);
+
+    // Show a snackbar with the result
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(result),
+        duration: const Duration(seconds: 3),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -129,6 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 color: AppColors.whiteColor,
                               ),
                               child: TextFormField(
+                                controller: _usernameController, // set controller
                                 style: GoogleFonts.raleway(
                                   fontWeight: FontWeight.w400,
                                   color: AppColors.darkBrownColor,
@@ -172,6 +216,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 color: AppColors.whiteColor,
                               ),
                               child: TextFormField(
+                                controller: _passwordController, // set controller
                                 style: GoogleFonts.raleway(
                                   fontWeight: FontWeight.w400,
                                   color: AppColors.darkBrownColor,
@@ -219,7 +264,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: Material(
                                 color: Colors.transparent,
                                 child: InkWell(
-                                  onTap: () {},
+                                  onTap: _handleLogin,
                                   borderRadius: BorderRadius.circular(16.0),
                                   child: Ink(
                                     padding: const EdgeInsets.symmetric(

@@ -8,7 +8,7 @@ export default class UserController {
         const data = req.body;
         try {
             const newUser = await User.createUser(data);
-            res.status(201).json({ message: 'User created successfully from controller', newUser});
+            return res.status(201).json({ message: 'User created successfully from controller', newUser});
         } 
         catch (error) {
             res.status(500).json({ error: error.message });
@@ -32,7 +32,7 @@ export default class UserController {
         if (!match) {
             return res.status(401).json({ error: 'Invalid password' });
         } else {
-            return res.status(200).json({ message: 'Login successful' });
+            return res.status(200).json({ message: 'Login successful', user });
         }
     }
 }
