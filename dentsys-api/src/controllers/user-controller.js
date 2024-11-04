@@ -35,4 +35,22 @@ export default class UserController {
             return res.status(200).json({ message: 'Login successful', user });
         }
     }
+
+    // update user
+    static async updateUser(req, res) {
+        const data = req.body;
+
+        const user = await User.getById(data);
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        try {
+            const updatedUser = await User.updateUser(data);
+            return res.status(200).json({ message: 'User updated successfully from controller', updatedUser });
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
 }

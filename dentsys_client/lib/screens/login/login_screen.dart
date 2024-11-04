@@ -46,6 +46,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
     // Call login method and display result
     String result = await userController.login(user);
+    print ('handleLogin result: $result');
+
+    // Navigate to dashboard if login is successful
+    if (result == 'User logged in: $username') {
+      Navigator.pushNamed(context, '/dashboard');
+    } else {
+      // Clear input fields
+      _usernameController.clear();
+      _passwordController.clear();
+    }
 
     // Show a snackbar with the result
     ScaffoldMessenger.of(context).showSnackBar(

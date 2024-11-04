@@ -19,7 +19,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.brown,
       ),
-      home: const DashboardScreen(),
+      initialRoute: '/login',
+      routes: {
+        '/login': (context) => const LoginScreen(),
+        '/dashboard': (context) => const DashboardScreen(),
+        '/patient_records': (context) => const PatientRecords(),
+      }
     );
   }
 }
