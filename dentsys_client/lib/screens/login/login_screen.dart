@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dentsys_client/screens/login/app_colors.dart';
-//import 'package:dentsys_client/screens/login/app_styles.dart';
+// import 'package:dentsys_client/screens/login/app_styles.dart';
 import 'package:dentsys_client/screens/login/app_icons.dart';
 import 'package:dentsys_client/screens/login/responsive_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -73,7 +73,16 @@ class _LoginScreenState extends State<LoginScreen> {
             ResponsiveWidget.isSmallScreen(context) ? const SizedBox() : Expanded(
               child: Container(
                 height: height,
-                color: AppColors.mainBrownColor,
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      Color.fromARGB(255, 226, 187, 81),
+                      AppColors.darkBrownColor,
+                    ],
+                  ),
+                ),
                 child: Center(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,

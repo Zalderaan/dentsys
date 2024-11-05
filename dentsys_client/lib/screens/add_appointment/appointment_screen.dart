@@ -154,7 +154,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
                                   ),
-                                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                  padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0),
                                 ),
                                 child: const Text(
                                   "Cancel",
@@ -170,7 +170,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
                                   ),
-                                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                  padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0),
                                 ),
                                 child: const Text(
                                   "Done",
