@@ -24,9 +24,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   // List of screens for each destination
   final List<Widget> _screens = [
-    AddApppointmentScreen(),
-    PatientRecords(),
-    AddPatientRecordScreen(),
+    const AddApppointmentScreen(),
+    const PatientRecords(),
+    const AddPatientRecordScreen(),
   ];
 
   @override
@@ -35,16 +35,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
       body: Row(
         children: [
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Color.fromARGB(255, 134, 103, 74),
               borderRadius: BorderRadius.horizontal(right: Radius.circular(20)),
             ),
             child: NavigationRail(
               extended: isExpanded,
               backgroundColor: Colors.transparent,
-              unselectedIconTheme: IconThemeData(color: Colors.white, opacity: 1),
-              unselectedLabelTextStyle: TextStyle(color: Colors.white),
-              selectedIconTheme: IconThemeData(color: Colors.brown),
+              unselectedIconTheme: const IconThemeData(color: Colors.white, opacity: 1),
+              unselectedLabelTextStyle: const TextStyle(color: Colors.white),
+              selectedIconTheme: const IconThemeData(color: Colors.brown),
               selectedIndex: selectedIndex,
               onDestinationSelected: (int index) {
                 setState(() {
@@ -57,10 +57,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     width: 100,
                     height: 100,
                     fit: BoxFit.fitHeight,
-                    image: AssetImage('assets/images/YNS Logo1.png'),
+                    image: const AssetImage('assets/images/YNS Logo1.png'),
                   ),
-                  SizedBox(width: 5),
-                  Text(
+                  const SizedBox(width: 5),
+                  const Text(
                     'YNS',
                     style: TextStyle(
                       fontSize: 20,
@@ -70,7 +70,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ],
               ),
-              destinations: [
+              destinations: const [
                 NavigationRailDestination(
                   icon: Icon(Icons.date_range),
                   label: Text("Appointments"),
@@ -114,15 +114,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               isExpanded = !isExpanded;
                             });
                           },
-                          icon: Icon(Icons.menu),
+                          icon: const Icon(Icons.menu),
                         ),
                         Row(
                           children: [
-                            Icon(Icons.calendar_today, size: 20.0),
-                            SizedBox(width: 8.0),
+                            const Icon(Icons.calendar_today, size: 20.0),
+                            const SizedBox(width: 8.0),
                             Text(
                               DateFormat('EEEE, MMMM d, yyyy, h:mm a').format(DateTime.now()),
-                              style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
+                              style: const TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
                             ),
                           ],
                         ),
