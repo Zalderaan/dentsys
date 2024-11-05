@@ -5,7 +5,7 @@ class AddApppointmentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return const Center(
       child: Text("This is the Add Appointment Screen"),
     );
   }
