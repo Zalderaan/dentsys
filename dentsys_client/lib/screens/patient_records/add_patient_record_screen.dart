@@ -1154,7 +1154,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                   ),
                                   
                                   //Question 11
-                                  Row(
+                                  const Row(
                                     children: [
                                     ],
                                   ),

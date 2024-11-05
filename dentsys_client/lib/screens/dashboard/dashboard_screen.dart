@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-
+import 'package:dentsys_client/screens/add_appointment/appointment_screen.dart';
 import 'package:dentsys_client/screens/patient_records/patient_records.dart';
 import 'package:dentsys_client/screens/patient_records/add_patient_record_screen.dart';
-import 'package:dentsys_client/screens/add_appointment/add_appointment_screen.dart';
 // Uncomment and import your other screens as needed
+// import 'package:dentsys_client/screens/add_appointment/add_appointment_screen.dart';
 // import 'package:dentsys_client/screens/scheduling_screen.dart';
 // import 'package:dentsys_client/screens/records_screen.dart';
 // import 'package:dentsys_client/screens/reports_screen.dart';
@@ -24,7 +24,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   // List of screens for each destination
   final List<Widget> _screens = [
-    const AddApppointmentScreen(),
+    const AppointmentScreen(),
     const PatientRecords(),
     const AddPatientRecordScreen(),
   ];

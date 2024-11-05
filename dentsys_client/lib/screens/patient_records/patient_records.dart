@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dentsys_client/screens/patient_records/add_patient_record_screen.dart';
-
+ 
 class PatientRecords extends StatefulWidget {
   const PatientRecords({super.key});
 
@@ -255,6 +255,7 @@ class _PatientRecordsState extends State<PatientRecords> {
         buildRecordItem("Godfrey D. Eclarinal", "Old", "Scheduled"),
         buildRecordItem("John Eric D. Dedicatoria", "Old", "Scheduled"),
         buildRecordItem("Neil Carlo F. Nabor", "New", "Scheduled"),
+        buildRecordItem("John Doe", "New", "Not Scheduled"),
       ],
     );
   }
