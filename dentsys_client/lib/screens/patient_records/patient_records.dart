@@ -231,7 +231,7 @@ class _PatientRecordsState extends State<PatientRecords> {
       ),
 
       // Search bar
-      Container(
+      SizedBox(
         width: 300.0,
         child: TextField(
           decoration: InputDecoration(
