@@ -30,13 +30,13 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                         color: Colors.black.withOpacity(0.2), // Shadow color
                         spreadRadius: 2, // Spread radius
                         blurRadius: 5, // Blur radius
-                        offset: Offset(0, 3), // Changes the position of the shadow (x, y)
+                        offset: const Offset(0, 3), // Changes the position of the shadow (x, y)
                       ),
                     ],
                   ),
                   
-                  padding: EdgeInsets.all(20.0),
-                  child: Column(
+                  padding: const EdgeInsets.all(20.0),
+                  child: const Column(
                   children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -54,7 +54,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                     ],
                   ),
                 ),
-                SizedBox(height: 15.0),
+                const SizedBox(height: 15.0),
                 //PERSONAL INFORMATION SECTION
                 Container(
                   decoration: BoxDecoration(
@@ -65,7 +65,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                         color: Colors.black.withOpacity(0.2), // Shadow color
                         spreadRadius: 2, // Spread radius
                         blurRadius: 5, // Blur radius
-                        offset: Offset(0, 3), // Changes the position of the shadow (x, y)
+                        offset: const Offset(0, 3), // Changes the position of the shadow (x, y)
                       ),
                     ],
                   ),
@@ -73,7 +73,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                     padding: const EdgeInsets.all(20.0), // Add some padding
                     child: Column(
                       children: [
-                        Row(
+                        const Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
@@ -84,13 +84,13 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                 ),
                           ],
                         ),
-                        SizedBox(height: 10), // Add space between title and fields
+                        const SizedBox(height: 10), // Add space between title and fields
                         Divider(
                           height: 10,
                           color: Colors.grey[400],
                           thickness: 1,
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         // Lastname, Firstname, Middle Name, Nickname
                         Form(
                           child: Column(
@@ -100,7 +100,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                               children: [
                                 Expanded(
                                   child: TextFormField(
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                       labelText: "Lastname",
                                       border: OutlineInputBorder(),
                                       ),
@@ -112,61 +112,61 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                         }
                                       ),
                                     ),
-                                SizedBox(width: 10),
-                                Expanded(child: TextFormField(decoration: InputDecoration(labelText: "Firstname", border: OutlineInputBorder()))),
-                                SizedBox(width: 10),
-                                Expanded(child: TextFormField(decoration: InputDecoration(labelText: "Middle Name", border: OutlineInputBorder()))),
-                                SizedBox(width: 10),
-                                Expanded(child: TextFormField(decoration: InputDecoration(labelText: "Nickname", border: OutlineInputBorder()))),
+                                const SizedBox(width: 10),
+                                Expanded(child: TextFormField(decoration: const InputDecoration(labelText: "Firstname", border: OutlineInputBorder()))),
+                                const SizedBox(width: 10),
+                                Expanded(child: TextFormField(decoration: const InputDecoration(labelText: "Middle Name", border: OutlineInputBorder()))),
+                                const SizedBox(width: 10),
+                                Expanded(child: TextFormField(decoration: const InputDecoration(labelText: "Nickname", border: OutlineInputBorder()))),
                               ],
                             ),
                           ],
                         ),
                         ),
-                        SizedBox(height: 15),
+                        const SizedBox(height: 15),
         
                         // Birth Date, Age, Sex
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Expanded(child: TextFormField(decoration: InputDecoration(labelText: "Birth Date (YYYY-MM-DD)", border: OutlineInputBorder()))),
-                            SizedBox(width: 10),
-                            Expanded(child: TextFormField(decoration: InputDecoration(labelText: "Age", border: OutlineInputBorder()))),
-                            SizedBox(width: 10),
-                            Expanded(child: TextFormField(decoration: InputDecoration(labelText: "Sex", border: OutlineInputBorder()))),
+                            Expanded(child: TextFormField(decoration: const InputDecoration(labelText: "Birth Date (YYYY-MM-DD)", border: OutlineInputBorder()))),
+                            const SizedBox(width: 10),
+                            Expanded(child: TextFormField(decoration: const InputDecoration(labelText: "Age", border: OutlineInputBorder()))),
+                            const SizedBox(width: 10),
+                            Expanded(child: TextFormField(decoration: const InputDecoration(labelText: "Sex", border: OutlineInputBorder()))),
                           ],
                         ),
-                        SizedBox(height: 15),
+                        const SizedBox(height: 15),
         
                         // Home Address
                         TextFormField(
-                          decoration: InputDecoration(labelText: "Home Address", border: OutlineInputBorder()),
+                          decoration: const InputDecoration(labelText: "Home Address", border: OutlineInputBorder()),
                         ),
-                        SizedBox(height: 15),
+                        const SizedBox(height: 15),
         
                         // Religion, Nationality, Occupation
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Expanded(child: TextFormField(decoration: InputDecoration(labelText: "Religion", border: OutlineInputBorder()))),
-                            SizedBox(width: 10),
-                            Expanded(child: TextFormField(decoration: InputDecoration(labelText: "Nationality", border: OutlineInputBorder()))),
-                            SizedBox(width: 10),
-                            Expanded(child: TextFormField(decoration: InputDecoration(labelText: "Occupation", border: OutlineInputBorder()))),
+                            Expanded(child: TextFormField(decoration: const InputDecoration(labelText: "Religion", border: OutlineInputBorder()))),
+                            const SizedBox(width: 10),
+                            Expanded(child: TextFormField(decoration: const InputDecoration(labelText: "Nationality", border: OutlineInputBorder()))),
+                            const SizedBox(width: 10),
+                            Expanded(child: TextFormField(decoration: const InputDecoration(labelText: "Occupation", border: OutlineInputBorder()))),
                           ],
                         ),
-                        SizedBox(height: 15),
+                        const SizedBox(height: 15),
         
                         // Dental Insurance and Effective Date
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Expanded(child: TextFormField(decoration: InputDecoration(labelText: "Dental Insurance", border: OutlineInputBorder()))),
-                            SizedBox(width: 10),
-                            Expanded(child: TextFormField(decoration: InputDecoration(labelText: "Effective Date (YYYY-MM-DD)", border: OutlineInputBorder()))),
+                            Expanded(child: TextFormField(decoration: const InputDecoration(labelText: "Dental Insurance", border: OutlineInputBorder()))),
+                            const SizedBox(width: 10),
+                            Expanded(child: TextFormField(decoration: const InputDecoration(labelText: "Effective Date (YYYY-MM-DD)", border: OutlineInputBorder()))),
                           ],
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
         
                         // Submit Button
                         Row(
@@ -176,7 +176,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                               onPressed: () {
                                 // Add your submission logic here
                               },
-                              child: Text("Next"),
+                              child: const Text("Next"),
                             ),
                           ],
                         ),
@@ -184,14 +184,14 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: 15.0),
+                const SizedBox(height: 15.0),
                 Divider(
                           height: 10,
                           color: Colors.grey[800],
                           thickness: 1,
                         ),
                 //DENTAL HISTORY SECTION
-                SizedBox(height: 15.0),
+                const SizedBox(height: 15.0),
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -201,7 +201,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                         color: Colors.black.withOpacity(0.2), // Shadow color
                         spreadRadius: 2, // Spread radius
                         blurRadius: 5, // Blur radius
-                        offset: Offset(0, 3), // Changes the position of the shadow (x, y)
+                        offset: const Offset(0, 3), // Changes the position of the shadow (x, y)
                       ),
                     ],
                   ),
@@ -209,7 +209,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                     padding: const EdgeInsets.all(20.0), // Add some padding
                     child: Column(
                       children: [
-                        Row(
+                        const Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
@@ -220,74 +220,74 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                 ),
                           ],
                         ),
-                        SizedBox(height: 10), // Add space between title and fields
+                        const SizedBox(height: 10), // Add space between title and fields
                         Divider(
                           height: 10,
                           color: Colors.grey[400],
                           thickness: 1,
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         // Lastname, Firstname, Middle Name, Nickname
                         Column(
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Expanded(child: TextFormField(decoration: InputDecoration(labelText: "Lastname", border: OutlineInputBorder()))),
-                                SizedBox(width: 10),
-                                Expanded(child: TextFormField(decoration: InputDecoration(labelText: "Firstname", border: OutlineInputBorder()))),
-                                SizedBox(width: 10),
-                                Expanded(child: TextFormField(decoration: InputDecoration(labelText: "Middle Name", border: OutlineInputBorder()))),
-                                SizedBox(width: 10),
-                                Expanded(child: TextFormField(decoration: InputDecoration(labelText: "Nickname", border: OutlineInputBorder()))),
+                                Expanded(child: TextFormField(decoration: const InputDecoration(labelText: "Lastname", border: OutlineInputBorder()))),
+                                const SizedBox(width: 10),
+                                Expanded(child: TextFormField(decoration: const InputDecoration(labelText: "Firstname", border: OutlineInputBorder()))),
+                                const SizedBox(width: 10),
+                                Expanded(child: TextFormField(decoration: const InputDecoration(labelText: "Middle Name", border: OutlineInputBorder()))),
+                                const SizedBox(width: 10),
+                                Expanded(child: TextFormField(decoration: const InputDecoration(labelText: "Nickname", border: OutlineInputBorder()))),
                               ],
                             ),
                           ],
                         ),
-                        SizedBox(height: 15),
+                        const SizedBox(height: 15),
         
                         // Birth Date, Age, Sex
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Expanded(child: TextFormField(decoration: InputDecoration(labelText: "Birth Date (YYYY-MM-DD)", border: OutlineInputBorder()))),
-                            SizedBox(width: 10),
-                            Expanded(child: TextFormField(decoration: InputDecoration(labelText: "Age", border: OutlineInputBorder()))),
-                            SizedBox(width: 10),
-                            Expanded(child: TextFormField(decoration: InputDecoration(labelText: "Sex", border: OutlineInputBorder()))),
+                            Expanded(child: TextFormField(decoration: const InputDecoration(labelText: "Birth Date (YYYY-MM-DD)", border: OutlineInputBorder()))),
+                            const SizedBox(width: 10),
+                            Expanded(child: TextFormField(decoration: const InputDecoration(labelText: "Age", border: OutlineInputBorder()))),
+                            const SizedBox(width: 10),
+                            Expanded(child: TextFormField(decoration: const InputDecoration(labelText: "Sex", border: OutlineInputBorder()))),
                           ],
                         ),
-                        SizedBox(height: 15),
+                        const SizedBox(height: 15),
         
                         // Home Address
                         TextFormField(
-                          decoration: InputDecoration(labelText: "Home Address", border: OutlineInputBorder()),
+                          decoration: const InputDecoration(labelText: "Home Address", border: OutlineInputBorder()),
                         ),
-                        SizedBox(height: 15),
+                        const SizedBox(height: 15),
         
                         // Religion, Nationality, Occupation
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Expanded(child: TextFormField(decoration: InputDecoration(labelText: "Religion", border: OutlineInputBorder()))),
-                            SizedBox(width: 10),
-                            Expanded(child: TextFormField(decoration: InputDecoration(labelText: "Nationality", border: OutlineInputBorder()))),
-                            SizedBox(width: 10),
-                            Expanded(child: TextFormField(decoration: InputDecoration(labelText: "Occupation", border: OutlineInputBorder()))),
+                            Expanded(child: TextFormField(decoration: const InputDecoration(labelText: "Religion", border: OutlineInputBorder()))),
+                            const SizedBox(width: 10),
+                            Expanded(child: TextFormField(decoration: const InputDecoration(labelText: "Nationality", border: OutlineInputBorder()))),
+                            const SizedBox(width: 10),
+                            Expanded(child: TextFormField(decoration: const InputDecoration(labelText: "Occupation", border: OutlineInputBorder()))),
                           ],
                         ),
-                        SizedBox(height: 15),
+                        const SizedBox(height: 15),
         
                         // Dental Insurance and Effective Date
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Expanded(child: TextFormField(decoration: InputDecoration(labelText: "Dental Insurance", border: OutlineInputBorder()))),
-                            SizedBox(width: 10),
-                            Expanded(child: TextFormField(decoration: InputDecoration(labelText: "Effective Date (YYYY-MM-DD)", border: OutlineInputBorder()))),
+                            Expanded(child: TextFormField(decoration: const InputDecoration(labelText: "Dental Insurance", border: OutlineInputBorder()))),
+                            const SizedBox(width: 10),
+                            Expanded(child: TextFormField(decoration: const InputDecoration(labelText: "Effective Date (YYYY-MM-DD)", border: OutlineInputBorder()))),
                           ],
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
         
                         // Submit Button
                         Row(
@@ -297,7 +297,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                               onPressed: () {
                                 // Add your submission logic here
                               },
-                              child: Text("Next"),
+                              child: const Text("Next"),
                             ),
                           ],
                         ),

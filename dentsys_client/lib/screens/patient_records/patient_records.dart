@@ -10,7 +10,7 @@ class PatientRecords extends StatefulWidget {
 
 class _PatientRecordsState extends State<PatientRecords> {
   bool isExpanded = false;
-  List<bool> _filterSelections = [true, false, false, false];
+  final List<bool> _filterSelections = [true, false, false, false];
 
   @override
   Widget build(BuildContext context) {
@@ -31,18 +31,18 @@ class _PatientRecordsState extends State<PatientRecords> {
                                     color: Colors.black.withOpacity(0.2), // Shadow color
                                     spreadRadius: 2, // Spread radius
                                     blurRadius: 5, // Blur radius
-                                    offset: Offset(0, 3), // Changes the position of the shadow (x, y)
+                                    offset: const Offset(0, 3), // Changes the position of the shadow (x, y)
                                   ),
                                 ],
                               ),
                               
-                              padding: EdgeInsets.all(20.0),
+                              padding: const EdgeInsets.all(20.0),
                               child: Column(
                               children: [
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
+                                      const Text(
                                         "Patient Records",
                                         style: TextStyle(
                                           fontSize:32.0,
@@ -52,7 +52,7 @@ class _PatientRecordsState extends State<PatientRecords> {
                                       ),
                                         Container(
                                           decoration: BoxDecoration(
-                                            gradient: LinearGradient(
+                                            gradient: const LinearGradient(
                                               colors: [Color(0xFFE2AD5E), Color(0xFF422B15)],
                                               begin: Alignment.topLeft,
                                               end: Alignment.bottomRight,
@@ -65,14 +65,14 @@ class _PatientRecordsState extends State<PatientRecords> {
                                             //Navigate to the AddPatientScreen when the button is pressed
                                             Navigator.pushReplacement(
                                               context,
-                                              MaterialPageRoute(builder: (context) => AddPatientRecordScreen()), // Make sure this screen is imported
+                                              MaterialPageRoute(builder: (context) => const AddPatientRecordScreen()), // Make sure this screen is imported
                                             );
                                           },
-                                          icon: Icon(
+                                          icon: const Icon(
                                             Icons.add,
                                             color: Colors.white,
                                             ), 
-                                          label: Text(
+                                          label: const Text(
                                             "Add Patient", 
                                             style: TextStyle(
                                               color: Colors.white
@@ -89,7 +89,7 @@ class _PatientRecordsState extends State<PatientRecords> {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: 20.0), // Adds spacing between the title and the row of cards
+                                  const SizedBox(height: 20.0), // Adds spacing between the title and the row of cards
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
@@ -128,11 +128,11 @@ class _PatientRecordsState extends State<PatientRecords> {
                                 ],
                               ),
                             ),
-                            SizedBox(height: 30.0),
+                            const SizedBox(height: 30.0),
                             buildSearchAndFilterSection(),
-                            SizedBox(height: 30.0),
+                            const SizedBox(height: 30.0),
                             buildArticleList(),
-                            SizedBox(height: 20.0),
+                            const SizedBox(height: 20.0),
                             buildPagination(),
                           ],
                         ),
@@ -147,7 +147,7 @@ class _PatientRecordsState extends State<PatientRecords> {
   Widget buildInfoCard(String title, List<String> details, IconData icon, {Color color = Colors.white}) {
   return Flexible(
     child: Card(
-      color: Color.fromARGB(255, 66, 43, 21),
+      color: const Color.fromARGB(255, 66, 43, 21),
       child: Padding(
         padding: const EdgeInsets.all(18.0),
         child: Row(
@@ -158,7 +158,7 @@ class _PatientRecordsState extends State<PatientRecords> {
                 Icon(icon, size: 100.0, color: color),
               ],
             ),
-            SizedBox(width: 10.0),
+            const SizedBox(width: 10.0),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,7 +167,7 @@ class _PatientRecordsState extends State<PatientRecords> {
                     title,
                     style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: color),
                   ),
-                  SizedBox(height: 10.0),
+                  const SizedBox(height: 10.0),
                   // Insert details based on the provided details list
                   for (int i = 0; i < details.length; i += 2)
                     Row(
@@ -208,21 +208,21 @@ class _PatientRecordsState extends State<PatientRecords> {
             borderRadius: BorderRadius.circular(20.0),
             selectedColor: Colors.white,
             fillColor: Colors.brown[300],
-            children: [
+            children: const [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text("All"),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text("Scheduled"),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text("New"),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text("Old"),
               ),
             ],
@@ -236,9 +236,9 @@ class _PatientRecordsState extends State<PatientRecords> {
         child: TextField(
           decoration: InputDecoration(
             hintText: "Search Patient Records",
-            prefixIcon: Icon(Icons.search),
+            prefixIcon: const Icon(Icons.search),
             border: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.black26),
+              borderSide: const BorderSide(color: Colors.black26),
               borderRadius: BorderRadius.circular(20.0),
             ),
           ),
@@ -283,7 +283,7 @@ class _PatientRecordsState extends State<PatientRecords> {
             flex: 1,
             child: Text(
               status,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.brown,
                 fontWeight: FontWeight.bold,
               ),
@@ -294,14 +294,14 @@ class _PatientRecordsState extends State<PatientRecords> {
           Align(
             alignment: Alignment.centerRight,
             child: Container(
-              padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
+              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
               decoration: BoxDecoration(
                 color: Colors.green[300],
                 borderRadius: BorderRadius.circular(15),
               ),
               child: Text(
                 schedule,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),

@@ -97,4 +97,10 @@ export default class Patient {
             throw new Error ('Error updating patient');
         }
     }
+
+    static async deletePatient(id) {
+        const queryStr = 'DELETE FROM patients WHERE patient_id = ?';
+        const [result] = await pool.query(queryStr, id);
+        return result;
+    }
 }
