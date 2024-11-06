@@ -41,8 +41,25 @@ export default class Patient {
 
     static async getPatients() {
         const queryStr = 'SELECT * FROM patients';
-        const [patients] = await pool.query(queryStr);
-        return patients;
+
+        try {
+            const [patients] = await pool.query(queryStr);
+            return patients;
+        } catch (error) {
+            console.log('Error getting patients from model', error);
+            throw new Error ('Error getting patients');
+        }
+    }
+
+    static async getOnePatient(id) {
+        const queryStr = 'SELECT * FROM patients WHERE patient_id = ?';
+        try {
+            const [patient] = await pool.query(queryStr, [id]);
+            return patient;
+        } catch (error) {
+            console.log('Error getting patient from model', error);
+            throw new Error ('Error getting patient', error);
+        }
     }
 
     static async getPatientByName(data) {
@@ -94,7 +111,7 @@ export default class Patient {
             }
         } catch (error) {
             console.log('Error updating patient from model', error);
-            throw new Error ('Error updating patient');
+            throw new Error ('Error updating patient', error);
         }
     }
 

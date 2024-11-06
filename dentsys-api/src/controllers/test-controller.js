@@ -1,9 +1,6 @@
-import Patient from '../models/patient-model.js';
 import Contact from '../models/contact-model.js';
 
-import pool from '../../config/db.js';
-
-export default class PatientController {
+export default class TestController {
     // POST
     static async addPatient(req, res) {
         const data = req.body;
@@ -17,7 +14,7 @@ export default class PatientController {
             const newPatient = await Patient.createPatient(data); // insert new patient data
             console.log('newPatient:', newPatient);
             
-            const newPatientId = newPatient;
+            const newPatientId = newPatient.patient_id;
             console.log('newPatientId:', newPatientId);
 
             data.patient_id = newPatientId; // add patient id to contact data
@@ -40,41 +37,50 @@ export default class PatientController {
         }
     }
 
+    static async createContact(req, res) {
+        const data = req.body;
+        try {
+            const newContact = await Contact.createContact(data);
+            return res.status(201).json({ message: 'Contact created successfully from controller', newContact});
+        } 
+        catch (error) {
+            res.status(500).json({ error: error.message });
+        }  
+    }
+
     // GET
-    static async getAllPatients(req, res) {
+    static async getContact(req, res) {
+        const data = req.params.id;
+        try {
+            const contact = await Contact.getContact(data);
+            if (contact.message === 'No contact found') {
+                return res.status(404).json({ message: 'No contact found' });
+            }
+            return res.status(200).json({ message: 'Contact retrieved successfully from controller', contact});
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+    
+    // PUT
+    static async updateContact(req, res) {
         const data = req.body;
         try {
-            const patients = await Patient.getPatients(data);
-            return res.status(200).json({ message: 'Patients retrieved successfully from controller', patients});
+            const updatedContact = await Contact.updateContact(data);
+            return res.status(200).json({ message: 'Contact updated successfully from controller', updatedContact});
         } catch (error) {
             res.status(500).json({ error: error.message });
         }
     }
 
-    static async getPatientDetails(req, res) {
+    // DELETE
+    static async deleteContact(req, res) {
+        const data = req.params.id;
         try {
-            const patient_data = req.params.id;
-            console.log('patient_data in controlelr:', patient_data);
-            if(!patient_data) {return res.status(400).json({ error: 'Patient ID is required' });}
-        
-            const patient = await Patient.getOnePatient(patient_data);
-            if (!patient || patient.length === 0) {return res.status(404).json({ error: 'Patient not found' });}
-
-            return res.status(200).json({ message: 'Patient retrieved successfully from controller', patient});
+            const deletedContact = await Contact.deleteContact(data);
+            return res.status(200).json({ message: 'Contact deleted successfully from controller', deletedContact});
         } catch (error) {
             res.status(500).json({ error: error.message });
         }
     }
-
-    static async searchPatientsByName(req, res) {
-        const data = req.body;
-        try {
-            const patients = await Patient.getPatientByName(data);
-            return res.status(200).json({ message: 'Patients retrieved successfully from controller', patients});
-        } catch (error) {
-            res.status(500).json({ error: error.message });
-        }
-    }
-
-    /* OTHER GET METHODS HERE */
 }

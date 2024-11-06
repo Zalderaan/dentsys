@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS patients (
     patient_id INT AUTO_INCREMENT PRIMARY KEY,
     patient_firstName VARCHAR(50) NOT NULL,
     patient_lastName VARCHAR(50) NOT NULL,
-    patient_middleName VARCHAR(50) NOT NULL,
+    patient_middleName VARCHAR(50),
     patient_nickname VARCHAR(50) NOT NULL,
     patient_birthdate DATE,
     patient_age INT NOT NULL,
@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS procedures (
 
 CREATE TABLE IF NOT EXISTS treatment_record (
     treatment_id INT AUTO_INCREMENT PRIMARY KEY,
-    patient_id INT NOT NULL,
+    patient_id INT NOT NULL UNIQUE,
     user_id INT NOT NULL,
     prcd_id INT NOT NULL,
     treatment_date DATE NOT NULL,
@@ -123,4 +123,27 @@ CREATE TABLE IF NOT EXISTS treatment_record (
     FOREIGN KEY (prcd_id) REFERENCES procedures(prcd_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS insurance (
+    insurance_id INT AUTO_INCREMENT PRIMARY KEY,
+    patient_id INT NOT NULL UNIQUE,
+    insurance_name VARCHAR(50) NOT NULL,
+    effective_date DATE NOT NULL,
+    FOREIGN KEY (patient_id) REFERENCES patients(patient_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS dental_history (
+    dental_id INT AUTO_INCREMENT PRIMARY KEY,
+    patient_id INT NOT NULL UNIQUE,
+    prev_dentist VARCHAR(50) NOT NULL,
+    last_visit DATE NOT NULL,
+    FOREIGN KEY (patient_id) REFERENCES patients(patient_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS health_condition (  
+    condition_id INT AUTO_INCREMENT PRIMARY KEY,
+    patient_id INT NOT NULL UNIQUE,
+    condition_name VARCHAR(50) NOT NULL,
+    condition_status VARCHAR(50) NOT NULL,
+    FOREIGN KEY (patient_id) REFERENCES patients(patient_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
 

@@ -4,7 +4,7 @@ import 'package:dentsys_client/screens/patient_records/add_patient_record_screen
 class PatientRecords extends StatefulWidget {
   const PatientRecords({super.key});
 
- @override
+  @override
   State<PatientRecords> createState() => _PatientRecordsState();
 }
 
@@ -187,7 +187,7 @@ class _PatientRecordsState extends State<PatientRecords> {
   );
 }
 
- Widget buildSearchAndFilterSection() {
+  Widget buildSearchAndFilterSection() {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
@@ -248,7 +248,7 @@ class _PatientRecordsState extends State<PatientRecords> {
   );
 }
 
- Widget buildArticleList() {
+  Widget buildArticleList() {
     return Column(
       children: [
         buildRecordItem("Vinsmoke Sanji", "New", "Scheduled"),
@@ -259,7 +259,7 @@ class _PatientRecordsState extends State<PatientRecords> {
     );
   }
 
- Widget buildRecordItem(String name, String status, String schedule) {
+  Widget buildRecordItem(String name, String status, String schedule) {
   return Card(
     color: Colors.white,
     child: Padding(
@@ -315,7 +315,7 @@ class _PatientRecordsState extends State<PatientRecords> {
   );
 }
 
- Widget buildPagination() {
+  Widget buildPagination() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
