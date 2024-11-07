@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Responsive Layout',
+      title: 'DentSys',
       theme: ThemeData(
         primarySwatch: Colors.brown,
       ),
@@ -23,7 +23,13 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => const LoginScreen(),
         '/dashboard': (context) => const DashboardScreen(),
-        '/patient_records': (context) => const PatientRecords(),
+        '/patient_records': (context) => PatientRecords(
+          onAddPatient: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const AddPatientRecordScreen()),
+            );
+          },
+        ),
       }
     );
   }

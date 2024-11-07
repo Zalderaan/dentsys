@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:dentsys_client/screens/patient_records/add_patient_record_screen.dart';
 
 class PatientRecords extends StatefulWidget {
-  const PatientRecords({super.key});
+  final VoidCallback onAddPatient; // Add this parameter
 
-  @override
+  const PatientRecords({super.key, required this.onAddPatient});
+
+   @override
   State<PatientRecords> createState() => _PatientRecordsState();
 }
 
@@ -61,13 +62,7 @@ class _PatientRecordsState extends State<PatientRecords> {
                                           ),
                                           child: ElevatedButton.icon(
                                           //ADD Patient
-                                          onPressed: () {
-                                            //Navigate to the AddPatientScreen when the button is pressed
-                                            Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(builder: (context) => const AddPatientRecordScreen()), // Make sure this screen is imported
-                                            );
-                                          },
+                                          onPressed: widget.onAddPatient,
                                           icon: const Icon(
                                             Icons.add,
                                             color: Colors.white,
