@@ -1,6 +1,7 @@
 import express from 'express';
 import UserController from '../controllers/user-controller.js';
 import PatientController from '../controllers/patient-controller.js';
+import TestController from '../controllers/test-controller.js';
 
 const router = express.Router();
 
@@ -11,9 +12,13 @@ router.post('/login', UserController.loginUser);
 
 // patient routes
 router.post('/add-patient', PatientController.addPatient);
-// router.get('/patient/:id', getPatient);
-// router.get('/patients', getPatients);
+router.get('/patients/:id', PatientController.getPatientDetails);
+router.get('/patients', PatientController.getAllPatients);
 // router.put('/update-patient/:id', updatePatient);
 // router.delete('/delete-patient/:id', deletePatient);
+
+// test routes
+router.post('/test/add-contact', TestController.createContact);
+router.get('/test/get-contact/:id', TestController.getContact);
 
 export default router;

@@ -15,19 +15,32 @@ class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
   @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
+  _DashboardScreenState createState() => _DashboardScreenState();
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
   bool isExpanded = false;
   int selectedIndex = 0;
+  late List<Widget> _screens;
 
-  // List of screens for each destination
-  final List<Widget> _screens = [
-    const AddApppointmentScreen(),
-    const PatientRecords(),
-    const AddPatientRecordScreen(),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _screens = [
+      const AddApppointmentScreen(),
+      PatientRecords(
+        onAddPatient: _handleAddPatient,
+      ),
+      const AddPatientRecordScreen(),
+    ];
+  }
+
+  // Helper method to handle the onAddPatient action
+  void _handleAddPatient() {
+    setState(() {
+      selectedIndex = 2; // Set index for AddPatientRecordScreen
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +134,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             const Icon(Icons.calendar_today, size: 20.0),
                             const SizedBox(width: 8.0),
                             Text(
-                              DateFormat('EEEE, MMMM d, yyyy, h:mm a').format(DateTime.now()),
+                              DateFormat('EEEE, MMMM d, yyyy').format(DateTime.now()),
                               style: const TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
                             ),
                           ],
