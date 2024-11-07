@@ -1,6 +1,6 @@
-import '../../config/db.js';
+import pool from '../../config/db.js';
 
-export default class dentalHistory {
+export default class DentalHistory {
     constructor(previous_dentist, last_visit, patient_id){
         this.previous_dentist = previous_dentist;
         this.last_visit = last_visit;
@@ -11,7 +11,7 @@ export default class dentalHistory {
         const {previous_dentist, last_visit, patient_id} = data;
 
         try {
-            const queryStr = 'INSERT INTO dental_history (dentalHist_previousDentist, dentalHist_lastVisit, patient_id) VALUES (?, ?, ?)';
+            const queryStr = 'INSERT INTO dental_history (dental_previousDentist, dental_lastVisit, patient_id) VALUES (?, ?, ?)';
             const values = [previous_dentist, last_visit, patient_id];
             const [result] = await pool.query(queryStr, values);
             const newDentalHist = result.insertId;

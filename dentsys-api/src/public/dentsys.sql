@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS contact (
     contact_id INT AUTO_INCREMENT PRIMARY KEY,
     patient_id INT NOT NULL UNIQUE,
     contact_homeAddress VARCHAR(100) NOT NULL, -- Increased size from 50 to 100
+    contact_homeNo VARCHAR(50) NOT NULL,
     contact_workNo VARCHAR(50) NOT NULL, 
     contact_mobileNo VARCHAR(50) NOT NULL,
     contact_faxNo VARCHAR(50) NOT NULL,
@@ -134,16 +135,49 @@ CREATE TABLE IF NOT EXISTS insurance (
 CREATE TABLE IF NOT EXISTS dental_history (
     dental_id INT AUTO_INCREMENT PRIMARY KEY,
     patient_id INT NOT NULL UNIQUE,
-    prev_dentist VARCHAR(50) NOT NULL,
-    last_visit DATE NOT NULL,
+    dental_previousDentist VARCHAR(50) NOT NULL,
+    dental_lastVisit DATE NOT NULL,
     FOREIGN KEY (patient_id) REFERENCES patients(patient_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS health_condition (  
-    condition_id INT AUTO_INCREMENT PRIMARY KEY,
-    patient_id INT NOT NULL UNIQUE,
-    condition_name VARCHAR(50) NOT NULL,
-    condition_status VARCHAR(50) NOT NULL,
-    FOREIGN KEY (patient_id) REFERENCES patients(patient_id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
+-- CREATE TABLE IF NOT EXISTS health_condition (  
+--     condition_id INT AUTO_INCREMENT PRIMARY KEY,
+--     patient_id INT NOT NULL UNIQUE,
+--     condition_highBlood BOOLEAN NOT NULL,
+--     condition_lowBlood BOOLEAN NOT NULL,
+--     condition_epliepsy BOOLEAN NOT NULL,
+--     condition_aids BOOLEAN NOT NULL,
+--     condition_std BOOLEAN NOT NULL,
+--     condition_stomachUlcer BOOLEAN NOT NULL,
+--     condition_faintingSeizures BOOLEAN NOT NULL,
+--     condition_rapidWeightLoss BOOLEAN NOT NULL,
+--     condition_radTherapy BOOLEAN NOT NULL,
+--     condition_jointReplacement BOOLEAN NOT NULL,
+--     condition_heartSurgery BOOLEAN NOT NULL,
+--     condition_heartAttack BOOLEAN NOT NULL,
+--     condition_heartDisease BOOLEAN NOT NULL,
+--     conition_heartMurmur BOOLEAN NOT NULL,
+--     condition_thyroid BOOLEAN NOT NULL,
+--     condition_hepatitisLiver BOOLEAN NOT NULL,
+--     condition_jaundice BOOLEAN NOT NULL,
+--     condition_rheumaticFever BOOLEAN NOT NULL,
+--     condition_hayFever BOOLEAN NOT NULL,
+--     condition_respiratoryProblems BOOLEAN NOT NULL,
+--     condition_tuberculosis BOOLEAN NOT NULL,
+--     condition_swollenAnkles BOOLEAN NOT NULL,
+--     condition_kidneyDisease BOOLEAN NOT NULL,
+--     condition_diabetes BOOLEAN NOT NULL,
+--     condition_chestPain BOOLEAN NOT NULL,
+--     condition_stroke BOOLEAN NOT NULL,
+--     condition_tumors BOOLEAN NOT NULL,
+--     condition_anemia BOOLEAN NOT NULL,
+--     condition_angina BOOLEAN NOT NULL,
+--     condition_asthma BOOLEAN NOT NULL,
+--     condition_emphysema BOOLEAN NOT NULL,
+--     condition_bleedingProblems BOOLEAN NOT NULL,
+--     condition_bloodDisease BOOLEAN NOT NULL,
+--     condition_headInjury BOOLEAN NOT NULL,
+--     condition_arthritis BOOLEAN NOT NULL,
+--     condition_others TEXT,
+--     FOREIGN KEY (patient_id) REFERENCES patients(patient_id) ON DELETE CASCADE ON UPDATE CASCADE
+-- );

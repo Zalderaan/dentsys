@@ -1,4 +1,4 @@
-import '../../config/db.js';
+import pool from '../../config/db.js';
 
 export default class Allergies {
     constructor(anesthetic, penicillin, antibiotics, sulfaDrugs, aspirin, latex, others, patient_id){
