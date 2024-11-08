@@ -12,14 +12,14 @@ export default class Allergies {
         this.patient_id = patient_id;
     }
 
-    static async createAllergies(data){
+    static async createAllergies(data, { transaction }) {
         const {anesthetic, penicillin, antibiotics, sulfaDrugs, aspirin, latex, others, patient_id} = data;
 
         const queryStr = 'INSERT INTO allergies (allergies_anesthetic, allergies_penicillin, allergies_antibiotics, allergies_sulfaDrugs, allergies_aspirin, allergies_latex, allergies_others, patient_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
         const values = [anesthetic, penicillin, antibiotics, sulfaDrugs, aspirin, latex, others, patient_id];
 
         try {
-            const [result] = await pool.query(queryStr, values);
+            const [result] = await transaction.query(queryStr, values);
             const newAllergies = result.insertId;
             if (newAllergies) {
                 console.log('Allergies created successfully from model', newAllergies);

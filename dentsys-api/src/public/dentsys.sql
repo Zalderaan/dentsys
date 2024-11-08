@@ -65,6 +65,8 @@ CREATE TABLE IF NOT EXISTS medical_history (
     medical_isTobacco BOOLEAN NOT NULL,
     medical_dangerousSubstance BOOLEAN NOT NULL,
     medical_bleedingTime INT,
+    medical_bloodType VARCHAR(50) NOT NULL,
+    medical_bloodPressure VARCHAR(50) NOT NULL,
     medical_isPregnant BOOLEAN NOT NULL,
     medical_isNursing BOOLEAN NOT NULL,
     medical_isBirthControl BOOLEAN NOT NULL,
@@ -140,44 +142,59 @@ CREATE TABLE IF NOT EXISTS dental_history (
     FOREIGN KEY (patient_id) REFERENCES patients(patient_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- CREATE TABLE IF NOT EXISTS health_condition (  
---     condition_id INT AUTO_INCREMENT PRIMARY KEY,
---     patient_id INT NOT NULL UNIQUE,
---     condition_highBlood BOOLEAN NOT NULL,
---     condition_lowBlood BOOLEAN NOT NULL,
---     condition_epliepsy BOOLEAN NOT NULL,
---     condition_aids BOOLEAN NOT NULL,
---     condition_std BOOLEAN NOT NULL,
---     condition_stomachUlcer BOOLEAN NOT NULL,
---     condition_faintingSeizures BOOLEAN NOT NULL,
---     condition_rapidWeightLoss BOOLEAN NOT NULL,
---     condition_radTherapy BOOLEAN NOT NULL,
---     condition_jointReplacement BOOLEAN NOT NULL,
---     condition_heartSurgery BOOLEAN NOT NULL,
---     condition_heartAttack BOOLEAN NOT NULL,
---     condition_heartDisease BOOLEAN NOT NULL,
---     conition_heartMurmur BOOLEAN NOT NULL,
---     condition_thyroid BOOLEAN NOT NULL,
---     condition_hepatitisLiver BOOLEAN NOT NULL,
---     condition_jaundice BOOLEAN NOT NULL,
---     condition_rheumaticFever BOOLEAN NOT NULL,
---     condition_hayFever BOOLEAN NOT NULL,
---     condition_respiratoryProblems BOOLEAN NOT NULL,
---     condition_tuberculosis BOOLEAN NOT NULL,
---     condition_swollenAnkles BOOLEAN NOT NULL,
---     condition_kidneyDisease BOOLEAN NOT NULL,
---     condition_diabetes BOOLEAN NOT NULL,
---     condition_chestPain BOOLEAN NOT NULL,
---     condition_stroke BOOLEAN NOT NULL,
---     condition_tumors BOOLEAN NOT NULL,
---     condition_anemia BOOLEAN NOT NULL,
---     condition_angina BOOLEAN NOT NULL,
---     condition_asthma BOOLEAN NOT NULL,
---     condition_emphysema BOOLEAN NOT NULL,
---     condition_bleedingProblems BOOLEAN NOT NULL,
---     condition_bloodDisease BOOLEAN NOT NULL,
---     condition_headInjury BOOLEAN NOT NULL,
---     condition_arthritis BOOLEAN NOT NULL,
---     condition_others TEXT,
---     FOREIGN KEY (patient_id) REFERENCES patients(patient_id) ON DELETE CASCADE ON UPDATE CASCADE
--- );
+CREATE TABLE IF NOT EXISTS conditions (  
+    condition_id INT AUTO_INCREMENT PRIMARY KEY,
+    condition_name VARCHAR(50) NOT NULL UNIQUE,
+    condition_description TEXT
+);
+
+CREATE TABLE IF NOT EXISTS patient_conditions (
+    patientCondition_id INT AUTO_INCREMENT PRIMARY KEY,
+    patient_id INT NOT NULL,
+    condition_id INT NOT NULL,
+    patientCondition_status BOOLEAN,
+    FOREIGN KEY (patient_id) REFERENCES patients(patient_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (condition_id) REFERENCES conditions(condition_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+-- insert default user
+INSERT INTO users (user_firstName, user_lastName, user_username, user_email, user_password) VALUES ('admin', 'admin', 'admin', 'admin@email.com','adminadmin');
+
+-- insert default conditions data 
+INSERT INTO conditions (condition_name, condition_description) VALUES ('highBlood', 'High blood pressure');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('lowBlood', 'Low blood pressure');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('epilepsy', 'Seizure disorder');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('aids', 'Acquired Immunodeficiency Syndrome');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('std', 'Sexually Transmitted Disease');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('stomachUlcer', 'Peptic or stomach ulcer');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('faintingSeizures', 'History of fainting or seizures');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('rapidWeightLoss', 'Rapid weight loss');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('radTherapy', 'Radiation therapy');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('jointReplacement', 'Joint replacement surgery');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('heartSurgery', 'History of heart surgery');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('heartAttack', 'History of heart attack');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('heartDisease', 'Heart disease');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('heartMurmur', 'Heart murmur');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('thyroid', 'Thyroid issues');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('hepatitisLiver', 'Hepatitis / liver issues');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('jaundice', 'Hepatits / Jaundice');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('rheumaticFever', 'Rheumatic fever');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('hayFever', 'Hay fever');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('respiratoryProblems', 'Respiratory problems');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('tuberculosis', 'Tuberculosis');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('swollenAnkles', 'Swollen ankles');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('kidneyDisease', 'Kidney disease');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('diabetes', 'Diabetes');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('chestPain', 'Chest pain');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('stroke', 'History of stroke');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('tumors', 'History of tumors');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('anemia', 'Anemia');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('angina', 'Angina');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('asthma', 'Asthma');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('emphysema', 'Emphysema');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('bleedingProblems', 'Bleeding problems');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('bloodDisease', 'Blood disease');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('headInjury', 'History of head injury');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('arthritis', 'Arthritis');
+INSERT INTO conditions (condition_name, condition_description) VALUES ('others', 'Other health conditions');

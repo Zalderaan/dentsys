@@ -7,13 +7,13 @@ export default class DentalHistory {
         this.patient_id = patient_id;
     }
 
-    static async createDentalHist(data){ 
+    static async createDentalHist(data, { transaction }) { 
         const {previous_dentist, last_visit, patient_id} = data;
 
         try {
             const queryStr = 'INSERT INTO dental_history (dental_previousDentist, dental_lastVisit, patient_id) VALUES (?, ?, ?)';
             const values = [previous_dentist, last_visit, patient_id];
-            const [result] = await pool.query(queryStr, values);
+            const [result] = await transaction.query(queryStr, values);
             const newDentalHist = result.insertId;
             if (newDentalHist) {
                 console.log('Dental history created successfully from model', newDentalHist);

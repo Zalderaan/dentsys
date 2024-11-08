@@ -7,14 +7,14 @@ export default class Insurance {
         this.patient_id = patient_id;
     }
 
-    static async createInsurance(data){
+    static async createInsurance(data, { transaction }) {
         const {insurance_name, effective_date, patient_id} = data;
 
         const queryStr = 'INSERT INTO insurance (insurance_name, effective_date, patient_id) VALUES (?, ?, ?)';
         const values = [insurance_name, effective_date, patient_id];
 
         try {
-            const [result] = await pool.query(queryStr, values);
+            const [result] = await transaction.query(queryStr, values);
             const newInsurance = result.insertId;
             if (newInsurance) {
                 console.log('Insurance created successfully from model', newInsurance);

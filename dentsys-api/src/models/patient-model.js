@@ -17,15 +17,16 @@ export default class Patient {
         this.totalBalance = totalBalance;
     }
 
-    static async createPatient(data) {
+    static async createPatient(data, { transaction }) {
         const { firstName, lastName, middleName, birthDate, age, sex, nickname, nationality, religion, occupation, reason, totalBalance } = data;
 
         const queryStr = 'INSERT INTO patients (patient_firstName, patient_lastName, patient_middleName, patient_birthDate, patient_age, patient_sex, patient_nickname, patient_nationality, patient_religion, patient_occupation, patient_reason, patient_totalBal) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
         const values = [firstName, lastName, middleName, birthDate, age, sex, nickname, nationality, religion, occupation, reason, totalBalance];
-
+        
         // execute
         try {
-            const [result] = await pool.query(queryStr, values);
+            // console.log('transaction:', transaction);
+            const [result] = await transaction.query(queryStr, values);
             const newPatient = result.insertId;
             if (newPatient) {
                 console.log('Patient created successfully from model', newPatient);

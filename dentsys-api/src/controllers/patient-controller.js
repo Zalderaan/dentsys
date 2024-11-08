@@ -4,6 +4,7 @@ import DentalHistory from '../models/dentalHistory-model.js';
 import Insurance from '../models/insurance-model.js';
 import Allergies from '../models/allergies-model.js';
 import MedicalHistory from '../models/medicalHistory-model.js';
+import patientCondition from '../models/patientConditon-model.js';
 
 import pool from '../../config/db.js';
 
@@ -18,28 +19,34 @@ export default class PatientController {
 
             await connection.beginTransaction(); // start transaction
 
-            const newPatient = await Patient.createPatient(data); // insert new patient data
+            const newPatient = await Patient.createPatient(data, {transaction: connection}); // insert new patient data
             const newPatientId = newPatient;
             console.log('newPatientId:', newPatientId);
 
             data.patient_id = newPatientId; // add patient id to contact data
             
-            const newContact = await Contact.createContact(data); // insert new contact data
-            const newDentalHistory = await DentalHistory.createDentalHist(data); // insert new dental history data
-            const newInsurance = await Insurance.createInsurance(data); // insert new insurance data
-            // const newMedicalHistory = await MedicalHistory.createMedicalHist(data); // insert new medical history data
-            const newAllergies = await Allergies.createAllergies(data); // insert new allergies data
-            
-            await connection.commit(); // commit transaction
+            const newContact = await Contact.createContact(data, {transaction: connection}); // insert new contact data
+            const newDentalHistory = await DentalHistory.createDentalHist(data, {transaction: connection}); // insert new dental history data
+            const newInsurance = await Insurance.createInsurance(data, {transaction: connection}); // insert new insurance data
+            const newAllergies = await Allergies.createAllergies(data, {transaction: connection}); // insert new allergies data
+            const newPatientConditions = await patientCondition.addPatientConditions(data, {transaction: connection}); // insert new patient conditions data
+            const newMedicalHistory = await MedicalHistory.createMedicalHistory(data, {transaction: connection}); // insert new medical history data
 
-            return res.status(201).json({ 
-                message: 'Patient created successfully from controller', 
-                patient: newPatient, 
-                contact: newContact,
-                dentalHistory: newDentalHistory,
-                insurance: newInsurance,
-                allergies: newAllergies,
-            });
+            if (!newContact || !newDentalHistory || !newInsurance || !newAllergies || !newPatientConditions || !newMedicalHistory) {
+                throw new Error('Error creating patient from controller');
+            } else {
+                await connection.commit(); // commit transaction
+                return res.status(201).json({ 
+                    message: 'Patient created successfully from controller', 
+                    patient: newPatient, 
+                    contact: newContact,
+                    dentalHistory: newDentalHistory,
+                    insurance: newInsurance,
+                    allergies: newAllergies,
+                    medicalHistory: newMedicalHistory,
+                    patientConditions: newPatientConditions
+                });
+            }
         } 
         catch (error) {
             await connection.rollback(); // rollback transaction
