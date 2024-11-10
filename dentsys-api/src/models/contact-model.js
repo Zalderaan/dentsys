@@ -11,14 +11,14 @@ export default class Contact {
         this.patient_id = patient_id;
     }
 
-    static async createContact(data){
+    static async createContact(data, { transaction }) {
         const { email, home_address, home_number, office_number, fax_number, mobile_number, patient_id } = data;
 
         const queryStr = 'INSERT INTO contact (contact_email, contact_homeAddress, contact_homeNo, contact_workNo, contact_faxNo, contact_mobileNo, patient_id) VALUES (?, ?, ?, ?, ?, ?, ?)';
         const values = [email, home_address, home_number, office_number, fax_number, mobile_number, patient_id];
 
         try {
-            const [result] = await pool.query(queryStr, values);
+            const [result] = await transaction.query(queryStr, values);
             const newContact = result.insertId;
             if (newContact) {
                 console.log('Contact created successfully from model', newContact);
