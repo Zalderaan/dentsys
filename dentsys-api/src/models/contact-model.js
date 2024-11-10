@@ -31,27 +31,27 @@ export default class Contact {
             if (error.code === 'ER_DUP_ENTRY') {
                 throw new Error('Contact already exists');
             }
-            throw new Error ('Error creating contact', error);
+            return { error: error.message };
         }
     }
 
-    static async getContact(id) {
+    static async getContact(id, { connection }) {
         const queryStr = 'SELECT * FROM contact WHERE patient_id = ?';
 
         try {
-            const [contact_result] = await pool.query(queryStr, [id]);
+            const [contact_result] = await connection.query(queryStr, [id]);
 
             if(!contact_result) {
                 throw new Error('No contact found');
             } else if (contact_result.length > 1) {
                 throw new Error('Multiple contacts found');
             } else if (contact_result.length === 0) {
-                return { message: 'No contact found' };
+                throw new Error('No contact found');
             }
             return contact_result;
         } catch (error) {
             console.log('Error getting contact from model', error);
-            throw new Error ('Error getting contact', error);
+            return { error: error.message };
         }
     }
 

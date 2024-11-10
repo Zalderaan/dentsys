@@ -24,18 +24,22 @@ export default class Insurance {
             }
         } catch (error) {
             console.log('Error creating insurance from model', error);
-            throw new Error ('Error creating insurance', error);
+            return { error: error.message };
         }
     }
 
-    static async getInsurance(id){
+    static async getInsurance(id, { connection }){
         const queryStr = 'SELECT * FROM insurance WHERE patient_id = ?';
         try {
-            const [insurance] = await pool.query(queryStr, [id]);
+            const [insurance] = await connection.query(queryStr, [id]);
             return insurance;
+
+            if (!insurance) {
+                throw new Error('Patient insurance not found');
+            }
         } catch (error) {
             console.log('Error getting insurance from model', error);
-            throw new Error ('Error getting insurance', error);
+            return { error: error.message };
         }
     }
 }

@@ -50,5 +50,17 @@ export default class patientCondition {
             // connection.release();
         }
     }
+
+    static async getPatientConditions(id, { connection}) {
+        const queryStr = 'SELECT * FROM patient_conditions WHERE patient_id = ?';
+
+        try {
+            const [conditions_result] = await connection.query(queryStr, [id]); // a patient can have 0 to many medical conditions
+            return conditions_result
+        } catch (error) {
+            console.log('Error getting patient conditions from model', error);
+            return { error: error.message };    
+        }
+    }
 }
 

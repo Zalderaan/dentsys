@@ -23,7 +23,23 @@ export default class DentalHistory {
             }
         } catch (error) {
             console.log('Error creating dental history from model', error);
-            throw new Error ('Error creating dental history', error);
+            return { error: error.message };
+        }
+    }
+
+    static async getDentalHist(id, { connection }) {
+        try {
+            const queryStr = 'SELECT * FROM dental_history WHERE patient_id = ?';
+            const [dentalHist] = await connection.query(queryStr, [id]);
+            if(!dentalHist) {
+                throw new Error('Error getting dental history');
+            } else {
+                console.log('Dental history retrieved successfully from model');
+                return dentalHist;
+            }
+        } catch (error) {
+            console.log('Error getting dental history from model', error);
+            return { error: error.message };
         }
     }
 }

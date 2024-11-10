@@ -68,15 +68,32 @@ export default class PatientController {
     }
 
     static async getPatientDetails(req, res) {
+        const patient_id = req.params.id;
+        const connection = await pool.getConnection();
         try {
-            const patient_data = req.params.id;
-            console.log('patient_data in controlelr:', patient_data);
-            if(!patient_data) {return res.status(400).json({ error: 'Patient ID is required' });}
+            console.log('patient_data in controller:', patient_id);
+            if(!patient_id) {return res.status(400).json({ error: 'Patient ID is required' });}
         
-            const patient = await Patient.getOnePatient(patient_data);
+            const patient = await Patient.getOnePatient(patient_id, { connection });
+            const contact = await Contact.getContact(patient_id, { connection });
+            const dentalHistory = await DentalHistory.getDentalHist(patient_id, { connection });
+            const insurance = await Insurance.getInsurance(patient_id, { connection });
+            const allergies = await Allergies.getAllergies(patient_id, { connection });
+            const medicalHistory = await MedicalHistory.getMedicalHistory(patient_id, { connection });
+            const patientConditions = await patientCondition.getPatientConditions(patient_id, { connection });
+
             if (!patient || patient.length === 0) {return res.status(404).json({ error: 'Patient not found' });}
 
-            return res.status(200).json({ message: 'Patient retrieved successfully from controller', patient});
+            return res.status(200).json({
+                message: 'Patient retrieved successfully from controller',
+                patient: patient,
+                contact: contact,
+                dentalHistory: dentalHistory,
+                insurance: insurance,
+                allergies: allergies,
+                medicalHistory: medicalHistory,
+                patientConditions: patientConditions
+            });
         } catch (error) {
             res.status(500).json({ error: error.message });
         }

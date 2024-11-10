@@ -29,15 +29,15 @@ export default class Allergies {
             }
         } catch (error) {
             console.log('Error creating allergies from model', error);
-            throw new Error ('Error creating allergies', error);
+            return { error: error.message };
         }
     }
 
-    static async getAllergies(id){
+    static async getAllergies(id, { connection }) {
         const queryStr = 'SELECT * FROM allergies WHERE patient_id = ?';
 
         try {
-            const [allergies] = await pool.query(queryStr, [id]);
+            const [allergies] = await connection.query(queryStr, [id]);
 
             if (!allergies) {
                 throw new Error('Patient allergies not found');
@@ -46,7 +46,7 @@ export default class Allergies {
             return allergies;
         } catch (error) {
             console.log('Error getting allergies from model', error);
-            throw new Error ('Error getting allergies', error);
+            return { error: error.message };
         }
     }
 }

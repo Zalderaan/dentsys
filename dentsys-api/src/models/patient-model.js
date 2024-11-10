@@ -36,7 +36,7 @@ export default class Patient {
             }
         } catch (error) {
             console.log('Error creating patient from model', error);
-            throw new Error ('Error creating patient');
+            return { error: error.message };
         }
     }
 
@@ -48,18 +48,32 @@ export default class Patient {
             return patients;
         } catch (error) {
             console.log('Error getting patients from model', error);
-            throw new Error ('Error getting patients');
+            return { error: error.message };
         }
     }
 
-    static async getOnePatient(id) {
+    static async getOnePatient(id, { connection }) {
+        // const queryStr = 'SELECT * FROM patients WHERE patient_id = ?';
+        // try {
+        //     const [patient] = await pool.query(queryStr, [id]);
+        //     return patient;
+        // } catch (error) {
+        //     console.log('Error getting patient from model', error);
+        //     throw new Error ('Error getting patient', error);
+        // }
+
         const queryStr = 'SELECT * FROM patients WHERE patient_id = ?';
         try {
-            const [patient] = await pool.query(queryStr, [id]);
-            return patient;
+            const [patient] = await connection.query(queryStr, [id]);
+            if (!patient) {
+                throw new Error('Patient not found');
+            } else {
+                return patient;
+            }
+            
         } catch (error) {
             console.log('Error getting patient from model', error);
-            throw new Error ('Error getting patient', error);
+            return { error: error.message };
         }
     }
 

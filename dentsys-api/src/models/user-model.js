@@ -66,7 +66,7 @@ export default class User {
             if (error.code === 'ER_DUP_ENTRY') {
                 throw new Error('User already exists check 2');
             } else {
-                throw new Error('db error: unable to create user');
+                return { error: error.message };
             }
         }
     }
@@ -108,7 +108,7 @@ export default class User {
             }
         } catch (error) {
             console.error('Error getting user', error);
-            throw new Error('db error: unable to get user');
+            return { error: error.message };
         }
     }
 
@@ -139,7 +139,7 @@ export default class User {
             }
         } catch (error) {
             console.error('Error getting user by id', error);
-            throw new Error('db error: unable to get user by id');
+            return { error: error.message };
         }
     }
     
@@ -170,7 +170,7 @@ export default class User {
             }
         } catch (error) {
             console.error('Error updating user', error);
-            throw new Error('db error: unable to update user');
+            return { error: error.message };
         }
     }
 
@@ -199,9 +199,9 @@ export default class User {
                 console.log('User deleted successfully from model', result.affectedRows);
                 return result.affectedRows;
             }
-        } catch (errors) {
+        } catch (error) {
             console.error('Error deleting user', error);
-            throw new Error('db error: unable to delete user');
+            return { error: error.message };
         }
     }
 }

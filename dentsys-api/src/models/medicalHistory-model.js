@@ -53,7 +53,23 @@ export default class MedicalHistory {
             console.error('Error creating medical history from model:', error.message);
             // console.error('Query String:', queryStr);
             // console.error('Query Values:', values);
-            throw new Error('Error creating medical history', error);
+            return { error: error.message };
+        }
+    }
+
+    static async getMedicalHistory(id, { connection }) {
+        const queryStr = 'SELECT * FROM medical_history WHERE patient_id = ?';
+        try {
+            const [mh_result] = await connection.query(queryStr, [id]);
+            if (!mh_result) {
+                throw new Error('Patient medical history not found');
+            } else {
+                console.log('Medical history retrieved successfully from model');
+                return mh_result;
+            }
+        } catch (error) {
+            console.log('Error getting medical history from model', error);
+            return { error: error.message };
         }
     }
 }
