@@ -31,32 +31,52 @@ export default class Contact {
             if (error.code === 'ER_DUP_ENTRY') {
                 throw new Error('Contact already exists');
             }
-            throw new Error ('Error creating contact', error);
+            throw error;
         }
     }
 
-    static async getContact(id) {
+    static async getContact(id, { transaction }) {
         const queryStr = 'SELECT * FROM contact WHERE patient_id = ?';
 
         try {
-            const [contact_result] = await pool.query(queryStr, [id]);
+            const [contact_result] = await transaction.query(queryStr, [id]);
 
-            if(!contact_result) {
+            if(contact_result.length === 0) {
                 throw new Error('No contact found');
             } else if (contact_result.length > 1) {
                 throw new Error('Multiple contacts found');
-            } else if (contact_result.length === 0) {
-                return { message: 'No contact found' };
             }
             return contact_result;
         } catch (error) {
             console.log('Error getting contact from model', error);
-            throw new Error ('Error getting contact', error);
+            throw error;
         }
     }
 
-    static async updateContact(data) {
+    static async updateContact(data, { transaction }) {
+        const { email, home_address, home_number, office_number, fax_number, mobile_number, patient_id} = data;
+        
+        const queryStr = 'UPDATE contact SET contact_email = ?, contact_homeAddress = ?, contact_homeNo = ?, contact_workNo = ?, contact_faxNo = ?, contact_mobileNo = ? WHERE patient_id = ?';
+        const values = [email, home_address, home_number, office_number, fax_number, mobile_number, patient_id];
 
+        try {
+            const [result] = await transaction.query(queryStr, values);
+            if (result.affectedRows === 0) {
+                console.log('patient contacts does not exist, not updated');
+                throw new Error('patient contacts does not exist, not updated');
+            }
+
+            console.log('Contact updated successfully from model');
+            return {
+                affectedRows: result.affectedRows,
+                message: 'Contact updated successfully',
+                patient_id: patient_id
+            }
+        
+        } catch (error) {
+            console.log('Error updating contact from model', error);
+            throw error;
+        }
     }
 
     static async deleteContact(id) {

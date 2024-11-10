@@ -14,8 +14,8 @@ router.post('/login', UserController.loginUser);
 router.post('/add-patient', PatientController.addPatient);
 router.get('/patients/:id', PatientController.getPatientDetails);
 router.get('/patients', PatientController.getAllPatients);
-// router.put('/update-patient/:id', updatePatient);
-// router.delete('/delete-patient/:id', deletePatient);
+router.put('/update-patient/:id', PatientController.updatePatient);
+router.delete('/delete-patient/:id', PatientController.removePatient);
 
 // test routes
 router.post('/test/add-contact', TestController.createContact);

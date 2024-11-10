@@ -23,7 +23,47 @@ export default class DentalHistory {
             }
         } catch (error) {
             console.log('Error creating dental history from model', error);
-            throw new Error ('Error creating dental history', error);
+            throw error;
+        }
+    }
+
+    static async getDentalHist(id, { transaction }) {
+        try {
+            const queryStr = 'SELECT * FROM dental_history WHERE patient_id = ?';
+            const [dentalHist] = await transaction.query(queryStr, [id]);
+            if(dentalHist.length === 0) {
+                throw new Error('dental history not found');
+            } else {
+                console.log('Dental history retrieved successfully from model');
+                return dentalHist;
+            }
+        } catch (error) {
+            console.log('Error getting dental history from model', error);
+            throw error;
+        }
+    }
+
+    static async updateDentalHist(data, { transaction }) {
+        const {previous_dentist, last_visit, patient_id} = data;
+        const queryStr = 'UPDATE dental_history SET dental_previousDentist = ?, dental_lastVisit = ? WHERE patient_id = ?';
+        const values = [previous_dentist, last_visit, patient_id];
+
+        try {
+            const [result] = await transaction.query(queryStr, values);
+            if (result.affectedRows === 0) {
+                console.log('Dental history not updated, does not exist');
+                throw new Error('Dental history not updated, does not exist');
+            } else {
+                console.log('Dental history updated successfully from model');
+                return {
+                    affectedRows: result.affectedRows,
+                    message: 'dental history updated successfully',
+                    patient_id: patient_id
+                }
+            }
+        } catch (error) {
+            console.log('Error updating dental history from model', error);
+            throw error;
         }
     }
 }

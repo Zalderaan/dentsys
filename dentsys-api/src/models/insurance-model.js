@@ -24,18 +24,46 @@ export default class Insurance {
             }
         } catch (error) {
             console.log('Error creating insurance from model', error);
-            throw new Error ('Error creating insurance', error);
+            throw error;
         }
     }
 
-    static async getInsurance(id){
+    static async getInsurance(id, { transaction }){
         const queryStr = 'SELECT * FROM insurance WHERE patient_id = ?';
         try {
-            const [insurance] = await pool.query(queryStr, [id]);
+            const [insurance] = await transaction.query(queryStr, [id]);
+            
+            if (insurance.length === 0) {
+                throw new Error('Patient insurance not found');
+            }
             return insurance;
         } catch (error) {
             console.log('Error getting insurance from model', error);
-            throw new Error ('Error getting insurance', error);
+            throw error;
+        }
+    }
+
+    static async updateInsurance(data, { transaction }) {
+        const {insurance_name, effective_date, patient_id} = data;
+        const queryStr = 'UPDATE insurance SET insurance_name = ?, effective_date = ? WHERE patient_id = ?';
+        const values = [insurance_name, effective_date, patient_id];
+
+        try {
+            const [result] = await transaction.query(queryStr, values);
+            if (result.affectedRows === 0) {
+                console.log('no updates in Insurance, does not exist');
+                throw new Error('Insurance not updated, does not exist');
+            } else {
+                console.log('Insurance updated successfully from model');
+                return {
+                    affectedRows: result.affectedRows,
+                    message: 'Insurance updated successfully',
+                    patient_id: patient_id
+                }
+            }
+        } catch (error) {
+            console.log('Error updating insurance from model', error);
+            throw error;
         }
     }
 }

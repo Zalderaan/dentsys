@@ -34,7 +34,13 @@ export default class MedicalHistory {
             medical_treatmentDetails, medical_seriousOperation, medical_seriousOperationDetails, medical_hospitalized, medical_hospitalizedDetails, medical_isMedication, 
             medical_medicationDetails, medical_isTobacco, medical_dangerousSubstance, medical_bleedingTime, medical_isPregnant, medical_isNursing, medical_isBirthControl } = data;
         
-        const queryStr = 'INSERT INTO medical_history (patient_id, medical_physician, medical_physicianSpec, medical_officeAddress, medical_officeNo, medical_goodHealth, medical_isUnderTreatment, medical_treatmentDetails, medical_seriousOperation, medical_seriousOperationDetails, medical_hospitalized, medical_hospitalizedDetails, medical_isMedication, medical_medicationDetails, medical_isTobacco, medical_dangerousSubstance, medical_bleedingTime, medical_isPregnant, medical_isNursing, medical_isBirthControl) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        const queryStr = 
+            `INSERT INTO medical_history (
+                patient_id, medical_physician, medical_physicianSpec, medical_officeAddress, medical_officeNo, medical_goodHealth, medical_isUnderTreatment, medical_treatmentDetails, 
+                medical_seriousOperation, medical_seriousOperationDetails, medical_hospitalized, medical_hospitalizedDetails, medical_isMedication, medical_medicationDetails, medical_isTobacco, 
+                medical_dangerousSubstance, medical_bleedingTime, medical_isPregnant, medical_isNursing, medical_isBirthControl
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        
         const values = [patient_id, medical_physician, medical_physicianSpec, medical_officeAddress, medical_officeNo, medical_goodHealth, medical_isUnderTreatment, 
             medical_treatmentDetails, medical_seriousOperation, medical_seriousOperationDetails, medical_hospitalized, medical_hospitalizedDetails, medical_isMedication, 
             medical_medicationDetails, medical_isTobacco, medical_dangerousSubstance, medical_bleedingTime, medical_isPregnant, medical_isNursing, medical_isBirthControl];
@@ -53,7 +59,75 @@ export default class MedicalHistory {
             console.error('Error creating medical history from model:', error.message);
             // console.error('Query String:', queryStr);
             // console.error('Query Values:', values);
-            throw new Error('Error creating medical history', error);
+            throw error;
+        }
+    }
+
+    static async getMedicalHistory(id, { transaction }) {
+        const queryStr = 'SELECT * FROM medical_history WHERE patient_id = ?';
+        try {
+            const [mh_result] = await transaction.query(queryStr, [id]);
+            if (mh_result.length === 0) {
+                throw new Error('Patient medical history not found');
+            } else {
+                console.log('Medical history retrieved successfully from model');
+                return mh_result;
+            }
+        } catch (error) {
+            console.log('Error getting medical history from model', error);
+            throw error;
+        }
+    }
+
+    static async updateMedicalHistory(data, { transaction }) {
+        const { medical_physician, medical_physicianSpec, medical_officeAddress, medical_officeNo, medical_goodHealth, medical_isUnderTreatment, 
+            medical_treatmentDetails, medical_seriousOperation, medical_seriousOperationDetails, medical_hospitalized, medical_hospitalizedDetails, medical_isMedication, 
+            medical_medicationDetails, medical_isTobacco, medical_dangerousSubstance, medical_bleedingTime, medical_isPregnant, medical_isNursing, medical_isBirthControl, patient_id } = data;
+
+        const queryStr = `
+            UPDATE medical_history 
+            SET
+                medical_physician = ?, 
+                medical_physicianSpec = ?, 
+                medical_officeAddress = ?, 
+                medical_officeNo = ?, 
+                medical_goodHealth = ?, 
+                medical_isUnderTreatment = ?, 
+                medical_treatmentDetails = ?, 
+                medical_seriousOperation = ?, 
+                medical_seriousOperationDetails = ?, 
+                medical_hospitalized = ?, 
+                medical_hospitalizedDetails = ?, 
+                medical_isMedication = ?, 
+                medical_medicationDetails = ?, 
+                medical_isTobacco = ?, 
+                medical_dangerousSubstance = ?, 
+                medical_bleedingTime = ?, 
+                medical_isPregnant = ?, 
+                medical_isNursing = ?, 
+                medical_isBirthControl = ?
+            WHERE patient_id = ?`;
+
+        const values = [medical_physician, medical_physicianSpec, medical_officeAddress, medical_officeNo, medical_goodHealth, medical_isUnderTreatment, 
+            medical_treatmentDetails, medical_seriousOperation, medical_seriousOperationDetails, medical_hospitalized, medical_hospitalizedDetails, medical_isMedication, 
+            medical_medicationDetails, medical_isTobacco, medical_dangerousSubstance, medical_bleedingTime, medical_isPregnant, medical_isNursing, medical_isBirthControl, patient_id];
+
+        try {
+            const [result] = await transaction.query(queryStr, values);
+            if (result.affectedRows === 0) {
+                console.log('no updates made in med history, does not exist');
+                throw new Error('Medical history not updated, does not exist');
+            }
+            
+            console.log('Medical history updated successfully from model');
+            return {
+                affectedRows: result.affectedRows,
+                message: 'Medical history updated successfully',
+                patient_id: patient_id
+            }
+        } catch (error) {
+            console.error('Error updating medical history from model', error);
+            throw error;
         }
     }
 }
