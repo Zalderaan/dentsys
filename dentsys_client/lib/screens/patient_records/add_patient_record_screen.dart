@@ -15,6 +15,8 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
   final _dentalInsuranceFormKey =  GlobalKey<FormState>();
   final _dentalHistoryFormKey = GlobalKey<FormState>();
   final _medicalHistoryFormKey = GlobalKey<FormState>();
+  final _allergicFormKey = GlobalKey<FormState>();
+  final _diseasesFormKey = GlobalKey<FormState>();
   final TextEditingController _dateController = TextEditingController();
 
   String? selectedSex;
@@ -23,6 +25,8 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
   bool isDentalInsuranceEnabled = false;
   bool isDentalHistoryEnabled = false;
   bool isMedicalHistoryEnabled = false;
+  bool isAllergicFormEnabled = false;
+  bool isDiseasesEnabled = false;
   bool _isInGoodHealth = false;
   bool _isUnderTreatment = false;
   bool _isSeriousIllness = false;
@@ -252,10 +256,25 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                   children: [
                                     Expanded(
                                       child: TextFormField(
+                                        controller: _dateController, // Controller to manage the selected date text
                                         decoration: const InputDecoration(
-                                          labelText: "Birth Date (YYYY-MM-DD)",
+                                          labelText: "Birth Date (MM-DD-YYYY)",
                                           border: OutlineInputBorder(),
                                         ),
+                                        readOnly: false, // Make the field non-editable
+                                        onTap: () async {
+                                          DateTime? pickedDate = await showDatePicker(
+                                            context: context,
+                                            initialDate: DateTime.now(),
+                                            firstDate: DateTime(1900), // Set a range if needed
+                                            lastDate: DateTime(2100),
+                                          );
+                        
+                                          if (pickedDate != null) {
+                                            String formattedDate = DateFormat('MM-dd-yyyy').format(pickedDate);
+                                            _dateController.text = formattedDate; // Set the selected date
+                                          }
+                                        },
                                         validator: (value) {
                                           if (value == null || value.isEmpty) {
                                             return 'This item is required';
@@ -415,37 +434,49 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                             ],
                                           ),
                                           const SizedBox(height: 10),
-
-                                          // Whom may we thank for referring you?
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Expanded(
-                                                child: TextFormField(
-                                                  decoration: const InputDecoration(
-                                                    labelText: "Whom may we thank for referring you?",
-                                                    border: OutlineInputBorder(),
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(width: 10),
-                                              Expanded(
-                                                child: TextFormField(
-                                                  decoration: const InputDecoration(
-                                                    labelText: "What is your reason for dental consultation?",
-                                                    border: OutlineInputBorder(),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 20),
                                       ],
                                     ),
                                   ),
                                 ),
+                                
+                                //Reason For Dental Consultation
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: TextFormField(
+                                        decoration: const InputDecoration(
+                                          labelText: "Whom may we thank for referring you?",
+                                          border: OutlineInputBorder(),
+                                        ),
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return 'This item is required';
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: TextFormField(
+                                        decoration: const InputDecoration(
+                                          labelText: "What is your reason for dental consultation?",
+                                          border: OutlineInputBorder(),
+                                        ),
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return 'This item is required';
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
 
-                                // Submit Button
+                                //Submit Button
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
@@ -472,7 +503,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                       Divider(
                         height: 10,
                         color: Colors.grey[800],
-                        thickness: 1,
+                        thickness: 0.5,
                       ),
                 const SizedBox(height: 10),
                 AbsorbPointer(
@@ -520,7 +551,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                         Divider(
                                           height: 10,
                                           color: Colors.grey[400],
-                                          thickness: 1,
+                                          thickness: 0.5,
                                         ),
                                         const SizedBox(height: 10),
                                         // Home Adress
@@ -656,7 +687,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                       Divider(
                         height: 10,
                         color: Colors.grey[800],
-                        thickness: 1,
+                        thickness: 0.5,
                       ),
                 const SizedBox(height: 10),
                 AbsorbPointer(
@@ -703,7 +734,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                         Divider(
                                           height: 10,
                                           color: Colors.grey[400],
-                                          thickness: 1,
+                                          thickness: 0.5,
                                         ),
                                         const SizedBox(height: 10),
                                         
@@ -730,7 +761,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                               child: TextFormField(
                                                 controller: _dateController, // Controller to manage the selected date text
                                                 decoration: const InputDecoration(
-                                                  labelText: "Effective Date (YYYY-MM-DD)",
+                                                  labelText: "Effective Date (MM-DD-YYYY)",
                                                   border: OutlineInputBorder(),
                                                 ),
                                                 readOnly: false, // Make the field non-editable
@@ -743,7 +774,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                   );
                                 
                                                   if (pickedDate != null) {
-                                                    String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate);
+                                                    String formattedDate = DateFormat('MM-dd-yyyy').format(pickedDate);
                                                     _dateController.text = formattedDate; // Set the selected date
                                                   }
                                                 },
@@ -792,7 +823,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                       Divider(
                         height: 10,
                         color: Colors.grey[800],
-                        thickness: 1,
+                        thickness: 0.5,
                       ),
                 const SizedBox(height: 10),
                 AbsorbPointer(
@@ -840,7 +871,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                         Divider(
                                           height: 10,
                                           color: Colors.grey[400],
-                                          thickness: 1,
+                                          thickness: 0.5,
                                         ),
                                         const SizedBox(height: 10),
                                         Row(
@@ -910,7 +941,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                       Divider(
                         height: 10,
                         color: Colors.grey[800],
-                        thickness: 1,
+                        thickness: 0.5,
                       ),
                 const SizedBox(height: 10),
                 AbsorbPointer(
@@ -956,7 +987,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                   Divider(
                                     height: 10,
                                     color: Colors.grey[400],
-                                    thickness: 1,
+                                    thickness: 0.5,
                                   ),
                                   const SizedBox(height: 10),
 
@@ -1390,135 +1421,12 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                     ],
                                   ),
                                   const SizedBox(height: 10),
-
-                                  // Question 8 - Allergies
+                                
+                                  //Question 8
                                   Row(
                                     children: [
                                       const Text(
-                                        "8. Are you allergic to any of the following:",
-                                        style: TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold,
-                                                ),
-                                      ),
-                                      const SizedBox(width: 10),
-                                      Wrap(
-                                        spacing: 10,
-                                        runSpacing: 10,
-                                        children: [
-                                          Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              const SizedBox(height: 50),
-                                              Checkbox(
-                                                value: _isAllergicToAnesthetic,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    _isAllergicToAnesthetic = value!;
-                                                  });
-                                                },
-                                              ),
-                                              const Text("Local Anesthetic (ex. Lidocaine)"),
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              const SizedBox(height: 50),
-                                              Checkbox(
-                                                value: _isAllergicToPenicillin,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    _isAllergicToPenicillin = value!;
-                                                  });
-                                                },
-                                              ),
-                                              const Text("Penicillin, Antibiotics"),
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              const SizedBox(height: 50),
-                                              Checkbox(
-                                                value: _isAllergicToSulfa,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    _isAllergicToSulfa = value!;
-                                                  });
-                                                },
-                                              ),
-                                              const Text("Sulfa drugs"),
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              const SizedBox(height: 50),
-                                              Checkbox(
-                                                value: _isAllergicToAspirin,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    _isAllergicToAspirin = value!;
-                                                  });
-                                                },
-                                              ),
-                                              const Text("Aspirin"),
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              const SizedBox(height: 50),
-                                              Checkbox(
-                                                value: _isAllergicToLatex,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    _isAllergicToLatex = value!;
-                                                  });
-                                                },
-                                              ),
-                                              const Text("Latex"),
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Checkbox(
-                                                value: _isAllergicToOthers,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    _isAllergicToOthers = value!;
-                                                  });
-                                                },
-                                              ),
-                                              const Text("Others: "),
-                                              const SizedBox(width: 5),
-                                              // Text field for specifying other allergies
-                                              SizedBox(
-                                                width: 150, // Adjust width as needed
-                                                child: TextFormField(
-                                                  enabled: _isAllergicToOthers,
-                                                  decoration: const InputDecoration(
-                                                    hintText: "Specify other allergies",
-                                                    border: UnderlineInputBorder(),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  
-                                  //const SizedBox(height: 10),
-
-                                  //Question 9
-                                  Row(
-                                    children: [
-                                      const Text(
-                                        "9. Blood Type ",
+                                        "8. Blood Type ",
                                         style: TextStyle(
                                             fontSize: 15,
                                             fontWeight: FontWeight.bold,
@@ -1532,9 +1440,15 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                             border: UnderlineInputBorder(),
                                             contentPadding: EdgeInsets.symmetric(horizontal: 5),
                                           ),
+                                          validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return 'This item is required';
+                                          }
+                                          return null;
+                                        },
                                         ),
                                       ),
-                                      const SizedBox(width: 30),
+                                      const SizedBox(width: 10),
                                       const Text(
                                         "Blood Pressure ",
                                         style: TextStyle(
@@ -1550,8 +1464,34 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                             border: UnderlineInputBorder(),
                                             contentPadding: EdgeInsets.symmetric(horizontal: 5),
                                           ),
+                                          validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return 'This item is required';
+                                          }
+                                          return null;
+                                        },
+                                        ),
+                                      ),                         
+                                      const SizedBox(width: 10),
+                                      const Text(
+                                        "Bleeding Time ",
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
+                                            ),
+                                        ),
+                                      SizedBox(
+                                        width: 200, // Adjust width as needed
+                                        child: TextFormField(
+                                          decoration: const InputDecoration(
+                                            hintText: "",
+                                            border: UnderlineInputBorder(),
+                                            contentPadding: EdgeInsets.symmetric(horizontal: 5),
+                                          ),
                                         ),
                                       ),
+                                        
+                                      
                                     ],
                                   ),
                                   const SizedBox(height: 20),
@@ -1671,27 +1611,27 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                             ),
                                             
 
-                                            Row(
-                                              children: [
-                                                const Text(
-                                                  "Bleeding Time ",
-                                                  style: TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight: FontWeight.bold,
-                                                      ),
-                                                  ),
-                                                SizedBox(
-                                                  width: 200, // Adjust width as needed
-                                                  child: TextFormField(
-                                                    decoration: const InputDecoration(
-                                                      hintText: "",
-                                                      border: UnderlineInputBorder(),
-                                                      contentPadding: EdgeInsets.symmetric(horizontal: 5),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                                            // Row(
+                                            //   children: [
+                                            //     const Text(
+                                            //       "Bleeding Time ",
+                                            //       style: TextStyle(
+                                            //           fontSize: 15,
+                                            //           fontWeight: FontWeight.bold,
+                                            //           ),
+                                            //       ),
+                                            //     SizedBox(
+                                            //       width: 200, // Adjust width as needed
+                                            //       child: TextFormField(
+                                            //         decoration: const InputDecoration(
+                                            //           hintText: "",
+                                            //           border: UnderlineInputBorder(),
+                                            //           contentPadding: EdgeInsets.symmetric(horizontal: 5),
+                                            //         ),
+                                            //       ),
+                                            //     ),
+                                            //   ],
+                                            // ),
 
                                             const SizedBox(height: 20),
                                         ],
@@ -1699,737 +1639,22 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                     ),
                                   ),
 
-
-                                  //Question 10
-                                  const Text(
-                                        "10. Do you have or have you had any of the following? Check which apply",
-                                        style: TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold,
-                                                ),
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Wrap(
-                                        spacing: 10,
-                                        runSpacing: 10,
-                                        children: [
-                                          Column(
-                                            children: [
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  children: [
-                                                    const SizedBox(height: 10),
-                                                    Checkbox(
-                                                      value: _isHighBlood,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _isHighBlood = value!;
-                                                        });
-                                                      },
-                                                    ),
-                                                    const Text("High Blood Pressure"),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: [
-                                                    const SizedBox(height: 10),
-                                                    Checkbox(
-                                                      value: _isLowBlood,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _isLowBlood = value!;
-                                                        });
-                                                      },
-                                                    ),
-                                                    const Text("Low Blood Pressure"),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  children: [
-                                                    const SizedBox(height: 10),
-                                                    Checkbox(
-                                                      value: _isEpilepsy,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _isEpilepsy = value!;
-                                                        });
-                                                      },
-                                                    ),
-                                                    const Text("Epilepsy / Convulsions"),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: [
-                                                    const SizedBox(height: 10),
-                                                    Checkbox(
-                                                      value: _isAIDSorHIV,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _isAIDSorHIV = value!;
-                                                        });
-                                                      },
-                                                    ),
-                                                    const Text("AIDS or HIV Infection"),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                    mainAxisSize: MainAxisSize.min,
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    children: [
-                                                      const SizedBox(height: 10),
-                                                      Checkbox(
-                                                        value: _isSTD,
-                                                        onChanged: (value) {
-                                                          setState(() {
-                                                            _isSTD = value!;
-                                                          });
-                                                        },
-                                                      ),
-                                                      const Text("Sexual Transmitted Disease"),
-                                                    ],
-                                                  ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: [
-                                                    const SizedBox(height: 10),
-                                                    Checkbox(
-                                                      value: _isUlcers,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _isUlcers = value!;
-                                                        });
-                                                      },
-                                                    ),
-                                                    const Text("Stomach Troubles / Ulcers"),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: [
-                                                    const SizedBox(height: 10),
-                                                    Checkbox(
-                                                      value: _isFaintingSeizure,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _isFaintingSeizure = value!;
-                                                        });
-                                                      },
-                                                    ),
-                                                    const Text("Fainting Seizure"),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                    mainAxisSize: MainAxisSize.min,
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    children: [
-                                                      const SizedBox(height: 10),
-                                                      Checkbox(
-                                                        value: _isRapidWeigthLoss,
-                                                        onChanged: (value) {
-                                                          setState(() {
-                                                            _isRapidWeigthLoss = value!;
-                                                          });
-                                                        },
-                                                      ),
-                                                      const Text("Rapid weigth Loss"),
-                                                    ],
-                                                  ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: [
-                                                    const SizedBox(height: 10),
-                                                    Checkbox(
-                                                      value: _isRadiationTherapy,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _isRadiationTherapy = value!;
-                                                        });
-                                                      },
-                                                    ),
-                                                    const Text("Radiation Therapy"),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-
-
-                                          Column(
-                                            children: [
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  children: [
-                                                    const SizedBox(height: 10),
-                                                    Checkbox(
-                                                      value: _isJointReplacement,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _isJointReplacement = value!;
-                                                        });
-                                                      },
-                                                    ),
-                                                    const Text("Joint Replacement / Implants"),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: [
-                                                    const SizedBox(height: 10),
-                                                    Checkbox(
-                                                      value: _isHeartSurgery,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _isHeartSurgery = value!;
-                                                        });
-                                                      },
-                                                    ),
-                                                    const Text("Heart Surgery"),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  children: [
-                                                    const SizedBox(height: 10),
-                                                    Checkbox(
-                                                      value: _isHeartAttack,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _isHeartAttack = value!;
-                                                        });
-                                                      },
-                                                    ),
-                                                    const Text("Heart Attack"),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: [
-                                                    const SizedBox(height: 10),
-                                                    Checkbox(
-                                                      value: _isThyroidProblem,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _isThyroidProblem = value!;
-                                                        });
-                                                      },
-                                                    ),
-                                                    const Text("Thyroid Problem"),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                    mainAxisSize: MainAxisSize.min,
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    children: [
-                                                      const SizedBox(height: 10),
-                                                      Checkbox(
-                                                        value: _isHeartDisease,
-                                                        onChanged: (value) {
-                                                          setState(() {
-                                                            _isHeartDisease = value!;
-                                                          });
-                                                        },
-                                                      ),
-                                                      const Text("Heart Disease"),
-                                                    ],
-                                                  ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: [
-                                                    const SizedBox(height: 10),
-                                                    Checkbox(
-                                                      value: _isHeartMurmur,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _isHeartMurmur = value!;
-                                                        });
-                                                      },
-                                                    ),
-                                                    const Text("Heart Murmur"),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: [
-                                                    const SizedBox(height: 10),
-                                                    Checkbox(
-                                                      value: _isLiverDisease,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _isLiverDisease = value!;
-                                                        });
-                                                      },
-                                                    ),
-                                                    const Text("Hepatitis / Liver Disease"),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                    mainAxisSize: MainAxisSize.min,
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    children: [
-                                                      const SizedBox(height: 10),
-                                                      Checkbox(
-                                                        value: _isRheumaticFever,
-                                                        onChanged: (value) {
-                                                          setState(() {
-                                                            _isRheumaticFever = value!;
-                                                          });
-                                                        },
-                                                      ),
-                                                      const Text("Rheumatic Fever"),
-                                                    ],
-                                                  ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: [
-                                                    const SizedBox(height: 10),
-                                                    Checkbox(
-                                                      value: _isHayFever,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _isHayFever = value!;
-                                                        });
-                                                      },
-                                                    ),
-                                                    const Text("Hay Fever / Allergies"),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-
-
-                                          Column(
-                                            children: [
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  children: [
-                                                    const SizedBox(height: 10),
-                                                    Checkbox(
-                                                      value: _isRespiratoryProblems,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _isRespiratoryProblems = value!;
-                                                        });
-                                                      },
-                                                    ),
-                                                    const Text("Respiratory Problems"),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: [
-                                                    const SizedBox(height: 10),
-                                                    Checkbox(
-                                                      value: _isJaundice,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _isJaundice = value!;
-                                                        });
-                                                      },
-                                                    ),
-                                                    const Text("Hepatitis / Jaundice"),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  children: [
-                                                    const SizedBox(height: 10),
-                                                    Checkbox(
-                                                      value: _isTuberculosis,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _isTuberculosis = value!;
-                                                        });
-                                                      },
-                                                    ),
-                                                    const Text("Tuberculosis"),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: [
-                                                    const SizedBox(height: 10),
-                                                    Checkbox(
-                                                      value: _isSwollenAnkles,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _isSwollenAnkles = value!;
-                                                        });
-                                                      },
-                                                    ),
-                                                    const Text("Swollen Ankles"),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                    mainAxisSize: MainAxisSize.min,
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    children: [
-                                                      const SizedBox(height: 10),
-                                                      Checkbox(
-                                                        value: _isKidneyDisease,
-                                                        onChanged: (value) {
-                                                          setState(() {
-                                                            _isKidneyDisease = value!;
-                                                          });
-                                                        },
-                                                      ),
-                                                      const Text("Kidney Disease"),
-                                                    ],
-                                                  ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: [
-                                                    const SizedBox(height: 10),
-                                                    Checkbox(
-                                                      value: _isDiabetes,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _isDiabetes = value!;
-                                                        });
-                                                      },
-                                                    ),
-                                                    const Text("Diabetes"),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: [
-                                                    const SizedBox(height: 10),
-                                                    Checkbox(
-                                                      value: _isChestPain,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _isChestPain = value!;
-                                                        });
-                                                      },
-                                                    ),
-                                                    const Text("Chest Pain"),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                    mainAxisSize: MainAxisSize.min,
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    children: [
-                                                      const SizedBox(height: 10),
-                                                      Checkbox(
-                                                        value: _isStroke,
-                                                        onChanged: (value) {
-                                                          setState(() {
-                                                            _isStroke = value!;
-                                                          });
-                                                        },
-                                                      ),
-                                                      const Text("Stroke"),
-                                                    ],
-                                                  ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: [
-                                                    const SizedBox(height: 10),
-                                                    Checkbox(
-                                                      value: _isCancer,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _isCancer = value!;
-                                                        });
-                                                      },
-                                                    ),
-                                                    const Text("Cancer / Tumors"),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-
-                                          
-                                          Column(
-                                            children: [
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  children: [
-                                                    const SizedBox(height: 10),
-                                                    Checkbox(
-                                                      value: _isAnemia,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _isAnemia = value!;
-                                                        });
-                                                      },
-                                                    ),
-                                                    const Text("Anemia"),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: [
-                                                    const SizedBox(height: 10),
-                                                    Checkbox(
-                                                      value: _isAngina,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _isAngina = value!;
-                                                        });
-                                                      },
-                                                    ),
-                                                    const Text("Angina"),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  children: [
-                                                    const SizedBox(height: 10),
-                                                    Checkbox(
-                                                      value: _isAsthma,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _isAsthma = value!;
-                                                        });
-                                                      },
-                                                    ),
-                                                    const Text("Asthma"),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: [
-                                                    const SizedBox(height: 10),
-                                                    Checkbox(
-                                                      value: _isEmphysema,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _isEmphysema = value!;
-                                                        });
-                                                      },
-                                                    ),
-                                                    const Text("Emphysema"),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                    mainAxisSize: MainAxisSize.min,
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    children: [
-                                                      const SizedBox(height: 10),
-                                                      Checkbox(
-                                                        value: _isBleedingProblem,
-                                                        onChanged: (value) {
-                                                          setState(() {
-                                                            _isBleedingProblem = value!;
-                                                          });
-                                                        },
-                                                      ),
-                                                      const Text("Bleeding Problems"),
-                                                    ],
-                                                  ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: [
-                                                    const SizedBox(height: 10),
-                                                    Checkbox(
-                                                      value: _isBloodDisease,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _isBloodDisease = value!;
-                                                        });
-                                                      },
-                                                    ),
-                                                    const Text("Blood Diseases"),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: [
-                                                    const SizedBox(height: 10),
-                                                    Checkbox(
-                                                      value: _isHeadInjuries,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _isHeadInjuries = value!;
-                                                        });
-                                                      },
-                                                    ),
-                                                    const Text("Head Injuries"),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                    mainAxisSize: MainAxisSize.min,
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    children: [
-                                                      const SizedBox(height: 10),
-                                                      Checkbox(
-                                                        value: _isArthritis,
-                                                        onChanged: (value) {
-                                                          setState(() {
-                                                            _isArthritis = value!;
-                                                          });
-                                                        },
-                                                      ),
-                                                      const Text("Arthritis / Rheumatism"),
-                                                    ],
-                                                  ),
-                                              ),
-                                              SizedBox(
-                                                width: 300,
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: [
-                                                    Checkbox(
-                                                      value: _othersDisease,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _othersDisease = value!;
-                                                        });
-                                                      },
-                                                    ),
-                                                    const Text("Others: "),
-                                                    const SizedBox(width: 5),
-                                                    // Text field for specifying other allergies
-                                                    SizedBox(
-                                                      width: 150, // Adjust width as needed
-                                                      child: TextFormField(
-                                                        enabled: _othersDisease,
-                                                        decoration: const InputDecoration(
-                                                          hintText: "Specify other disease",
-                                                          border: UnderlineInputBorder(),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-
-
                                   const SizedBox(height: 10),
                                   // Submit Button
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          if (_medicalHistoryFormKey.currentState?.validate() ?? false) {
-                                            // Submit all forms data
-                                          }
-                                        },
-                                        child: const Text("Submit All"),
-                                      ),
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          //if (isDentalHistoryEnabled)
+                                            ElevatedButton(
+                                              onPressed: () => _validateAndEnableNextSection(
+                                                _medicalHistoryFormKey,
+                                                (isValid) => setState(() => isAllergicFormEnabled = isValid),
+                                              ),
+                                              child: const Text("Next"),
+                                            ),
+                                      // Add more fields as needed for dental history
                                     ],
                                   ),
-                                  
                                 ],
                               ),
                             ),
@@ -2440,6 +1665,1015 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                     ),
                   ),
                 ),
+              
+
+                //Are you alergic to the following
+                const SizedBox(height: 10.0),
+                      Divider(
+                        height: 10,
+                        color: Colors.grey[800],
+                        thickness: 0.5,
+                      ),
+                const SizedBox(height: 10),
+                AbsorbPointer(
+                  absorbing: !isAllergicFormEnabled, // Disable if not enabled
+                  child: Opacity(
+                    opacity: isAllergicFormEnabled ? 1.0 : 0.5, // Dim if disabled
+                    child: Column(
+                      children: [
+                        // (Allergies Form)
+                        Form(
+                          key: _allergicFormKey,
+                            child: Column(
+                              children: [
+                                // (ALlergies fields)
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.2),
+                                        spreadRadius: 2,
+                                        blurRadius: 5,
+                                        offset: const Offset(0, 3),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Padding(
+                                      padding: const EdgeInsets.all(20.0),
+                                      child: Column(
+                                        children: [
+                                          const Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "Allergies",
+                                                style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Divider(
+                                            height: 10,
+                                            color: Colors.grey[400],
+                                            thickness: 0.5,
+                                          ),
+                                          const SizedBox(height: 10),
+                                          // Allergies Question
+                                          Row(
+                                          children: [
+                                            const Text(
+                                              "Are you allergic to any of the following:",
+                                              style: TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight: FontWeight.bold,
+                                                      ),
+                                            ),
+                                            const SizedBox(width: 10),
+                                            Wrap(
+                                              spacing: 10,
+                                              runSpacing: 10,
+                                              children: [
+                                                Row(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    const SizedBox(height: 50),
+                                                    Checkbox(
+                                                      value: _isAllergicToAnesthetic,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          _isAllergicToAnesthetic = value!;
+                                                        });
+                                                      },
+                                                    ),
+                                                    const Text("Local Anesthetic (ex. Lidocaine)"),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    const SizedBox(height: 50),
+                                                    Checkbox(
+                                                      value: _isAllergicToPenicillin,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          _isAllergicToPenicillin = value!;
+                                                        });
+                                                      },
+                                                    ),
+                                                    const Text("Penicillin, Antibiotics"),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    const SizedBox(height: 50),
+                                                    Checkbox(
+                                                      value: _isAllergicToSulfa,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          _isAllergicToSulfa = value!;
+                                                        });
+                                                      },
+                                                    ),
+                                                    const Text("Sulfa drugs"),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    const SizedBox(height: 50),
+                                                    Checkbox(
+                                                      value: _isAllergicToAspirin,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          _isAllergicToAspirin = value!;
+                                                        });
+                                                      },
+                                                    ),
+                                                    const Text("Aspirin"),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    const SizedBox(height: 50),
+                                                    Checkbox(
+                                                      value: _isAllergicToLatex,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          _isAllergicToLatex = value!;
+                                                        });
+                                                      },
+                                                    ),
+                                                    const Text("Latex"),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    Checkbox(
+                                                      value: _isAllergicToOthers,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          _isAllergicToOthers = value!;
+                                                        });
+                                                      },
+                                                    ),
+                                                    const Text("Others: "),
+                                                    const SizedBox(width: 5),
+                                                    // Text field for specifying other allergies
+                                                    SizedBox(
+                                                      width: 150, // Adjust width as needed
+                                                      child: TextFormField(
+                                                        enabled: _isAllergicToOthers,
+                                                        decoration: const InputDecoration(
+                                                          hintText: "Specify other allergies",
+                                                          border: UnderlineInputBorder(),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      
+                                          //Submit Button
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                              children: [
+                                                //if (isMedicalHistoryEnabled)
+                                                  ElevatedButton(
+                                                    onPressed: () => _validateAndEnableNextSection(
+                                                      _allergicFormKey,
+                                                      (isValid) => setState(() => isDiseasesEnabled = isValid),
+                                                    ),
+                                                    child: const Text("Next"),
+                                                  ),
+                                            // Add more fields as needed for dental history
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                
+                // Diseases Form
+                const SizedBox(height: 10.0),
+                      Divider(
+                        height: 10,
+                        color: Colors.grey[800],
+                        thickness: 0.5,
+                      ),
+                const SizedBox(height: 10),
+                AbsorbPointer(
+                  absorbing: !isDiseasesEnabled, // Disable if not enabled
+                  child: Opacity(
+                    opacity: isDiseasesEnabled ? 1.0 : 0.5, // Dim if disabled
+                    child: Column(
+                      children: [
+                        // (Diseases Form)
+                        Form(
+                          key: _diseasesFormKey,
+                            child: Column(
+                              children: [
+                                // (Diseases fields)
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.2),
+                                        spreadRadius: 2,
+                                        blurRadius: 5,
+                                        offset: const Offset(0, 3),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Column(
+                                      children: [
+                                        const Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Diseases",
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Divider(
+                                          height: 10,
+                                          color: Colors.grey[400],
+                                          thickness: 0.5,
+                                        ),
+                                        const SizedBox(height: 10),
+
+                                        //Diseases
+                                        const Row(
+                                          children: [
+                                            Text(
+                                                  "Do you have or have you had any of the following? Check which apply",
+                                                  style: TextStyle(
+                                                          fontSize: 15,
+                                                          fontWeight: FontWeight.bold,
+                                                          ),
+                                                ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 10),
+                                          Wrap(
+                                            spacing: 10,
+                                            runSpacing: 10,
+                                            children: [
+                                              Column(
+                                                children: [
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                      children: [
+                                                        const SizedBox(height: 10),
+                                                        Checkbox(
+                                                          value: _isHighBlood,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              _isHighBlood = value!;
+                                                            });
+                                                          },
+                                                        ),
+                                                        const Text("High Blood Pressure"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        const SizedBox(height: 10),
+                                                        Checkbox(
+                                                          value: _isLowBlood,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              _isLowBlood = value!;
+                                                            });
+                                                          },
+                                                        ),
+                                                        const Text("Low Blood Pressure"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                      children: [
+                                                        const SizedBox(height: 10),
+                                                        Checkbox(
+                                                          value: _isEpilepsy,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              _isEpilepsy = value!;
+                                                            });
+                                                          },
+                                                        ),
+                                                        const Text("Epilepsy / Convulsions"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        const SizedBox(height: 10),
+                                                        Checkbox(
+                                                          value: _isAIDSorHIV,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              _isAIDSorHIV = value!;
+                                                            });
+                                                          },
+                                                        ),
+                                                        const Text("AIDS or HIV Infection"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                        mainAxisSize: MainAxisSize.min,
+                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                        children: [
+                                                          const SizedBox(height: 10),
+                                                          Checkbox(
+                                                            value: _isSTD,
+                                                            onChanged: (value) {
+                                                              setState(() {
+                                                                _isSTD = value!;
+                                                              });
+                                                            },
+                                                          ),
+                                                          const Text("Sexual Transmitted Disease"),
+                                                        ],
+                                                      ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        const SizedBox(height: 10),
+                                                        Checkbox(
+                                                          value: _isUlcers,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              _isUlcers = value!;
+                                                            });
+                                                          },
+                                                        ),
+                                                        const Text("Stomach Troubles / Ulcers"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        const SizedBox(height: 10),
+                                                        Checkbox(
+                                                          value: _isFaintingSeizure,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              _isFaintingSeizure = value!;
+                                                            });
+                                                          },
+                                                        ),
+                                                        const Text("Fainting Seizure"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                        mainAxisSize: MainAxisSize.min,
+                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                        children: [
+                                                          const SizedBox(height: 10),
+                                                          Checkbox(
+                                                            value: _isRapidWeigthLoss,
+                                                            onChanged: (value) {
+                                                              setState(() {
+                                                                _isRapidWeigthLoss = value!;
+                                                              });
+                                                            },
+                                                          ),
+                                                          const Text("Rapid weigth Loss"),
+                                                        ],
+                                                      ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        const SizedBox(height: 10),
+                                                        Checkbox(
+                                                          value: _isRadiationTherapy,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              _isRadiationTherapy = value!;
+                                                            });
+                                                          },
+                                                        ),
+                                                        const Text("Radiation Therapy"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+
+
+                                              Column(
+                                                children: [
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                      children: [
+                                                        const SizedBox(height: 10),
+                                                        Checkbox(
+                                                          value: _isJointReplacement,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              _isJointReplacement = value!;
+                                                            });
+                                                          },
+                                                        ),
+                                                        const Text("Joint Replacement / Implants"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        const SizedBox(height: 10),
+                                                        Checkbox(
+                                                          value: _isHeartSurgery,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              _isHeartSurgery = value!;
+                                                            });
+                                                          },
+                                                        ),
+                                                        const Text("Heart Surgery"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                      children: [
+                                                        const SizedBox(height: 10),
+                                                        Checkbox(
+                                                          value: _isHeartAttack,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              _isHeartAttack = value!;
+                                                            });
+                                                          },
+                                                        ),
+                                                        const Text("Heart Attack"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        const SizedBox(height: 10),
+                                                        Checkbox(
+                                                          value: _isThyroidProblem,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              _isThyroidProblem = value!;
+                                                            });
+                                                          },
+                                                        ),
+                                                        const Text("Thyroid Problem"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                        mainAxisSize: MainAxisSize.min,
+                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                        children: [
+                                                          const SizedBox(height: 10),
+                                                          Checkbox(
+                                                            value: _isHeartDisease,
+                                                            onChanged: (value) {
+                                                              setState(() {
+                                                                _isHeartDisease = value!;
+                                                              });
+                                                            },
+                                                          ),
+                                                          const Text("Heart Disease"),
+                                                        ],
+                                                      ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        const SizedBox(height: 10),
+                                                        Checkbox(
+                                                          value: _isHeartMurmur,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              _isHeartMurmur = value!;
+                                                            });
+                                                          },
+                                                        ),
+                                                        const Text("Heart Murmur"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        const SizedBox(height: 10),
+                                                        Checkbox(
+                                                          value: _isLiverDisease,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              _isLiverDisease = value!;
+                                                            });
+                                                          },
+                                                        ),
+                                                        const Text("Hepatitis / Liver Disease"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                        mainAxisSize: MainAxisSize.min,
+                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                        children: [
+                                                          const SizedBox(height: 10),
+                                                          Checkbox(
+                                                            value: _isRheumaticFever,
+                                                            onChanged: (value) {
+                                                              setState(() {
+                                                                _isRheumaticFever = value!;
+                                                              });
+                                                            },
+                                                          ),
+                                                          const Text("Rheumatic Fever"),
+                                                        ],
+                                                      ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        const SizedBox(height: 10),
+                                                        Checkbox(
+                                                          value: _isHayFever,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              _isHayFever = value!;
+                                                            });
+                                                          },
+                                                        ),
+                                                        const Text("Hay Fever / Allergies"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+
+
+                                              Column(
+                                                children: [
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                      children: [
+                                                        const SizedBox(height: 10),
+                                                        Checkbox(
+                                                          value: _isRespiratoryProblems,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              _isRespiratoryProblems = value!;
+                                                            });
+                                                          },
+                                                        ),
+                                                        const Text("Respiratory Problems"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        const SizedBox(height: 10),
+                                                        Checkbox(
+                                                          value: _isJaundice,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              _isJaundice = value!;
+                                                            });
+                                                          },
+                                                        ),
+                                                        const Text("Hepatitis / Jaundice"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                      children: [
+                                                        const SizedBox(height: 10),
+                                                        Checkbox(
+                                                          value: _isTuberculosis,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              _isTuberculosis = value!;
+                                                            });
+                                                          },
+                                                        ),
+                                                        const Text("Tuberculosis"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        const SizedBox(height: 10),
+                                                        Checkbox(
+                                                          value: _isSwollenAnkles,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              _isSwollenAnkles = value!;
+                                                            });
+                                                          },
+                                                        ),
+                                                        const Text("Swollen Ankles"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                        mainAxisSize: MainAxisSize.min,
+                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                        children: [
+                                                          const SizedBox(height: 10),
+                                                          Checkbox(
+                                                            value: _isKidneyDisease,
+                                                            onChanged: (value) {
+                                                              setState(() {
+                                                                _isKidneyDisease = value!;
+                                                              });
+                                                            },
+                                                          ),
+                                                          const Text("Kidney Disease"),
+                                                        ],
+                                                      ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        const SizedBox(height: 10),
+                                                        Checkbox(
+                                                          value: _isDiabetes,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              _isDiabetes = value!;
+                                                            });
+                                                          },
+                                                        ),
+                                                        const Text("Diabetes"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        const SizedBox(height: 10),
+                                                        Checkbox(
+                                                          value: _isChestPain,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              _isChestPain = value!;
+                                                            });
+                                                          },
+                                                        ),
+                                                        const Text("Chest Pain"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                        mainAxisSize: MainAxisSize.min,
+                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                        children: [
+                                                          const SizedBox(height: 10),
+                                                          Checkbox(
+                                                            value: _isStroke,
+                                                            onChanged: (value) {
+                                                              setState(() {
+                                                                _isStroke = value!;
+                                                              });
+                                                            },
+                                                          ),
+                                                          const Text("Stroke"),
+                                                        ],
+                                                      ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        const SizedBox(height: 10),
+                                                        Checkbox(
+                                                          value: _isCancer,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              _isCancer = value!;
+                                                            });
+                                                          },
+                                                        ),
+                                                        const Text("Cancer / Tumors"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+
+                                              
+                                              Column(
+                                                children: [
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                      children: [
+                                                        const SizedBox(height: 10),
+                                                        Checkbox(
+                                                          value: _isAnemia,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              _isAnemia = value!;
+                                                            });
+                                                          },
+                                                        ),
+                                                        const Text("Anemia"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        const SizedBox(height: 10),
+                                                        Checkbox(
+                                                          value: _isAngina,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              _isAngina = value!;
+                                                            });
+                                                          },
+                                                        ),
+                                                        const Text("Angina"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                      children: [
+                                                        const SizedBox(height: 10),
+                                                        Checkbox(
+                                                          value: _isAsthma,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              _isAsthma = value!;
+                                                            });
+                                                          },
+                                                        ),
+                                                        const Text("Asthma"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        const SizedBox(height: 10),
+                                                        Checkbox(
+                                                          value: _isEmphysema,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              _isEmphysema = value!;
+                                                            });
+                                                          },
+                                                        ),
+                                                        const Text("Emphysema"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                        mainAxisSize: MainAxisSize.min,
+                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                        children: [
+                                                          const SizedBox(height: 10),
+                                                          Checkbox(
+                                                            value: _isBleedingProblem,
+                                                            onChanged: (value) {
+                                                              setState(() {
+                                                                _isBleedingProblem = value!;
+                                                              });
+                                                            },
+                                                          ),
+                                                          const Text("Bleeding Problems"),
+                                                        ],
+                                                      ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        const SizedBox(height: 10),
+                                                        Checkbox(
+                                                          value: _isBloodDisease,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              _isBloodDisease = value!;
+                                                            });
+                                                          },
+                                                        ),
+                                                        const Text("Blood Diseases"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        const SizedBox(height: 10),
+                                                        Checkbox(
+                                                          value: _isHeadInjuries,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              _isHeadInjuries = value!;
+                                                            });
+                                                          },
+                                                        ),
+                                                        const Text("Head Injuries"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                        mainAxisSize: MainAxisSize.min,
+                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                        children: [
+                                                          const SizedBox(height: 10),
+                                                          Checkbox(
+                                                            value: _isArthritis,
+                                                            onChanged: (value) {
+                                                              setState(() {
+                                                                _isArthritis = value!;
+                                                              });
+                                                            },
+                                                          ),
+                                                          const Text("Arthritis / Rheumatism"),
+                                                        ],
+                                                      ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        Checkbox(
+                                                          value: _othersDisease,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              _othersDisease = value!;
+                                                            });
+                                                          },
+                                                        ),
+                                                        const Text("Others: "),
+                                                        const SizedBox(width: 5),
+                                                        // Text field for specifying other allergies
+                                                        SizedBox(
+                                                          width: 150, // Adjust width as needed
+                                                          child: TextFormField(
+                                                            enabled: _othersDisease,
+                                                            decoration: const InputDecoration(
+                                                              hintText: "Specify other disease",
+                                                              border: UnderlineInputBorder(),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+
+                                        //Submit Button
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                            children: [
+                                                ElevatedButton(
+                                                  onPressed: () => _validateAndEnableNextSection(
+                                                    _diseasesFormKey,
+                                                    (isValid) => setState(() => isMedicalHistoryEnabled = isValid),
+                                                  ),
+                                                  child: const Text("Sumbit All"),
+                                                ),
+                                          // Add more fields as needed for dental history
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                
+                
+
+
               ],
             ),
           ),
