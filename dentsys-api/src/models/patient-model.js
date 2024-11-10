@@ -36,7 +36,7 @@ export default class Patient {
             }
         } catch (error) {
             console.log('Error creating patient from model', error);
-            return { error: error.message };
+            throw error;
         }
     }
 
@@ -48,32 +48,23 @@ export default class Patient {
             return patients;
         } catch (error) {
             console.log('Error getting patients from model', error);
-            return { error: error.message };
+            throw error;
         }
     }
 
-    static async getOnePatient(id, { connection }) {
-        // const queryStr = 'SELECT * FROM patients WHERE patient_id = ?';
-        // try {
-        //     const [patient] = await pool.query(queryStr, [id]);
-        //     return patient;
-        // } catch (error) {
-        //     console.log('Error getting patient from model', error);
-        //     throw new Error ('Error getting patient', error);
-        // }
-
+    static async getOnePatient(id, { transaction }) {
         const queryStr = 'SELECT * FROM patients WHERE patient_id = ?';
         try {
-            const [patient] = await connection.query(queryStr, [id]);
-            if (!patient) {
-                throw new Error('Patient not found');
+            const [patient] = await transaction.query(queryStr, [id]);
+            if (patient.length === 0) {
+                throw new Error('Patient data not found');
             } else {
                 return patient;
             }
             
         } catch (error) {
             console.log('Error getting patient from model', error);
-            return { error: error.message };
+            throw error;
         }
     }
 
@@ -93,8 +84,8 @@ export default class Patient {
         return patient;
     }
 
-    static async updatePatient(data) {
-        const { firstName, lastName, middleName, birthDate, age, sex, nickname, nationality, religion, occupation, reason, totalBalance } = data;
+    static async updatePatient(data, { transaction }) {
+        const { firstName, lastName, middleName, birthDate, age, sex, nickname, nationality, religion, occupation, reason, totalBalance, patient_id } = data;
 
         const queryStr = `
         UPDATE patients
@@ -113,26 +104,71 @@ export default class Patient {
             patient_totalBal = ?
         WHERE patient_id = ?`;
 
-    const values = [firstName, lastName, middleName, birthDate, age, sex, nickname, nationality, religion, occupation, reason, totalBalance, patientId];
+    const values = [firstName, lastName, middleName, birthDate, age, sex, nickname, nationality, religion, occupation, reason, totalBalance, patient_id];
         // execute
         try {
-            const [result] = await pool.query(queryStr, values);
-            const updPatient = result.insertId;
-            if (updPatient) {
-                console.log('Patient updated successfully from model', updPatient);
-                return updPatient;
-            } else {
-                throw new Error('Error updating patient');
+            const [result] = await transaction.query(queryStr, values);
+            if (result.affectedRows === 0) {
+                console.log('no updates in patient, does not exist');
+                throw new Error('Patient does not exist, ');
+            }
+
+            console.log('Patient updated successfully from model');
+            return {
+                affectedRows: result.affectedRows,
+                message: 'Patient updated successfully',
+                patient_id: patient_id
             }
         } catch (error) {
             console.log('Error updating patient from model', error);
-            throw new Error ('Error updating patient', error);
+            throw error;
         }
     }
 
-    static async deletePatient(id) {
-        const queryStr = 'DELETE FROM patients WHERE patient_id = ?';
-        const [result] = await pool.query(queryStr, id);
-        return result;
+    // static async deletePatient(id, { connection }) {
+    //     try {
+
+    //         const queryStr = 'DELETE FROM patients WHERE patient_id = ?';
+    //         const [result] = await connection.query(queryStr, id);
+
+    //         if (result.affectedRows === 0) {
+    //             throw new Error('Patient not deleted');
+    //         } else {
+    //             return {
+    //                 message: 'Patient deleted successfully',
+    //                 affectedRows: result.affectedRows,
+    //                 patient_id: id
+    //             }
+    //         }
+    //     } catch (error) {
+    //         console.log('Error deleting patient from model', error);
+    //         throw error;
+    //     }
+    // }
+
+    static async deletePatient(id, { transaction }) {
+        try {
+            const patient_exists = await this.getOnePatient(id, { transaction: transaction });
+            if (patient_exists.length === 0) {
+                throw new Error('Patient not found');
+            }
+
+            const queryStr = 'DELETE FROM patients WHERE patient_id = ?';
+            const [delResult] = await transaction.query(queryStr, id);
+
+            if (delResult.affectedRows === 0) {
+                throw new Error('Patient not deleted');
+            } else {
+                return {
+                    message: 'Patient deleted successfully',
+                    affectedRows: delResult.affectedRows,
+                    patient_id: id
+                }
+            }
+
+        } catch (error) {
+            console.log('Error deleting patient from model', error);
+            throw error;
+        }
     }
 }

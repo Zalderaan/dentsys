@@ -7,59 +7,77 @@ export default class patientCondition {
         this.patientCondition_status = patientCondition_status;
     }
 
-    static async addPatientConditions(data, { transaction }) {
+    static async upsertPatientConditions(data, { transaction }) {
         const {patient_id, conditions} = data;
-
-        // setup transaction
-        // const connection = await pool.getConnection();
-
         const insertedConditions = [];
         try {
-            // await connection.beginTransaction();
+            // get current conditions of patient
+            const currentConditions = await this.getPatientConditions(patient_id, { transaction: transaction }) || []; // NOTE: '|| []' is just a fallback to prevent 'undefined' error
+            console.log('currentConditions:', currentConditions);
+
+            // create a map of existing conditions
+            const currentConditionsMap = new Map(currentConditions.map(condition => [condition.condition_id, condition]));
+
             for (const condition of conditions) {
                 const {condition_id, patientCondition_status} = condition;
-    
-                const queryStr = 'INSERT INTO patient_conditions (patient_id, condition_id, patientCondition_status) VALUES (?, ?, ?)';
-                const values = [patient_id, condition_id, patientCondition_status];
-    
-                const [condition_result] = await transaction.query(queryStr, values);
-                if (!condition_result) {
-                    throw new Error('Error creating patient condition');
-                }
-
-                insertedConditions.push(
-                    {
-                        patient_id: patient_id,
-                        condition_id: condition_id,
-                        patientCondition_status: patientCondition_status
-                    }
-                );
+                
+                if (currentConditionsMap.has(condition_id)) {
+                    const queryStr = `
+                        UPDATE patient_conditions
+                        SET
+                            patientCondition_status = ?
+                        WHERE
+                            patient_id = ? AND condition_id = ?`;
+                    const values = [patientCondition_status, patient_id, condition_id];
+                    const [condition_result] = await transaction.query(queryStr, values);
+                    insertedConditions.push(
+                        {
+                            patient_id: patient_id,
+                            condition_id: condition_id,
+                            patientCondition_status: patientCondition_status,
+                            status: 'updated'
+                        }
+                    );
+                } else {
+                    const queryStr = 'INSERT INTO patient_conditions (patient_id, condition_id, patientCondition_status) VALUES (?, ?, ?)';
+                    const values = [patient_id, condition_id, patientCondition_status];    
+                    const [condition_result] = await transaction.query(queryStr, values);
+                    insertedConditions.push(
+                        {
+                            patient_id: patient_id,
+                            condition_id: condition_id,
+                            patientCondition_status: patientCondition_status,
+                            status: 'inserted'
+                        }
+                    );
+                }                
             }
             // await connection.commit();
             if (insertedConditions.length === 0) {
-                throw new Error('Error creating patient condition');
-            } else {
-                console.log('Condition added successfully');
-                return insertedConditions;
-            } 
+                console.log('No conditions were added (either patient has no conditions or error');
+            } else if (insertedConditions.length >= 1) {
+                console.log('Patient conditions added successfully', insertedConditions);
+            }
+            return insertedConditions;
         } catch (error) {
             // await connection.rollback();
             console.log('Error creating patient condition from model', error);
-            throw new Error ('Error creating patient condition', error);
+            throw error
         } finally {
             // connection.release();
         }
     }
 
-    static async getPatientConditions(id, { connection }) {
+    static async getPatientConditions(patient_id, { transaction }) {
         const queryStr = 'SELECT * FROM patient_conditions WHERE patient_id = ?';
 
         try {
-            const [conditions_result] = await connection.query(queryStr, [id]); // a patient can have 0 to many medical conditions
-            return conditions_result
+            const [conditions_result] = await transaction.query(queryStr, [patient_id]); // a patient can have 0 to many medical conditions
+            console.log('conditions_result:', conditions_result);
+            return conditions_result || [];
         } catch (error) {
             console.log('Error getting patient conditions from model', error);
-            return { message: 'patient conditions model: ', error: error.message };    
+            throw error;  
         }
     }
 }

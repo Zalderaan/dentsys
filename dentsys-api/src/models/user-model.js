@@ -66,7 +66,7 @@ export default class User {
             if (error.code === 'ER_DUP_ENTRY') {
                 throw new Error('User already exists check 2');
             } else {
-                return { error: error.message };
+                throw error;
             }
         }
     }
@@ -108,7 +108,7 @@ export default class User {
             }
         } catch (error) {
             console.error('Error getting user', error);
-            return { error: error.message };
+            throw error;
         }
     }
 
@@ -139,7 +139,7 @@ export default class User {
             }
         } catch (error) {
             console.error('Error getting user by id', error);
-            return { error: error.message };
+            throw error;
         }
     }
     
@@ -170,7 +170,7 @@ export default class User {
             }
         } catch (error) {
             console.error('Error updating user', error);
-            return { error: error.message };
+            throw error;
         }
     }
 
@@ -201,7 +201,7 @@ export default class User {
             }
         } catch (error) {
             console.error('Error deleting user', error);
-            return { error: error.message };
+            throw error;
         }
     }
 }
