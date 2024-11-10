@@ -19,26 +19,26 @@ export default class PatientController {
 
             await connection.beginTransaction(); // start transaction
 
-            const newPatient = await Patient.createPatient(data, {transaction: connection}); // insert new patient data
+            const newPatient = await Patient.createPatient(data, { transaction: connection }); // insert new patient data
             const newPatientId = newPatient;
             console.log('newPatientId:', newPatientId);
 
             data.patient_id = newPatientId; // add patient id to contact data
-            
-            const newContact = await Contact.createContact(data, {transaction: connection}); // insert new contact data
-            const newDentalHistory = await DentalHistory.createDentalHist(data, {transaction: connection}); // insert new dental history data
-            const newInsurance = await Insurance.createInsurance(data, {transaction: connection}); // insert new insurance data
-            const newAllergies = await Allergies.createAllergies(data, {transaction: connection}); // insert new allergies data
-            const newPatientConditions = await patientCondition.addPatientConditions(data, {transaction: connection}); // insert new patient conditions data
-            const newMedicalHistory = await MedicalHistory.createMedicalHistory(data, {transaction: connection}); // insert new medical history data
+
+            const newContact = await Contact.createContact(data, { transaction: connection }); // insert new contact data
+            const newDentalHistory = await DentalHistory.createDentalHist(data, { transaction: connection }); // insert new dental history data
+            const newInsurance = await Insurance.createInsurance(data, { transaction: connection }); // insert new insurance data
+            const newAllergies = await Allergies.createAllergies(data, { transaction: connection }); // insert new allergies data
+            const newPatientConditions = await patientCondition.addPatientConditions(data, { transaction: connection }); // insert new patient conditions data
+            const newMedicalHistory = await MedicalHistory.createMedicalHistory(data, { transaction: connection }); // insert new medical history data
 
             if (!newContact || !newDentalHistory || !newInsurance || !newAllergies || !newPatientConditions || !newMedicalHistory) {
                 throw new Error('Error creating patient from controller');
             } else {
                 await connection.commit(); // commit transaction
-                return res.status(201).json({ 
-                    message: 'Patient created successfully from controller', 
-                    patient: newPatient, 
+                return res.status(201).json({
+                    message: 'Patient created successfully from controller',
+                    patient: newPatient,
                     contact: newContact,
                     dentalHistory: newDentalHistory,
                     insurance: newInsurance,
@@ -47,7 +47,7 @@ export default class PatientController {
                     patientConditions: newPatientConditions
                 });
             }
-        } 
+        }
         catch (error) {
             await connection.rollback(); // rollback transaction
             res.status(500).json({ error: error.message });
@@ -61,7 +61,7 @@ export default class PatientController {
         const data = req.body;
         try {
             const patients = await Patient.getPatients(data);
-            return res.status(200).json({ message: 'Patients retrieved successfully from controller', patients});
+            return res.status(200).json({ message: 'Patients retrieved successfully from controller', patients });
         } catch (error) {
             res.status(500).json({ error: error.message });
         }
@@ -72,17 +72,17 @@ export default class PatientController {
         const connection = await pool.getConnection();
         try {
             console.log('patient_data in controller:', patient_id);
-            if(!patient_id) {return res.status(400).json({ error: 'Patient ID is required' });}
-        
-            const patient = await Patient.getOnePatient(patient_id, { connection });
-            const contact = await Contact.getContact(patient_id, { connection });
-            const dentalHistory = await DentalHistory.getDentalHist(patient_id, { connection });
-            const insurance = await Insurance.getInsurance(patient_id, { connection });
-            const allergies = await Allergies.getAllergies(patient_id, { connection });
-            const medicalHistory = await MedicalHistory.getMedicalHistory(patient_id, { connection });
-            const patientConditions = await patientCondition.getPatientConditions(patient_id, { connection });
+            if (!patient_id) { return res.status(400).json({ error: 'Patient ID is required' }); }
 
-            if (!patient || patient.length === 0) {return res.status(404).json({ error: 'Patient not found' });}
+            const patient = await Patient.getOnePatient(patient_id, { connection }).catch(err => { throw new Error(`Error fetching patient: ${err.message}`); });
+            const contact = await Contact.getContact(patient_id, { connection }).catch(err => { throw new Error(`Error fetching contact: ${err.message}`); });
+            const dentalHistory = await DentalHistory.getDentalHist(patient_id, { connection }).catch(err => { throw new Error(`Error fetching dental history: ${err.message}`); });
+            const insurance = await Insurance.getInsurance(patient_id, { connection }).catch(err => { throw new Error(`Error fetching insurance: ${err.message}`); });
+            const allergies = await Allergies.getAllergies(patient_id, { connection }).catch(err => { throw new Error(`Error fetching allergies: ${err.message}`); });
+            const medicalHistory = await MedicalHistory.getMedicalHistory(patient_id, { connection }).catch(err => { throw new Error(`Error fetching medical history: ${err.message}`); });
+            const patientConditions = await patientCondition.getPatientConditions(patient_id, { connection }).catch(err => { throw new Error(`Error fetching patient conditions: ${err.message}`); });
+
+            if (!patient || patient.length === 0) { return res.status(404).json({ error: 'Patient not found' }); }
 
             return res.status(200).json({
                 message: 'Patient retrieved successfully from controller',
@@ -103,7 +103,7 @@ export default class PatientController {
         const data = req.body;
         try {
             const patients = await Patient.getPatientByName(data);
-            return res.status(200).json({ message: 'Patients retrieved successfully from controller', patients});
+            return res.status(200).json({ message: 'Patients retrieved successfully from controller', patients });
         } catch (error) {
             res.status(500).json({ error: error.message });
         }

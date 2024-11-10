@@ -51,7 +51,7 @@ export default class patientCondition {
         }
     }
 
-    static async getPatientConditions(id, { connection}) {
+    static async getPatientConditions(id, { connection }) {
         const queryStr = 'SELECT * FROM patient_conditions WHERE patient_id = ?';
 
         try {
@@ -59,7 +59,7 @@ export default class patientCondition {
             return conditions_result
         } catch (error) {
             console.log('Error getting patient conditions from model', error);
-            return { error: error.message };    
+            return { message: 'patient conditions model: ', error: error.message };    
         }
     }
 }
