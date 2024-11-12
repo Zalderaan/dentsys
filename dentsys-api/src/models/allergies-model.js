@@ -12,7 +12,7 @@ export default class Allergies {
         this.patient_id = patient_id;
     }
 
-    static async createAllergies(data, { transaction }) {
+    static async createAllergies(data, ) {
         const {anesthetic, penicillin, antibiotics, sulfaDrugs, aspirin, latex, others, patient_id} = data;
 
         const queryStr = 'INSERT INTO allergies (allergies_anesthetic, allergies_penicillin, allergies_antibiotics, allergies_sulfaDrugs, allergies_aspirin, allergies_latex, allergies_others, patient_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
@@ -33,7 +33,7 @@ export default class Allergies {
         }
     }
 
-    static async getAllergies(id, { transaction }) {
+    static async getAllergies(id, ) {
         const queryStr = 'SELECT * FROM allergies WHERE patient_id = ?';
 
         try {
@@ -52,7 +52,7 @@ export default class Allergies {
         }
     }
 
-    static async updateAllergies(data, { transaction }) {
+    static async updateAllergies(data, ) {
         const {anesthetic, penicillin, antibiotics, sulfaDrugs, aspirin, latex, others, patient_id} = data;
         const queryStr = 'UPDATE allergies SET allergies_anesthetic = ?, allergies_penicillin = ?, allergies_antibiotics = ?, allergies_sulfaDrugs = ?, allergies_aspirin = ?, allergies_latex = ?, allergies_others = ? WHERE patient_id = ?';
         const values = [anesthetic, penicillin, antibiotics, sulfaDrugs, aspirin, latex, others, patient_id];

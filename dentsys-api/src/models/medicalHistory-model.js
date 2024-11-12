@@ -27,7 +27,7 @@ export default class MedicalHistory {
         this.medical_isBirthControl = medical_isBirthControl;   
     }
 
-    static async createMedicalHistory(data, { transaction }) {
+    static async createMedicalHistory(data) {
         
         // extract data
         const { patient_id, medical_physician, medical_physicianSpec, medical_officeAddress, medical_officeNo, medical_goodHealth, medical_isUnderTreatment, 
@@ -46,7 +46,7 @@ export default class MedicalHistory {
             medical_medicationDetails, medical_isTobacco, medical_dangerousSubstance, medical_bleedingTime, medical_isPregnant, medical_isNursing, medical_isBirthControl];
 
         try {
-            const [medical_result] = await transaction.query(queryStr, values);
+            const [medical_result] = await pool.query(queryStr, values);
             const newMH = medical_result.insertId;
             console.log ('newMH:', newMH);
             if (newMH) {
@@ -63,10 +63,10 @@ export default class MedicalHistory {
         }
     }
 
-    static async getMedicalHistory(id, { transaction }) {
+    static async getMedicalHistory(id, ) {
         const queryStr = 'SELECT * FROM medical_history WHERE patient_id = ?';
         try {
-            const [mh_result] = await transaction.query(queryStr, [id]);
+            const [mh_result] = await pool.query(queryStr, [id]);
             if (mh_result.length === 0) {
                 throw new Error('Patient medical history not found');
             } else {
@@ -79,7 +79,7 @@ export default class MedicalHistory {
         }
     }
 
-    static async updateMedicalHistory(data, { transaction }) {
+    static async updateMedicalHistory(data) {
         const { medical_physician, medical_physicianSpec, medical_officeAddress, medical_officeNo, medical_goodHealth, medical_isUnderTreatment, 
             medical_treatmentDetails, medical_seriousOperation, medical_seriousOperationDetails, medical_hospitalized, medical_hospitalizedDetails, medical_isMedication, 
             medical_medicationDetails, medical_isTobacco, medical_dangerousSubstance, medical_bleedingTime, medical_isPregnant, medical_isNursing, medical_isBirthControl, patient_id } = data;
@@ -113,7 +113,7 @@ export default class MedicalHistory {
             medical_medicationDetails, medical_isTobacco, medical_dangerousSubstance, medical_bleedingTime, medical_isPregnant, medical_isNursing, medical_isBirthControl, patient_id];
 
         try {
-            const [result] = await transaction.query(queryStr, values);
+            const [result] = await pool.query(queryStr, values);
             if (result.affectedRows === 0) {
                 console.log('no updates made in med history, does not exist');
                 throw new Error('Medical history not updated, does not exist');
@@ -127,6 +127,26 @@ export default class MedicalHistory {
             }
         } catch (error) {
             console.error('Error updating medical history from model', error);
+            throw error;
+        }
+    }
+
+    static async deleteMedicalHistory(id) {
+        const queryStr = 'DELETE FROM medical_history WHERE patient_id = ?';
+        try {
+            const [result] = await pool.query(queryStr, [id]);
+            if (result.affectedRows === 0) {
+                console.log('Medical history not deleted, does not exist');
+                throw new Error('Medical history not deleted, does not exist');
+            } else {   
+                return {
+                    affectedRows: result.affectedRows,
+                    message: 'Medical history deleted successfully from model',
+                    patient_id: id
+                }
+            }
+        } catch (error) {
+            console.error('Error deleting medical history from model', error);
             throw error;
         }
     }
