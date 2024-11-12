@@ -32,7 +32,7 @@ export default class PatientCondition {
                         patient_id = ? AND condition_id = ?;
                     `;
                     const values = [patientCondition_status, patient_id, condition_id];
-                    const [condition_result] = await pool.query(queryStr, values);
+                    const [condition_result] = await connection.query(queryStr, values);
                     insertedConditions.push(
                         {
                             patient_id: patient_id,
@@ -44,7 +44,7 @@ export default class PatientCondition {
                 } else {
                     const queryStr = 'INSERT INTO patient_conditions (patient_id, condition_id, patientCondition_status) VALUES (?, ?, ?)';
                     const values = [patient_id, condition_id, patientCondition_status];    
-                    const [condition_result] = await pool.query(queryStr, values);
+                    const [condition_result] = await connection.query(queryStr, values);
                     insertedConditions.push(
                         {
                             patient_id: patient_id,
