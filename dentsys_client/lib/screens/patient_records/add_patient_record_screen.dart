@@ -17,6 +17,21 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
   final _medicalHistoryFormKey = GlobalKey<FormState>();
   final _allergicFormKey = GlobalKey<FormState>();
   final _diseasesFormKey = GlobalKey<FormState>();
+  
+  // personal info
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _middleNameController = TextEditingController();
+  final TextEditingController _nicknameController = TextEditingController();
+  final TextEditingController _birthDateController = TextEditingController();
+  final TextEditingController _ageController = TextEditingController();
+  final TextEditingController _sexController = TextEditingController();
+  final TextEditingController _religionController = TextEditingController();
+  final TextEditingController _nationalityController = TextEditingController();
+  final TextEditingController _occupationController = TextEditingController();
+  final TextEditingController _parentGuardianController = TextEditingController();
+  final TextEditingController _parentGuardianOccupationController = TextEditingController();
+  
   final TextEditingController _dateController = TextEditingController();
 
   String? selectedSex;
