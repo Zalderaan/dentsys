@@ -17,17 +17,18 @@ CREATE TABLE IF NOT EXISTS patients (
     patient_firstName VARCHAR(50) NOT NULL,
     patient_lastName VARCHAR(50) NOT NULL,
     patient_middleName VARCHAR(50),
-    patient_nickname VARCHAR(50) NOT NULL,
+    patient_nickname VARCHAR(50),
     patient_birthdate DATE,
     patient_age INT NOT NULL,
     patient_sex VARCHAR(50) NOT NULL,
     patient_nationality VARCHAR(50) NOT NULL,
     patient_religion VARCHAR(50) NOT NULL,
     patient_occupation VARCHAR(50) NOT NULL,
+    patient_referrer VARCHAR(50),
     patient_reason VARCHAR(100) NOT NULL, -- Increased size from 50 to 100
-    patient_totalBal FLOAT NOT NULL, -- Changed to FLOAT for balance
-    patient_parentName VARCHAR(50) NOT NULL,
-    patient_parentOccupation VARCHAR(50) NOT NULL
+    patient_totalBal FLOAT, -- Changed to FLOAT for balance
+    patient_parentName VARCHAR(50),
+    patient_parentOccupation VARCHAR(50)
 );
 
 -- CONTACT TABLE

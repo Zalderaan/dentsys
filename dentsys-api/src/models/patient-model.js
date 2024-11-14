@@ -1,7 +1,7 @@
 import pool from '../../config/db.js';
 
 export default class Patient {
-    constructor(id, firstName, lastName, middleName, birthDate, age, sex, nickname, nationality, religion, occupation, reason, totalBalance) {
+    constructor(id, firstName, lastName, middleName, birthDate, age, sex, nickname, nationality, religion, occupation, referrer, reason, totalBalance) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -13,15 +13,16 @@ export default class Patient {
         this.nationality = nationality;
         this.religion = religion;
         this.occupation = occupation;
+        this.referrer = referrer;
         this.reason = reason;
         this.totalBalance = totalBalance;
     }
 
     static async createPatient(data) {
-        const { firstName, lastName, middleName, birthDate, age, sex, nickname, nationality, religion, occupation, reason, totalBalance } = data;
+        const { firstName, lastName, middleName, birthDate, age, sex, nickname, nationality, religion, occupation, referrer, reason, totalBalance } = data;
 
-        const queryStr = 'INSERT INTO patients (patient_firstName, patient_lastName, patient_middleName, patient_birthDate, patient_age, patient_sex, patient_nickname, patient_nationality, patient_religion, patient_occupation, patient_reason, patient_totalBal) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-        const values = [firstName, lastName, middleName, birthDate, age, sex, nickname, nationality, religion, occupation, reason, totalBalance];
+        const queryStr = 'INSERT INTO patients (patient_firstName, patient_lastName, patient_middleName, patient_birthDate, patient_age, patient_sex, patient_nickname, patient_nationality, patient_religion, patient_occupation, patient_referrer, patient_reason, patient_totalBal) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        const values = [firstName, lastName, middleName, birthDate, age, sex, nickname, nationality, religion, occupation, referrer, reason, totalBalance];
         
         // execute
         try {

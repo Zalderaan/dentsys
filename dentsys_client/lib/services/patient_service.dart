@@ -15,13 +15,15 @@ class PatientService {
       final response = await http.post(
         Uri.parse('$baseUrl/add-patient'),
         headers: headers,
-        body: jsonEncode({patient.toJson()})
+        body: jsonEncode(
+          patient.toJson()
+        ),
       );
-
-      if (response.statusCode == 200) {
+      print(response.body);
+      if (response.statusCode == 201) {
         return Patient.fromJson(jsonDecode(response.body));
       } else {
-        throw Exception('Failed to add patient');
+        throw Exception('Failed to add patient: ${response.body}');
       }
     } catch (error) {
       throw Exception('Error in service: $error');

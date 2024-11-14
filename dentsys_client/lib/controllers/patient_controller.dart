@@ -1,4 +1,3 @@
-import 'package:dentsys_client/controllers/user_controller.dart';
 import 'package:dentsys_client/models/patient_model.dart';
 import 'package:dentsys_client/services/patient_service.dart';
 
@@ -31,6 +30,7 @@ class PatientController {
       final fetchedPatients = await _patientService.getAllPatientsService();
       return fetchedPatients;
     } catch (error) {
+      print ('Error getting all patients in frontend controller: $error');
       throw Exception('Error getting all patients in frontend controller: $error');
     }
   }

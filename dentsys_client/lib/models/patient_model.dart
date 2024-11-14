@@ -6,12 +6,13 @@ class Patient {
   final String? nickname;
   final String birthDate;
   final int age;
-  final String sex;
+  final String? sex;
   final String nationality;
   final String religion;
   final String occupation;
   final String reason;
-  final int balance;
+  final String? balance;
+  final String? referrer;
   final String? parentName;
   final String? parentOccupation;
 
@@ -28,7 +29,8 @@ class Patient {
     required this.religion,
     required this. occupation,
     required this.reason,
-    required this.balance,
+    this.balance,
+    this.referrer,
     this.parentName,
     this.parentOccupation
   });
@@ -44,7 +46,7 @@ class Patient {
       "firstName": firstName,
       "lastName": lastName,
       "middleName": middleName,
-      "nickname": nickname,
+      "nickname": nickname ?? "",
       "birthDate": birthDate,
       "age": age,
       "sex": sex,
@@ -52,29 +54,36 @@ class Patient {
       "religion": religion,
       "occupation": occupation,
       "reason": reason,
-      "balance": balance,
-      "parentName": parentName,
-      "parentOccupation": parentOccupation
+      "balance": balance ?? "",
+      "referrer": referrer ?? "",
+      "parentName": parentName ?? "",
+      "parentOccupation": parentOccupation ?? ""
     };
+    // remember: balance temporarily removed
   }
 
   factory Patient.fromJson(Map<String, dynamic> json){
+    final patient = json['newPatient'][0];
     return Patient(
-      id: json['patient_id'],
-      firstName: json['patient_firstName'],
-      lastName: json['patient_lastName'],
-      middleName: json['patient_middleName'],
-      nickname: json['patient_nickname'],
-      birthDate: json['patient_birthDate'],
-      age: json['patient_age'],
-      sex: json['patient_sex'],
-      nationality: json['patient_nationality'],
-      religion: json['patient_religion'],
-      occupation:  json['patient_occupation'],
-      reason: json['patient_reason'],
-      balance: json['patient_balance'],
-      parentName: json['patient_parentName'],
-      parentOccupation: json['patient_parentOccupation']
+      id: patient['patient_id'],
+      firstName: patient['patient_firstName'],
+      lastName: patient['patient_lastName'],
+      middleName: patient['patient_middleName'],
+      nickname: patient['patient_nickname'],
+      birthDate: patient['patient_birthdate'],
+      age: patient['patient_age'] is String 
+        ? int.tryParse(patient['patient_age']) ?? 0 
+        : patient['patient_age'] as int,
+      sex: patient['patient_sex'],
+      nationality: patient['patient_nationality'],
+      religion: patient['patient_religion'],
+      occupation:  patient['patient_occupation'],
+      reason: patient['patient_reason'],
+      balance: patient['patient_totalBal'],
+      parentName: patient['patient_parentName'],
+      parentOccupation: patient['patient_parentOccupation'],
+      referrer: patient['patient_referrer']
     );
+    // remember: balance temporarily removed
   }
 }
