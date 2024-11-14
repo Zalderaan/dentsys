@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+
 import 'package:dentsys_client/controllers/patient_controller.dart';
 import 'package:dentsys_client/models/patient_model.dart';
+
+import 'package:dentsys_client/controllers/contact_controller.dart';
+import 'package:dentsys_client/models/contact_model.dart';
 
 class AddPatientRecordScreen extends StatefulWidget {
   const AddPatientRecordScreen({super.key});
@@ -12,6 +16,14 @@ class AddPatientRecordScreen extends StatefulWidget {
 }
 
 class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
+  int? _patientId;
+  
+  @override
+  void initState() {
+    super.initState();
+    // _patientId = _patientId ?? 0;
+  }
+
   final _personalInfoFormKey = GlobalKey<FormState>();
   final _contactInformationFormKey =  GlobalKey<FormState>();
   final _dentalInsuranceFormKey =  GlobalKey<FormState>();
@@ -34,8 +46,16 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
   final TextEditingController _parentGuardianOccupationController = TextEditingController();
   final TextEditingController _referrerController = TextEditingController();
   final TextEditingController _reasonController = TextEditingController();
+  final PatientController patientController = PatientController(); // patient controller
   
-  final PatientController patientController = PatientController();
+  // contact info
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _homeAddressController = TextEditingController();
+  final TextEditingController _homeNoController = TextEditingController();
+  final TextEditingController _faxNoController = TextEditingController();
+  final TextEditingController _workNoController = TextEditingController();
+  final TextEditingController _mobileNoController = TextEditingController();
+  final ContactController contactController = ContactController(); // contact controller
 
   Future<void> _handleAddPatient() async {
     final patient = Patient(
@@ -56,7 +76,10 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
     );
 
     try {
-      final createdPatient = await patientController.createPatient(patient);
+      final createdPatient = await patientController.createPatient(patient);    
+      setState(() {
+        _patientId = createdPatient.id;
+      });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Patient ${createdPatient.firstName} ${createdPatient.lastName} created successfully'),
@@ -67,6 +90,39 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error creating patient: $error'),
+        )
+      );
+    }
+  }
+
+  
+  Future<void> _handleAddContact() async {
+    if (_patientId == null) {
+      // Handle the case where _patientId is null
+      print('Patient ID is not available');
+    }
+
+    final contact = Contact(
+      patient_id: _patientId!,
+      home_address: _homeAddressController.text,
+      fax_number: _faxNoController.text,
+      home_number: _homeNoController.text,
+      work_number: _workNoController.text,
+      mobile_number: _mobileNoController.text,
+      email: _emailController.text
+    );
+
+    try {
+      final createdContact = await contactController.createContact(contact);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('contact created successfully, $createdContact'),
+        )
+      );
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+        content: Text('Error creating contact: $error')
         )
       );
     }
@@ -316,7 +372,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                       child: TextFormField(
                                         controller: _dateController, // Controller to manage the selected date text
                                         decoration: const InputDecoration(
-                                          labelText: "Birth Date (MM-DD-YYYY)",
+                                          labelText: "Birth Date (YYYY-MM-DD)",
                                           border: OutlineInputBorder(),
                                         ),
                                         readOnly: false, // Make the field non-editable
@@ -329,7 +385,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                           );
                         
                                           if (pickedDate != null) {
-                                            String formattedDate = DateFormat('MM-dd-yyyy').format(pickedDate);
+                                            String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
                                             _dateController.text = formattedDate; // Set the selected date
                                           }
                                         },
@@ -627,6 +683,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                         const SizedBox(height: 10),
                                         // Home Adress
                                         TextFormField(
+                                          controller: _homeAddressController,
                                           decoration: const InputDecoration(
                                             labelText: "Home Address",
                                             border: OutlineInputBorder(),
@@ -645,9 +702,10 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                           children: [
                                             Expanded(
                                               child: TextFormField(
-                                              decoration: const InputDecoration(
-                                                labelText: "Home Number",
-                                                border: OutlineInputBorder(),
+                                                controller:  _homeNoController,
+                                                decoration: const InputDecoration(
+                                                  labelText: "Home Number",
+                                                  border: OutlineInputBorder(),
                                                 ),
                                                 validator: (value) {
                                                   if (value == null || value.isEmpty) {
@@ -660,10 +718,11 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                             const SizedBox(width: 10),
                                             Expanded(
                                               child: TextFormField(
-                                              decoration: const InputDecoration(
-                                                labelText: "Office Number",
-                                                border: OutlineInputBorder(),
-                                                ),
+                                                controller: _workNoController,
+                                                decoration: const InputDecoration(
+                                                  labelText: "Office Number",
+                                                  border: OutlineInputBorder(),
+                                                  ),
                                                 validator: (value) {
                                                   if (value == null || value.isEmpty) {
                                                     return 'This item is required';
@@ -675,9 +734,10 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                             const SizedBox(width: 10),
                                             Expanded(
                                               child: TextFormField(
-                                              decoration: const InputDecoration(
-                                                labelText: "Fax Number",
-                                                border: OutlineInputBorder(),
+                                                controller: _faxNoController,
+                                                decoration: const InputDecoration(
+                                                  labelText: "Fax Number",
+                                                  border: OutlineInputBorder(),
                                                 ),
                                                 validator: (value) {
                                                   if (value == null || value.isEmpty) {
@@ -697,6 +757,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                           children: [
                                             Expanded(
                                               child: TextFormField(
+                                                controller: _mobileNoController,
                                                 decoration: const InputDecoration(
                                                   labelText: "Contact Number",
                                                   border: OutlineInputBorder(),
@@ -712,6 +773,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                             const SizedBox(width: 10),
                                             Expanded(
                                               child: TextFormField(
+                                                controller: _emailController,
                                                 decoration: const InputDecoration(
                                                   labelText: "Email Address",
                                                   border: OutlineInputBorder(),
@@ -732,10 +794,14 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                             children: [
                                               //if (isDentalHistoryEnabled)
                                                 ElevatedButton(
-                                                  onPressed: () => _validateAndEnableNextSection(
-                                                    _contactInformationFormKey,
-                                                    (isValid) => setState(() => isDentalInsuranceEnabled = isValid),
-                                                  ),
+                                                  onPressed: () async {
+
+                                                    _validateAndEnableNextSection(
+                                                      _contactInformationFormKey,
+                                                      (isValid) => setState(() => isDentalInsuranceEnabled = isValid),
+                                                    );
+                                                    var createdContact = await _handleAddContact();
+                                                  },
                                                   child: const Text("Next"),
                                                 ),
                                           // Add more fields as needed for dental history

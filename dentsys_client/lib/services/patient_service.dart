@@ -30,6 +30,7 @@ class PatientService {
     }
   }
 
+  // TODO: use in patient details
   // get patient by id (GET)
   Future<Patient> getPatientByIdService(String patient_id) async {
     const headers = {
@@ -52,6 +53,7 @@ class PatientService {
     }
   }
 
+  // TODO use in patient list
   Future<List<Patient>> getAllPatientsService() async {
     const headers = {
       'Content-Type': 'applicaton/json'
@@ -74,6 +76,7 @@ class PatientService {
     }
   }
 
+  // TODO: use in patient update
   // PUT
   Future<void> updatePatientService(Patient patient) async {
     const headers = {
@@ -95,6 +98,7 @@ class PatientService {
     }
   }
 
+  // TODO use in patient delete (?)
   // DELETE
   Future<void> deletePatientService(String patient_id) async {
     const headers = {
