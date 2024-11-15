@@ -4,12 +4,19 @@ export default class PatientController {
     // POST
     static async addPatient(req, res) {
         const data = req.body;
+        console.log('data received in controller:', data);
         try {
-            const newPatient = await Patient.createPatient(data);
-            if(!newPatient) throw new Error('Error creating patient');
-            return res.status(201).json({ message: 'Patient created successfully from controller', newPatient});
+            const newPatientId = await Patient.createPatient(data);
+            const newPatient = await Patient.getPatientById(newPatientId);
+            if(!newPatient) {
+                throw new Error('Error creating patient');
+            } else if (newPatient) {
+                console.log('Patient created successfully from controller:', newPatient);
+                return res.status(201).json({ message: 'Patient created successfully from controller', newPatient});
+            }
         } 
         catch (error) {
+            console.error('Error creating patient from controller', error);
             res.status(500).json({ error: error.message });
         }
     }

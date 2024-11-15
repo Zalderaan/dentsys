@@ -6,8 +6,11 @@ export default class ContactController {
     // POST 
     static async addContact(req, res) {
         const data = req.body;
+        console.log('received contact data: ', data);
         try {
-            const newContact = await Contact.createContact(data);
+            const newContactId = await Contact.createContact(data);
+            console.log('new contact id: ', newContactId);
+            const newContact = await Contact.getContactByContactId(newContactId);
             return res.status(201).json({ message: 'Contact created successfully from controller', newContact});
         } 
         catch (error) {

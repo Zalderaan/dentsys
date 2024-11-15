@@ -53,6 +53,24 @@ export default class Contact {
         }
     }
 
+    static async getContactByContactId(id) {
+        const queryStr = 'SELECT * FROM contact WHERE contact_id = ?';
+
+        try {
+            const [contact_result] = await pool.query(queryStr, [id]);
+
+            if(contact_result.length === 0) {
+                throw new Error('No contact found');
+            } else if (contact_result.length > 1) {
+                throw new Error('Multiple contacts found');
+            }
+            return contact_result;
+        } catch (error) {
+            console.log('Error getting contact from model', error);
+            throw error;
+        }
+    }
+
     static async updateContact(data) {
         const { email, home_address, home_number, office_number, fax_number, mobile_number, patient_id} = data;
         
