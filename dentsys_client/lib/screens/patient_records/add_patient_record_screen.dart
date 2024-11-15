@@ -8,6 +8,9 @@ import 'package:dentsys_client/models/patient_model.dart';
 import 'package:dentsys_client/controllers/contact_controller.dart';
 import 'package:dentsys_client/models/contact_model.dart';
 
+import 'package:dentsys_client/controllers/insurance_controller.dart';
+import 'package:dentsys_client/models/insurance_model.dart';
+
 class AddPatientRecordScreen extends StatefulWidget {
   const AddPatientRecordScreen({super.key});
 
@@ -56,6 +59,11 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
   final TextEditingController _workNoController = TextEditingController();
   final TextEditingController _mobileNoController = TextEditingController();
   final ContactController contactController = ContactController(); // contact controller
+
+  // insurance info
+  final TextEditingController _insuranceNameController = TextEditingController();
+  final TextEditingController _insuranceEffectiveDateController = TextEditingController();
+  final InsuranceController insuranceController = InsuranceController(); // insurance controller
 
   Future<void> _handleAddPatient() async {
     final patient = Patient(
@@ -124,6 +132,25 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
         SnackBar(
         content: Text('Error creating contact: $error')
         )
+      );
+    }
+  }
+
+  Future<void> _handleAddInsurance() async {
+    final insurance = Insurance(
+      patient_id: _patientId!,
+      insurance_name: _insuranceNameController.text,
+      effective_date: _insuranceEffectiveDateController.text
+    );
+
+    try {
+      final createdInsurance = await insuranceController.createInsurance(insurance);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Insurance added successfuly: $createdInsurance'))
+      );
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error creating insurance: $error'))
       );
     }
   }
@@ -605,12 +632,11 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                     ElevatedButton(
                                       onPressed: () async
                                       {
-                                        var createdPatient = await _handleAddPatient();
-
                                         _validateAndEnableNextSection(
                                           _personalInfoFormKey,
                                           (isValid) => setState(() => isContactInformationEnabled = isValid),
                                         );
+                                        var createdPatient = await _handleAddPatient();
                                       },
                                       child: const Text("Next"),
                                     ),
@@ -881,6 +907,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                           children: [
                                             Expanded(
                                               child: TextFormField(
+                                                controller: _insuranceNameController,
                                                 decoration: const InputDecoration(
                                                   labelText: "Dental Insurance",
                                                   border: OutlineInputBorder(),
@@ -896,9 +923,9 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                             const SizedBox(width: 10),
                                             Expanded(
                                               child: TextFormField(
-                                                controller: _dateController, // Controller to manage the selected date text
+                                                controller: _insuranceEffectiveDateController, // Controller to manage the selected date text
                                                 decoration: const InputDecoration(
-                                                  labelText: "Effective Date (MM-DD-YYYY)",
+                                                  labelText: "Effective Date (YYYY-MM-DD)",
                                                   border: OutlineInputBorder(),
                                                 ),
                                                 readOnly: false, // Make the field non-editable
@@ -911,8 +938,8 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                   );
                                 
                                                   if (pickedDate != null) {
-                                                    String formattedDate = DateFormat('MM-dd-yyyy').format(pickedDate);
-                                                    _dateController.text = formattedDate; // Set the selected date
+                                                    String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+                                                    _insuranceEffectiveDateController.text = formattedDate; // Set the selected date
                                                   }
                                                 },
                                                 validator: (value) {
@@ -932,10 +959,14 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                             children: [
                                               //if (isDentalHistoryEnabled)
                                                 ElevatedButton(
-                                                  onPressed: () => _validateAndEnableNextSection(
-                                                    _dentalInsuranceFormKey,
-                                                    (isValid) => setState(() => isDentalHistoryEnabled = isValid),
-                                                  ),
+                                                  onPressed: () async {
+                                                    _validateAndEnableNextSection(
+                                                      _dentalInsuranceFormKey,
+                                                      (isValid) => setState(() => isDentalHistoryEnabled = isValid),
+                                                    );
+
+                                                    var createdInsurance = _handleAddInsurance();
+                                                  },
                                                   child: const Text("Next"),
                                                 ),
                                           // Add more fields as needed for dental history
