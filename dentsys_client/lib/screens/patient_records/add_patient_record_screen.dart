@@ -14,6 +14,9 @@ import 'package:dentsys_client/models/insurance_model.dart';
 import 'package:dentsys_client/controllers/dental_controller.dart';
 import 'package:dentsys_client/models/dental_model.dart';
 
+import 'package:dentsys_client/controllers/medical_controller.dart';
+import 'package:dentsys_client/models/medical_model.dart';
+
 class AddPatientRecordScreen extends StatefulWidget {
   const AddPatientRecordScreen({super.key});
 
@@ -72,6 +75,20 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
   final TextEditingController _previousDentistController = TextEditingController();
   final TextEditingController _lastVisitController = TextEditingController();
   final DentalController dentalController = DentalController(); // dental history controller
+
+  // medical history info
+  final TextEditingController _physicianNameController = TextEditingController();
+  final TextEditingController _physicianSpecialtyController = TextEditingController();
+  final TextEditingController _officeAddressController = TextEditingController();
+  final TextEditingController _officeNumberController = TextEditingController();
+  final TextEditingController _treatmentDetailsController = TextEditingController();
+  final TextEditingController _seriousOperationDetailsController = TextEditingController();
+  final TextEditingController _hospitalizedDetailsController = TextEditingController();
+  final TextEditingController _medicationDetailsController = TextEditingController();
+  final TextEditingController _bleedingTimeController = TextEditingController();
+  final TextEditingController _bloodPressureController = TextEditingController();
+  final TextEditingController _bloodTypeController = TextEditingController();
+  final MedicalController medicalController = MedicalController(); // medical history controller  
 
   Future<void> _handleAddPatient() async {
     final patient = Patient(
@@ -178,6 +195,43 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error creating dental history: $error'))
+      );
+    }
+  }
+
+  Future<void> _handleAddMedical() async {
+    final medical = Medical(
+      patient_id: _patientId!,
+      medical_physician: _physicianNameController.text,
+      medical_physicianSpec: _physicianSpecialtyController.text,
+      medical_officeAddress: _officeAddressController.text,
+      medical_officeNo: _officeNumberController.text,
+      medical_goodHealth: _isInGoodHealth,
+      medical_isUnderTreatment: _isUnderTreatment,
+      medical_treatmentDetails: _treatmentDetailsController.text,
+      medical_seriousOperation: _isSeriousIllness,
+      medical_seriousOperationDetails: _seriousOperationDetailsController.text,
+      medical_hospitalized: _isHospitalized,
+      medical_hospitalizedDetails: _hospitalizedDetailsController.text,
+      medical_isMedication: _isTakingMedication,
+      medical_medicationDetails: _medicationDetailsController.text,
+      medical_isTobacco: _isUsingTobacco,
+      medical_dangerousSubstance: _isUsingDangerousDrugs,
+      medical_bleedingTime: _bleedingTimeController.text,
+      medical_bloodPressure: _bloodPressureController.text,
+      medical_bloodType: _bloodTypeController.text,
+      medical_isPregnant: _isPregnant,
+      medical_isNursing: _isNursing,
+      medical_isBirthControl: _isTakingBirthControl,
+    );
+    try {
+      final createdMedical = await medicalController.createMedicalHistory(medical);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Medical history added successfuly: $createdMedical'))
+      );
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error creating medical history: $error'))
       );
     }
   }
@@ -1200,6 +1254,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                     children: [
                                       Expanded(
                                         child: TextFormField(
+                                          controller: _physicianNameController,
                                           decoration: const InputDecoration(
                                             labelText: "Name of Physician",
                                             border: OutlineInputBorder(),
@@ -1209,6 +1264,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                       const SizedBox(width: 10),
                                       Expanded(
                                         child: TextFormField(
+                                          controller: _physicianSpecialtyController,
                                           decoration: const InputDecoration(
                                             labelText: "Specialty, if applicable",
                                             border: OutlineInputBorder(),
@@ -1225,6 +1281,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                     children: [
                                       Expanded(
                                         child: TextFormField(
+                                          controller: _officeAddressController,
                                           decoration: const InputDecoration(
                                             labelText: "Office Address",
                                             border: OutlineInputBorder(),
@@ -1234,6 +1291,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                       const SizedBox(width: 10),
                                       Expanded(
                                         child: TextFormField(
+                                          controller: _officeNumberController,
                                           decoration: const InputDecoration(
                                             labelText: "Office Number",
                                             border: OutlineInputBorder(),
@@ -1329,6 +1387,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                   SizedBox(
                                                     width: 200, // Adjust width as needed
                                                     child: TextFormField(
+                                                      controller: _treatmentDetailsController,
                                                       enabled: _isUnderTreatment, // Disable the field if not under treatment
                                                       decoration: const InputDecoration(
                                                         hintText: "Specify condition",
@@ -1401,6 +1460,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                   SizedBox(
                                                     width: 200, // Adjust width as needed
                                                     child: TextFormField(
+                                                      controller: _seriousOperationDetailsController,
                                                       enabled: _isSeriousIllness, // Disable the field if not under treatment
                                                       decoration: const InputDecoration(
                                                         hintText: "Specify condition",
@@ -1473,6 +1533,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                   SizedBox(
                                                     width: 200, // Adjust width as needed
                                                     child: TextFormField(
+                                                      controller: _hospitalizedDetailsController,
                                                       enabled: _isHospitalized, // Disable the field if not under treatment
                                                       decoration: const InputDecoration(
                                                         hintText: "Specify condition",
@@ -1545,6 +1606,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                   SizedBox(
                                                     width: 200, // Adjust width as needed
                                                     child: TextFormField(
+                                                      controller: _medicationDetailsController,
                                                       enabled: _isTakingMedication, // Disable the field if not under treatment
                                                       decoration: const InputDecoration(
                                                         hintText: "Specify condition",
@@ -1638,6 +1700,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                       SizedBox(
                                         width: 200, // Adjust width as needed
                                         child: TextFormField(
+                                          controller: _bloodTypeController,
                                           decoration: const InputDecoration(
                                             hintText: "",
                                             border: UnderlineInputBorder(),
@@ -1662,6 +1725,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                       SizedBox(
                                         width: 200, // Adjust width as needed
                                         child: TextFormField(
+                                          controller: _bloodPressureController,
                                           decoration: const InputDecoration(
                                             hintText: "",
                                             border: UnderlineInputBorder(),
@@ -1686,6 +1750,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                       SizedBox(
                                         width: 200, // Adjust width as needed
                                         child: TextFormField(
+                                          controller: _bleedingTimeController,
                                           decoration: const InputDecoration(
                                             hintText: "",
                                             border: UnderlineInputBorder(),
@@ -1849,10 +1914,15 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                         children: [
                                           //if (isDentalHistoryEnabled)
                                             ElevatedButton(
-                                              onPressed: () => _validateAndEnableNextSection(
-                                                _medicalHistoryFormKey,
-                                                (isValid) => setState(() => isAllergicFormEnabled = isValid),
-                                              ),
+                                              onPressed: () async {
+
+                                                _validateAndEnableNextSection(
+                                                  _medicalHistoryFormKey,
+                                                  (isValid) => setState(() => isAllergicFormEnabled = isValid),
+                                                );
+
+                                                var createdMedical = _handleAddMedical();
+                                              }, 
                                               child: const Text("Next"),
                                             ),
                                       // Add more fields as needed for dental history

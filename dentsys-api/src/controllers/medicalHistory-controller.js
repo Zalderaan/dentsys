@@ -5,7 +5,8 @@ export default class MedicalHistoryController {
     static async addMedicalHistory(req, res) {
         const data = req.body;
         try {
-            const newMedicalHistory = await MedicalHistory.createMedicalHistory(data);
+            const newMedicalHistoryId = await MedicalHistory.createMedicalHistory(data);
+            const newMedicalHistory = await MedicalHistory.getByMedicalHistoryId(newMedicalHistoryId);
             return res.status(201).json({ message: 'Medical History created successfully from controller', newMedicalHistory});
         } 
         catch (error) {
