@@ -1,18 +1,20 @@
 import pool from '../../config/db.js';
 
-export default class patientCondition {
+export default class PatientCondition {
     constructor(patient_id, condition_id, patientCondition_status) {
         this.patient_id = patient_id;
         this.condition_id = condition_id;
         this.patientCondition_status = patientCondition_status;
     }
 
-    static async upsertPatientConditions(data, { transaction }) {
+    static async upsertPatientConditions(data) {
         const {patient_id, conditions} = data;
         const insertedConditions = [];
+        const connection = await pool.getConnection();
+        await connection.beginTransaction();
         try {
             // get current conditions of patient
-            const currentConditions = await this.getPatientConditions(patient_id, { transaction: transaction }) || []; // NOTE: '|| []' is just a fallback to prevent 'undefined' error
+            const currentConditions = await this.getPatientConditions(patient_id) || []; // NOTE: '|| []' is just a fallback to prevent 'undefined' error
             console.log('currentConditions:', currentConditions);
 
             // create a map of existing conditions
@@ -25,11 +27,12 @@ export default class patientCondition {
                     const queryStr = `
                         UPDATE patient_conditions
                         SET
-                            patientCondition_status = ?
+                        patientCondition_status = ?
                         WHERE
-                            patient_id = ? AND condition_id = ?`;
+                        patient_id = ? AND condition_id = ?;
+                    `;
                     const values = [patientCondition_status, patient_id, condition_id];
-                    const [condition_result] = await transaction.query(queryStr, values);
+                    const [condition_result] = await connection.query(queryStr, values);
                     insertedConditions.push(
                         {
                             patient_id: patient_id,
@@ -41,7 +44,7 @@ export default class patientCondition {
                 } else {
                     const queryStr = 'INSERT INTO patient_conditions (patient_id, condition_id, patientCondition_status) VALUES (?, ?, ?)';
                     const values = [patient_id, condition_id, patientCondition_status];    
-                    const [condition_result] = await transaction.query(queryStr, values);
+                    const [condition_result] = await connection.query(queryStr, values);
                     insertedConditions.push(
                         {
                             patient_id: patient_id,
@@ -52,27 +55,29 @@ export default class patientCondition {
                     );
                 }                
             }
-            // await connection.commit();
+
+            await connection.commit();
             if (insertedConditions.length === 0) {
                 console.log('No conditions were added (either patient has no conditions or error');
+                throw new Error('No conditions were added (either patient has no conditions or error');
             } else if (insertedConditions.length >= 1) {
                 console.log('Patient conditions added successfully', insertedConditions);
             }
             return insertedConditions;
         } catch (error) {
-            // await connection.rollback();
+            await connection.rollback();
             console.log('Error creating patient condition from model', error);
             throw error
         } finally {
-            // connection.release();
+            connection.release();
         }
     }
 
-    static async getPatientConditions(patient_id, { transaction }) {
+    static async getPatientConditions(patient_id) {
         const queryStr = 'SELECT * FROM patient_conditions WHERE patient_id = ?';
 
         try {
-            const [conditions_result] = await transaction.query(queryStr, [patient_id]); // a patient can have 0 to many medical conditions
+            const [conditions_result] = await pool.query(queryStr, [patient_id]); // a patient can have 0 to many medical conditions
             console.log('conditions_result:', conditions_result);
             return conditions_result || [];
         } catch (error) {

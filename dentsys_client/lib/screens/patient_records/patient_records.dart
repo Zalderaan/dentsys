@@ -5,7 +5,7 @@ class PatientRecords extends StatefulWidget {
 
   const PatientRecords({super.key, required this.onAddPatient});
 
-   @override
+  @override
   State<PatientRecords> createState() => _PatientRecordsState();
 }
 

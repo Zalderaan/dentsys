@@ -21,10 +21,11 @@ class UserController {
   Future<dynamic> login(User user) async {
     try {
       _currentUser = await userService.loginService(user);
-      print('Login response: $_currentUser'); // Debugging line
       if (_currentUser == null) {
         throw Exception("User not found");
       }
+      print('current user: $_currentUser'); 
+
       return "User logged in: ${_currentUser!.username}";
     } catch (e) {
       print('current user: $_currentUser!.username');

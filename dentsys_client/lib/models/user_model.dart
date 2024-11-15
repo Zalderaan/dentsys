@@ -26,6 +26,11 @@ class User {
         firstName = null,
         lastName = null;
 
+  @override
+  String toString() {
+    return 'User{id: $id, firstName: $firstName, lastName: $lastName, username: $username, email: $email, password: $password}';
+  }
+
   // factory constructor
   factory User.fromJson(Map<String, dynamic> json) {
     // Adjust to match your API response structure for login

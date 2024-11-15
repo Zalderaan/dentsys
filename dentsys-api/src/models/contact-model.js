@@ -11,14 +11,14 @@ export default class Contact {
         this.patient_id = patient_id;
     }
 
-    static async createContact(data, { transaction }) {
+    static async createContact(data) {
         const { email, home_address, home_number, office_number, fax_number, mobile_number, patient_id } = data;
 
         const queryStr = 'INSERT INTO contact (contact_email, contact_homeAddress, contact_homeNo, contact_workNo, contact_faxNo, contact_mobileNo, patient_id) VALUES (?, ?, ?, ?, ?, ?, ?)';
         const values = [email, home_address, home_number, office_number, fax_number, mobile_number, patient_id];
 
         try {
-            const [result] = await transaction.query(queryStr, values);
+            const [result] = await pool.query(queryStr, values);
             const newContact = result.insertId;
             if (newContact) {
                 console.log('Contact created successfully from model', newContact);
@@ -35,11 +35,11 @@ export default class Contact {
         }
     }
 
-    static async getContact(id, { transaction }) {
+    static async getContact(id) {
         const queryStr = 'SELECT * FROM contact WHERE patient_id = ?';
 
         try {
-            const [contact_result] = await transaction.query(queryStr, [id]);
+            const [contact_result] = await pool.query(queryStr, [id]);
 
             if(contact_result.length === 0) {
                 throw new Error('No contact found');
@@ -53,14 +53,32 @@ export default class Contact {
         }
     }
 
-    static async updateContact(data, { transaction }) {
+    static async getContactByContactId(id) {
+        const queryStr = 'SELECT * FROM contact WHERE contact_id = ?';
+
+        try {
+            const [contact_result] = await pool.query(queryStr, [id]);
+
+            if(contact_result.length === 0) {
+                throw new Error('No contact found');
+            } else if (contact_result.length > 1) {
+                throw new Error('Multiple contacts found');
+            }
+            return contact_result;
+        } catch (error) {
+            console.log('Error getting contact from model', error);
+            throw error;
+        }
+    }
+
+    static async updateContact(data) {
         const { email, home_address, home_number, office_number, fax_number, mobile_number, patient_id} = data;
         
         const queryStr = 'UPDATE contact SET contact_email = ?, contact_homeAddress = ?, contact_homeNo = ?, contact_workNo = ?, contact_faxNo = ?, contact_mobileNo = ? WHERE patient_id = ?';
         const values = [email, home_address, home_number, office_number, fax_number, mobile_number, patient_id];
 
         try {
-            const [result] = await transaction.query(queryStr, values);
+            const [result] = await pool.query(queryStr, values);
             if (result.affectedRows === 0) {
                 console.log('patient contacts does not exist, not updated');
                 throw new Error('patient contacts does not exist, not updated');
@@ -80,6 +98,23 @@ export default class Contact {
     }
 
     static async deleteContact(id) {
+        const queryStr = 'DELETE FROM contact WHERE patient_id = ?';
+        try {
+            const [result] = await pool.query(queryStr, [id]);
+            if (result.affectedRows === 0) {
+                console.log('Contact does not exist, not deleted');
+                throw new Error('Contact does not exist, not deleted');
+            }
 
+            console.log('Contact deleted successfully from model');
+            return {
+                affectedRows: result.affectedRows,
+                message: 'Contact deleted successfully',
+                patient_id: id
+            }
+        } catch (error) {
+            console.log('Error deleting contact from model', error);
+            throw error;
+        }
     }
 }
