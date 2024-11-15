@@ -1,9 +1,4 @@
-
-
 // ignore_for_file: non_constant_identifier_names
-
-import 'package:flutter/gestures.dart';
-
 class Insurance{
   final int? id;
   final int? patient_id;

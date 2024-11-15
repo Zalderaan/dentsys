@@ -20,7 +20,7 @@ class InsuranceService {
       );
 
       if (response.statusCode == 201){
-        print('data returned to service: ${response.body}');
+        // print('data returned to service: ${response.body}');
         return Insurance.fromJson(jsonDecode(response.body));
       } else {
         throw Exception('Failed to add insurance ${response.body}');

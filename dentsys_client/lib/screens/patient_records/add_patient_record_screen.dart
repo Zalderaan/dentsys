@@ -11,6 +11,9 @@ import 'package:dentsys_client/models/contact_model.dart';
 import 'package:dentsys_client/controllers/insurance_controller.dart';
 import 'package:dentsys_client/models/insurance_model.dart';
 
+import 'package:dentsys_client/controllers/dental_controller.dart';
+import 'package:dentsys_client/models/dental_model.dart';
+
 class AddPatientRecordScreen extends StatefulWidget {
   const AddPatientRecordScreen({super.key});
 
@@ -64,6 +67,11 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
   final TextEditingController _insuranceNameController = TextEditingController();
   final TextEditingController _insuranceEffectiveDateController = TextEditingController();
   final InsuranceController insuranceController = InsuranceController(); // insurance controller
+
+  // dental history info
+  final TextEditingController _previousDentistController = TextEditingController();
+  final TextEditingController _lastVisitController = TextEditingController();
+  final DentalController dentalController = DentalController(); // dental history controller
 
   Future<void> _handleAddPatient() async {
     final patient = Patient(
@@ -151,6 +159,25 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error creating insurance: $error'))
+      );
+    }
+  }
+
+  Future<void> _handleAddDental() async {
+    final dental = Dental(
+      patient_id: _patientId!,
+      previous_dentist: _previousDentistController.text,
+      last_visit: _lastVisitController.text
+    );
+
+    try {
+      final createdDental = await dentalController.createDentalHistory(dental);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Dental history added successfuly: $createdDental'))
+      );
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error creating dental history: $error'))
       );
     }
   }
@@ -1047,9 +1074,10 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                           children: [
                                             Expanded(
                                               child: TextFormField(
-                                              decoration: const InputDecoration(
-                                                labelText: "Previous Dentist",
-                                                border: OutlineInputBorder(),
+                                                controller: _previousDentistController,
+                                                decoration: const InputDecoration(
+                                                  labelText: "Previous Dentist",
+                                                  border: OutlineInputBorder(),
                                                 ),
                                                 validator: (value) {
                                                   if (value == null || value.isEmpty) {
@@ -1062,9 +1090,10 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                             const SizedBox(width: 10),
                                             Expanded(
                                               child: TextFormField(
-                                              decoration: const InputDecoration(
-                                                labelText: "Latest Dental Visit",
-                                                border: OutlineInputBorder(),
+                                                controller: _lastVisitController,
+                                                decoration: const InputDecoration(
+                                                  labelText: "Latest Dental Visit",
+                                                  border: OutlineInputBorder(),
                                                 ),
                                                 validator: (value) {
                                                   if (value == null || value.isEmpty) {
@@ -1082,10 +1111,16 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                             children: [
                                               //if (isDentalHistoryEnabled)
                                                 ElevatedButton(
-                                                  onPressed: () => _validateAndEnableNextSection(
-                                                    _dentalHistoryFormKey,
-                                                    (isValid) => setState(() => isMedicalHistoryEnabled = isValid),
-                                                  ),
+                                                  onPressed: () async 
+                                                  {
+
+                                                    _validateAndEnableNextSection(
+                                                      _dentalHistoryFormKey,
+                                                      (isValid) => setState(() => isMedicalHistoryEnabled = isValid),
+                                                    );
+
+                                                    var createdDental = await _handleAddDental();
+                                                  },
                                                   child: const Text("Next"),
                                                 ),
                                           // Add more fields as needed for dental history

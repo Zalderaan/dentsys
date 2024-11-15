@@ -53,6 +53,9 @@ router.put('/change-patient-condition', PatientConditionController.changePatient
 // router.get('/get-patient-condition/:id', PatientConditionController.getPatientCondition);
 // router.delete('/delete-patient-condition/:id', PatientConditionController.removePatientCondition);
 
+// allergies routes
+// router.post('/add-allergy', AllergyController.addAllergy);
+
 // test routes
 router.post('/test/add-contact', TestController.createContact);
 router.get('/test/get-contact/:id', TestController.getContact);

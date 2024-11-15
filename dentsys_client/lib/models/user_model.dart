@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-
 class User {
   // properties
   final String? id;
