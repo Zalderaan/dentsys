@@ -6,9 +6,12 @@ export default class AllergiesController {
         const data = req.body;
         // console.log('received allergy data: ', data);
         try {
-            const newAllergy = await Allergy.createAllergies(data);
+            const newAllergyId = await Allergy.createAllergies(data);
+            const newAllergies = await Allergy.getByAllergiesId(newAllergyId);
+            console.log('new allergy id: ', newAllergyId);
+            console.log('new allergies: ', newAllergies);
             // console.log('new allergy: ', newAllergy);
-            return res.status(201).json({ message: 'Allergy created successfully from controller', newAllergy });
+            return res.status(201).json({ message: 'Allergy created successfully from controller', newAllergies });
         } catch (error) {
             res.status(500).json({ error: error.message });
         }

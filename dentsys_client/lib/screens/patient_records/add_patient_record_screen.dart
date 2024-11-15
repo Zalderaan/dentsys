@@ -17,6 +17,9 @@ import 'package:dentsys_client/models/dental_model.dart';
 import 'package:dentsys_client/controllers/medical_controller.dart';
 import 'package:dentsys_client/models/medical_model.dart';
 
+import 'package:dentsys_client/controllers/allergies_controller.dart';
+import 'package:dentsys_client/models/allergies_model.dart';
+
 class AddPatientRecordScreen extends StatefulWidget {
   const AddPatientRecordScreen({super.key});
 
@@ -89,6 +92,10 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
   final TextEditingController _bloodPressureController = TextEditingController();
   final TextEditingController _bloodTypeController = TextEditingController();
   final MedicalController medicalController = MedicalController(); // medical history controller  
+
+  // allergies info
+  final TextEditingController _otherAllergiesController = TextEditingController();
+  final AllergiesController allergiesController = AllergiesController(); // allergies controller
 
   Future<void> _handleAddPatient() async {
     final patient = Patient(
@@ -236,7 +243,28 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
     }
   }
 
-
+  Future<void> _handleAddAllergies() async {
+    final allergies = Allergies(
+      patient_id: _patientId!,
+      allergies_anesthetic: _isAllergicToAnesthetic,
+      allergies_penicillin: _isAllergicToPenicillin,
+      allergies_sulfaDrugs: _isAllergicToSulfa,
+      allergies_aspirin: _isAllergicToAspirin,
+      allergies_latex: _isAllergicToLatex,
+      allergies_others: _otherAllergiesController.text
+    );
+    try {
+      final createdAllergies = await allergiesController.createAllergy(allergies);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Allergies added successfuly: $createdAllergies'))
+      );
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error creating allergies: $error'))
+      );
+    }
+  }
+  
   String? selectedSex;
   int userAge = 0;
   bool isContactInformationEnabled = false;
@@ -2103,6 +2131,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                     SizedBox(
                                                       width: 150, // Adjust width as needed
                                                       child: TextFormField(
+                                                        controller: _otherAllergiesController,
                                                         enabled: _isAllergicToOthers,
                                                         decoration: const InputDecoration(
                                                           hintText: "Specify other allergies",
@@ -2123,10 +2152,13 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                               children: [
                                                 //if (isMedicalHistoryEnabled)
                                                   ElevatedButton(
-                                                    onPressed: () => _validateAndEnableNextSection(
-                                                      _allergicFormKey,
-                                                      (isValid) => setState(() => isDiseasesEnabled = isValid),
-                                                    ),
+                                                    onPressed: () async {
+                                                      _validateAndEnableNextSection(
+                                                        _allergicFormKey,
+                                                        (isValid) => setState(() => isDiseasesEnabled = isValid),
+                                                      );
+                                                      _handleAddAllergies();
+                                                    },
                                                     child: const Text("Next"),
                                                   ),
                                             // Add more fields as needed for dental history

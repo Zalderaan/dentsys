@@ -2,7 +2,7 @@
 
 class Medical{
   final int? medical_id;
-  final int? patient_id;
+  final int patient_id;
   final String medical_physician;
   final String? medical_physicianSpec;
   final String medical_officeAddress;
@@ -27,7 +27,7 @@ class Medical{
 
   Medical({
     this.medical_id,
-    this.patient_id,
+    required this.patient_id,
     required this.medical_physician,
     this.medical_physicianSpec,
     required this.medical_officeAddress,
@@ -80,7 +80,7 @@ String toString() {
   //   '  medical_isBirthControl: $medical_isBirthControl\n'
   //   '}'
   // );
-  return 'in fromJson: $medical_id';
+  return 'id: $medical_id';
 }
 
   factory Medical.fromJson(Map<String, dynamic> json){

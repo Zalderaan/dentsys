@@ -13,10 +13,11 @@ export default class Allergies {
     }
 
     static async createAllergies(data) {
-        const {anesthetic, penicillin, antibiotics, sulfaDrugs, aspirin, latex, others, patient_id} = data;
+        console.log ('data received in allergies model:', data);
+        const {allergies_anesthetic, allergies_penicillin, allergies_sulfaDrugs, allergies_aspirin, allergies_latex, allergies_others, patient_id} = data;
 
-        const queryStr = 'INSERT INTO allergies (allergies_anesthetic, allergies_penicillin, allergies_antibiotics, allergies_sulfaDrugs, allergies_aspirin, allergies_latex, allergies_others, patient_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-        const values = [anesthetic, penicillin, antibiotics, sulfaDrugs, aspirin, latex, others, patient_id];
+        const queryStr = 'INSERT INTO allergies (allergies_anesthetic, allergies_penicillin, allergies_sulfaDrugs, allergies_aspirin, allergies_latex, allergies_others, patient_id) VALUES (?, ?, ?, ?, ?, ?, ?)';
+        const values = [allergies_anesthetic, allergies_penicillin, allergies_sulfaDrugs, allergies_aspirin, allergies_latex, allergies_others, patient_id];
 
         try {
             const [result] = await pool.query(queryStr, values);
@@ -65,6 +66,8 @@ export default class Allergies {
             } else if (allergies.length > 1) {
                 throw new Error('Multiple allergies found');
             }
+
+            return allergies;
         } catch (error) {
             console.log('Error getting allergies by id from model', error);
             throw error;
