@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 
 import 'package:dentsys_client/controllers/patient_controller.dart';
 import 'package:dentsys_client/models/patient_model.dart';
@@ -124,32 +125,42 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
     );
 
     try {
-      final createdPatient = await patientController.createPatient(patient);    
+      final createdPatient = await patientController.createPatient(patient);
       setState(() {
         _patientId = createdPatient.id;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Patient ${createdPatient.firstName} ${createdPatient.lastName} created successfully'),
-          duration: const Duration(seconds: 2)
-        )
-      );
+
+      AnimatedSnackBar.material(
+        'Patient ${createdPatient.firstName} ${createdPatient.lastName} created successfully',
+        type: AnimatedSnackBarType.success,
+        duration: const Duration(seconds: 3),
+      ).show(context);
     } catch (error) {
       print(error);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error creating patient: $error'),
-          duration: const Duration(seconds: 2)
-        )
-      );
+
+      AnimatedSnackBar.material(
+        'Error creating patient: $error',
+        type: AnimatedSnackBarType.error,
+        duration: const Duration(seconds: 5),
+      ).show(context);
     }
   }
 
   
+
+  
+
+
   Future<void> _handleAddContact() async {
     if (_patientId == null) {
       // Handle the case where _patientId is null
       print('Patient ID is not available');
+      AnimatedSnackBar.material(
+        'Patient ID is not available',
+        type: AnimatedSnackBarType.warning,
+        duration: const Duration(seconds: 3),
+      ).show(context);
+      return;
     }
 
     final contact = Contact(
@@ -159,26 +170,26 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
       home_number: _homeNoController.text,
       work_number: _workNoController.text,
       mobile_number: _mobileNoController.text,
-      email: _emailController.text
+      email: _emailController.text,
     );
 
     try {
       final createdContact = await contactController.createContact(contact);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('contact created successfully, $createdContact'),
-          duration: const Duration(seconds: 2)
-        )
-      );
+
+      AnimatedSnackBar.material(
+        'Contact created successfully: $createdContact',
+        type: AnimatedSnackBarType.success,
+        duration: const Duration(seconds: 3),
+      ).show(context);
     } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error creating contact: $error'),
-          duration: const Duration(seconds: 2)
-        )
-      );
+      AnimatedSnackBar.material(
+        'Error creating contact: $error',
+        type: AnimatedSnackBarType.error,
+        duration: const Duration(seconds: 5),
+      ).show(context);
     }
   }
+
 
   Future<void> _handleAddInsurance() async {
     final insurance = Insurance(
