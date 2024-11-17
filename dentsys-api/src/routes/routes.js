@@ -51,9 +51,9 @@ router.put('/update-medical-history/:id', MedicalHistoryController.updateMedical
 router.delete('/delete-medical-history/:id', MedicalHistoryController.removeMedicalHistory);
 
 // patient condition routes
-router.put('/change-patient-condition', PatientConditionController.changePatientCondition);
-// router.get('/get-patient-condition/:id', PatientConditionController.getPatientCondition);
-// router.delete('/delete-patient-condition/:id', PatientConditionController.removePatientCondition);
+router.put('/change-patient-conditions', PatientConditionController.changePatientCondition);
+router.get('/get-patient-conditions/:id', PatientConditionController.getPatientCondition);
+router.delete('/delete-patient-conditions/:id', PatientConditionController.removePatientCondition);
 
 // allergies routes
 router.post('/add-allergies', AllergiesController.addAllergies);
