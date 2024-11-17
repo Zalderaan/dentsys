@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import  'package:dentsys_client/services/patient_service.dart';
+import 'package:dentsys_client/models/patient_model.dart';
+
+
+
 
 class PatientRecords extends StatefulWidget {
   final VoidCallback onAddPatient; // Add this parameter
@@ -13,126 +18,189 @@ class _PatientRecordsState extends State<PatientRecords> {
   bool isExpanded = false;
   final List<bool> _filterSelections = [true, false, false, false];
 
+  final PatientService _patientService = PatientService();
+  late Future<List<Patient>> patientRecords;
+  List<Patient> filteredRecords = [];
+  String searchQuery = '';
+  int selectedFilter = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    loadPatientRecords();
+  }
+
+  void loadPatientRecords() async {
+    patientRecords = _patientService.getAllPatientsService();
+    patientRecords.then((records) {
+      setState(() {
+        filteredRecords = records; // Initially show all records
+      });
+    }).catchError((error) {
+      print('Error fetching patient records: $error');
+    });
+  }
+
+  // void applyFilters() {
+  //   patientRecords.then((records) {
+  //     setState(() {
+  //       filteredRecords = records.where((patient) {
+  //         // Apply search filter
+  //         final matchesSearch = searchQuery.isEmpty ||
+  //             patient.firstName.toLowerCase().contains(searchQuery.toLowerCase()) ||
+  //             patient.lastName.toLowerCase().contains(searchQuery.toLowerCase());
+
+  //         // Apply status filter
+  //         final matchesFilter = (selectedFilter == 0) ||
+  //             (selectedFilter == 1 && patient.status == "Scheduled") ||
+  //             (selectedFilter == 2 && patient.status == "New") ||
+  //             (selectedFilter == 3 && patient.status == "Old");
+
+  //         return matchesSearch && matchesFilter;
+  //       }).toList();
+  //     });
+  //   });
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Material(
       child: Center(
         child: SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Column(
-                          children: [
-                            // Dashboard content goes here
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+                // Dashboard content goes here
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2), // Shadow color
+                        spreadRadius: 2, // Spread radius
+                        blurRadius: 5, // Blur radius
+                        offset: const Offset(0, 3), // Changes the position of the shadow (x, y)
+                      ),
+                    ],
+                  ),
+                  
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                  children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "Patient Records",
+                            style: TextStyle(
+                              fontSize:32.0,
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(255, 66, 43, 21),
+                            ),
+                          ),
                             Container(
                               decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(20.0),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.2), // Shadow color
-                                    spreadRadius: 2, // Spread radius
-                                    blurRadius: 5, // Blur radius
-                                    offset: const Offset(0, 3), // Changes the position of the shadow (x, y)
-                                  ),
-                                ],
+                                gradient: const LinearGradient(
+                                  colors: [Color(0xFFE2AD5E), Color(0xFF422B15)],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius: BorderRadius.circular(8), // Match button shape
                               ),
-                              
-                              padding: const EdgeInsets.all(20.0),
-                              child: Column(
-                              children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      const Text(
-                                        "Patient Records",
-                                        style: TextStyle(
-                                          fontSize:32.0,
-                                          fontWeight: FontWeight.bold,
-                                          color: Color.fromARGB(255, 66, 43, 21),
-                                        ),
-                                      ),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            gradient: const LinearGradient(
-                                              colors: [Color(0xFFE2AD5E), Color(0xFF422B15)],
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
-                                            ),
-                                            borderRadius: BorderRadius.circular(8), // Match button shape
-                                          ),
-                                          child: ElevatedButton.icon(
-                                          //ADD Patient
-                                          onPressed: widget.onAddPatient,
-                                          icon: const Icon(
-                                            Icons.add,
-                                            color: Colors.white,
-                                            ), 
-                                          label: const Text(
-                                            "Add Patient", 
-                                            style: TextStyle(
-                                              color: Colors.white
-                                              ),
-                                            ), 
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.transparent,
-                                            shadowColor: Colors.transparent, // Remove shadow to avoid conflicts with gradient
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(8), // Match container border radius
-                                            ), // Background color of the button
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                              child: ElevatedButton.icon(
+                              //ADD Patient
+                              onPressed: widget.onAddPatient,
+                              icon: const Icon(
+                                Icons.add,
+                                color: Colors.white,
+                                ), 
+                              label: const Text(
+                                "Add Patient", 
+                                style: TextStyle(
+                                  color: Colors.white
                                   ),
-                                  const SizedBox(height: 20.0), // Adds spacing between the title and the row of cards
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      buildInfoCard(
-                                        "NUMBER OF PATIENTS",
-                                        [
-                                          "Returnee: ", "14",
-                                          "New: ", "10",
-                                          "Total: ", "24"
-                                        ],
-                                        Icons.people,
-                                        color: Colors.white
-                                      ),
-                                      buildInfoCard(
-                                        "LAST PATIENT DONE",
-                                        [
-                                          "Patient Name: ", "Gofrey Eclarinal",
-                                          "Procedure Done: ", "Keme",
-                                          "Dentist: ", "Dr. John Eric Dedicatoria"
-                                        ],
-                                        Icons.person,
-                                        color: Colors.white
-                                      ),
-                                      buildInfoCard(
-                                        "LATEST NEW PATIENT",
-                                        [
-                                          "Patient Name: ", "Jane Doe",
-                                          "Procedure Done: ", "Consultation",
-                                          "Dentist: ", "Dr. John Eric Dedicatoria"
-                                        ],
-                                        Icons.person,
-                                        color: Colors.white
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                ), 
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.transparent,
+                                shadowColor: Colors.transparent, // Remove shadow to avoid conflicts with gradient
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8), // Match container border radius
+                                ), // Background color of the button
                               ),
                             ),
-                            const SizedBox(height: 30.0),
-                            buildSearchAndFilterSection(),
-                            const SizedBox(height: 30.0),
-                            buildArticleList(),
-                            const SizedBox(height: 20.0),
-                            buildPagination(),
-                          ],
-                        ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20.0), // Adds spacing between the title and the row of cards
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          buildInfoCard(
+                            "NUMBER OF PATIENTS",
+                            [
+                              "Returnee: ", "14",
+                              "New: ", "10",
+                              "Total: ", "24"
+                            ],
+                            Icons.people,
+                            color: Colors.white
+                          ),
+                          buildInfoCard(
+                            "LAST PATIENT DONE",
+                            [
+                              "Patient Name: ", "Gofrey Eclarinal",
+                              "Procedure Done: ", "Keme",
+                              "Dentist: ", "Dr. John Eric Dedicatoria"
+                            ],
+                            Icons.person,
+                            color: Colors.white
+                          ),
+                          buildInfoCard(
+                            "LATEST NEW PATIENT",
+                            [
+                              "Patient Name: ", "Jane Doe",
+                              "Procedure Done: ", "Consultation",
+                              "Dentist: ", "Dr. John Eric Dedicatoria"
+                            ],
+                            Icons.person,
+                            color: Colors.white
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 30.0),
+                buildSearchAndFilterSection(),
+                const SizedBox(height: 30.0),
+                Row(
+                  children: [
+                    Expanded(
+                      child: FutureBuilder<List<Patient>>(
+                        future: patientRecords,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const Center(child: CircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            return Center(child: Text('Error: ${snapshot.error}'));
+                          } else if (filteredRecords.isEmpty) {
+                            return const Center(child: Text('No patient records found.'));
+                          } else {
+                            return buildArticleList();
+                          }
+                        },
                       ),
                     ),
+                  ],
+                ),
+                const SizedBox(height: 20.0),
+                buildPagination(),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -244,71 +312,73 @@ class _PatientRecordsState extends State<PatientRecords> {
 }
 
   Widget buildArticleList() {
-    return Column(
-      children: [
-        buildRecordItem("Vinsmoke Sanji", "New", "Scheduled"),
-        buildRecordItem("Godfrey D. Eclarinal", "Old", "Scheduled"),
-        buildRecordItem("John Eric D. Dedicatoria", "Old", "Scheduled"),
-        buildRecordItem("Neil Carlo F. Nabor", "New", "Scheduled"),
-      ],
+    return ListView.builder(
+      itemCount: filteredRecords.length,
+      itemBuilder: (context, index) {
+        final patient = filteredRecords[index];
+        return buildRecordItem(
+          "${patient.firstName} ${patient.lastName}"
+          //patient.status ?? "Unknown",
+          //patient.schedule ?? "Unscheduled",
+        );
+      },
     );
   }
 
-  Widget buildRecordItem(String name, String status, String schedule) {
-  return Card(
-    color: Colors.white,
-    child: Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            flex: 3,
-            child: Text(
-              name,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20.0,
-                color: Colors.brown[900],
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Text(
-              status,
-              style: const TextStyle(
-                color: Colors.brown,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          // Controlled width container
-          Align(
-            alignment: Alignment.centerRight,
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
-              decoration: BoxDecoration(
-                color: Colors.green[300],
-                borderRadius: BorderRadius.circular(15),
-              ),
+ Widget buildRecordItem(String name) {
+    return Card(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              flex: 3,
               child: Text(
-                schedule,
-                style: const TextStyle(
-                  color: Colors.white,
+                name,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20.0,
+                  color: Colors.brown[900],
+                ),
+                textAlign: TextAlign.left,
+              ),
+            ),
+            const Expanded(
+              flex: 1,
+              child: Text(
+                "Patient",
+                style: TextStyle(
+                  color: Colors.brown,
                   fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.center,
               ),
             ),
-          ),
-        ],
+            Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
+                decoration: BoxDecoration(
+                  color: Colors.green[300],
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: const Text(
+                  "Scheduled",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Widget buildPagination() {
     return Row(

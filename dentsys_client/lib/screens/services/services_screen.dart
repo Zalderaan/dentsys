@@ -126,9 +126,9 @@ class _ServicesScreenState extends State<ServicesScreen> {
                           child: Row(
                             children: [
                               for (var service in [
-                                "Consultation", "Oral Prophylaxis", "Oral Surgery", "Tooth Restoration", "Crown & Veneers"
-                                "Consultation", "Oral Prophylaxis", "Oral Surgery", "Tooth Restoration", "Crown & Veneers"
-                                "Consultation", "Oral Prophylaxis", "Oral Surgery", "Tooth Restoration", "Crown & Veneers"
+                                "Consultation", "Oral Prophylaxis", "Oral Surgery", "Tooth Restoration", "Crown & Veneers",
+                                "Consultation", "Oral Prophylaxis", "Oral Surgery", "Tooth Restoration", "Crown & Veneers",
+                                "Consultation", "Oral Prophylaxis", "Oral Surgery", "Tooth Restoration", "Crown & Veneers",
                               ])
                                 Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
