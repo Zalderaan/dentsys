@@ -1,7 +1,21 @@
+import 'package:dentsys_client/screens/reports/forms/allergies_forms.dart';
+import 'package:dentsys_client/screens/reports/forms/contact_info_forms.dart';
+import 'package:dentsys_client/screens/reports/forms/dental_history_forms.dart';
+import 'package:dentsys_client/screens/reports/forms/dental_insurance_forms.dart';
+import 'package:dentsys_client/screens/reports/forms/diseases_forms.dart';
+import 'package:dentsys_client/screens/reports/forms/medical_history_forms.dart';
 import 'package:flutter/material.dart';
+import 'package:dentsys_client/screens/reports/forms/personal_info_forms.dart';
 
-class ReportsScreen extends StatelessWidget {
+class ReportsScreen extends StatefulWidget {
   const ReportsScreen({super.key});
+
+  @override
+  State<ReportsScreen> createState() => _ReportsScreenState();
+}
+
+class _ReportsScreenState extends State<ReportsScreen> {
+
 
   @override
   Widget build(BuildContext context) {
@@ -69,16 +83,49 @@ class ReportsScreen extends StatelessWidget {
                         padding: const EdgeInsets.all(20.0),
                         child: Column(
                           children: [
-                            const Row(
+                            Row(
                               children: [
-                                Text(
-                                  "Details",
-                                  style: TextStyle(
-                                    fontSize: 24.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color.fromARGB(255, 66, 43, 21),
+                                const Expanded(
+                                  child: Text(
+                                    "Details",
+                                    style: TextStyle(
+                                      fontSize: 24.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color.fromARGB(255, 66, 43, 21),
+                                    ),
                                   ),
                                 ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    gradient: const LinearGradient(
+                                      colors: [Color(0xFFE2AD5E), Color(0xFF422B15)],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: ElevatedButton.icon(
+                                    onPressed: () {
+                                      _showEditPatientFormsDialog(context);
+                                    },
+                                    icon: const Icon(
+                                      Icons.edit,
+                                      color: Colors.white,
+                                    ),
+                                    label: const Text(
+                                      "Edit Details",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.transparent,
+                                      shadowColor: Colors.transparent,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                //const SizedBox(width:400),
                               ],
                             ),
                             const SizedBox(height: 5.0),
@@ -700,3 +747,86 @@ class ReportsScreen extends StatelessWidget {
     );
   }
 }
+
+
+void _showEditPatientFormsDialog(BuildContext context) {
+  final TextEditingController dialogBirthdateController = TextEditingController();
+  final TextEditingController dialogEffectiveDateController = TextEditingController();
+  final TextEditingController dialogLatestVisitController = TextEditingController();
+
+  final GlobalKey<FormState> dialogPersonalInfoFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> dialogContactInfoFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> dialogDentalInsuranceFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> dialogDentalHistoryFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> dialogMedicalHistoryFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> dialogAllergiesFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> dialogDiseasesFormKey = GlobalKey<FormState>();
+  
+
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text(
+          'Edit Patient Record',
+          textAlign: TextAlign.left,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 36),
+        ),
+        content: SizedBox(
+          width: 1300,
+          height: 600,
+          child:  SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Divider(
+                  height: 10,
+                  color: Colors.grey[800],
+                  thickness: 0.5,
+                ),
+                const SizedBox(height: 15.0),
+                PersonalInfoForms(
+                  birthdateController: dialogBirthdateController,
+                  formKey: dialogPersonalInfoFormKey,
+                ),
+                ContactInfoForms(formKey: dialogContactInfoFormKey),
+                DentalInsuranceForms(formKey: dialogDentalInsuranceFormKey, effectivedateController: dialogEffectiveDateController),
+                DentalHistoryForms(formKey: dialogDentalHistoryFormKey, latestvisitController: dialogLatestVisitController),
+                MedicalHistoryForms(formKey: dialogMedicalHistoryFormKey),
+                AllergiesForms(formKey: dialogAllergiesFormKey),
+                DiseasesForms(formKey: dialogDiseasesFormKey),
+                //const ContactInfoForms()
+                
+              ],
+            ),
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          ElevatedButton(
+            child: const Text('Update Records'),
+            onPressed: () {
+              // Perform form validation and handle updates
+              if (dialogPersonalInfoFormKey.currentState?.validate() ?? false) {
+                // Handle valid form submission here
+                Navigator.of(context).pop();
+              } else {
+                // Handle invalid form case
+              }
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+  
+ 
+  
