@@ -63,7 +63,9 @@ class Patient {
   }
 
   factory Patient.fromJson(Map<String, dynamic> json){
-    final patient = json['newPatient'][0];
+    // print ('received in fromJson patient: $json');
+    final patient = json['newPatient'] != null ? json['newPatient'][0] : json; // if 'newPatient' exists in json response, use it, else use json 
+    // NOTE: newPatient is for add-patient, patient is for get-patient (next time be consistent in sending response data from backend)
     return Patient(
       id: patient['patient_id'],
       firstName: patient['patient_firstName'],
