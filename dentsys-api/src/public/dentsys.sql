@@ -82,7 +82,6 @@ CREATE TABLE IF NOT EXISTS allergies (
     patient_id INT NOT NULL UNIQUE,
     allergies_anesthetic BOOLEAN NOT NULL,
     allergies_penicillin BOOLEAN NOT NULL,
-    allergies_antibiotics BOOLEAN NOT NULL,
     allergies_sulfaDrugs BOOLEAN NOT NULL,
     allergies_aspirin BOOLEAN NOT NULL,
     allergies_latex BOOLEAN NOT NULL,

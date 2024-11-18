@@ -6,9 +6,11 @@ import DentalHistoryController from '../controllers/dentalHistory-controller.js'
 import InsuranceController from '../controllers/insurance-controller.js';
 import MedicalHistoryController from '../controllers/medicalHistory-controller.js';
 import PatientConditionController from '../controllers/patientCondition-controller.js';
-
+import AllergyController from '../controllers/allergies-controller.js';   
 
 import TestController from '../controllers/test-controller.js';
+import Allergies from '../models/allergies-model.js';
+import AllergiesController from '../controllers/allergies-controller.js';
 
 const router = express.Router();
 
@@ -49,9 +51,15 @@ router.put('/update-medical-history/:id', MedicalHistoryController.updateMedical
 router.delete('/delete-medical-history/:id', MedicalHistoryController.removeMedicalHistory);
 
 // patient condition routes
-router.put('/change-patient-condition', PatientConditionController.changePatientCondition);
-// router.get('/get-patient-condition/:id', PatientConditionController.getPatientCondition);
-// router.delete('/delete-patient-condition/:id', PatientConditionController.removePatientCondition);
+router.put('/change-patient-conditions', PatientConditionController.changePatientCondition);
+router.get('/get-patient-conditions/:id', PatientConditionController.getPatientCondition);
+router.delete('/delete-patient-conditions/:id', PatientConditionController.removePatientCondition);
+
+// allergies routes
+router.post('/add-allergies', AllergiesController.addAllergies);
+router.get('/get-allergies/:id', AllergiesController.getAllergies);
+router.put('/update-allergies/:id', AllergiesController.updateAllergies);
+router.delete('/delete-allergies/:id', AllergiesController.deleteAllergies);
 
 // test routes
 router.post('/test/add-contact', TestController.createContact);

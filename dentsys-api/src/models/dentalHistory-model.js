@@ -43,6 +43,22 @@ export default class DentalHistory {
         }
     }
 
+    static async getDentalHistByDentalId(id) {
+        try {
+            const queryStr = 'SELECT * FROM dental_history WHERE dental_id = ?';
+            const [dentalHist] = await pool.query(queryStr, [id]);
+            if(dentalHist.length === 0) {
+                throw new Error('dental history not found');
+            } else {
+                console.log('Dental history retrieved successfully from model');
+                return dentalHist;
+            }
+        } catch (error) {
+            console.log('Error getting dental history from model', error);
+            throw error;
+        }
+    }
+
     static async updateDentalHist(data) {
         const {previous_dentist, last_visit, patient_id} = data;
         const queryStr = 'UPDATE dental_history SET dental_previousDentist = ?, dental_lastVisit = ? WHERE patient_id = ?';

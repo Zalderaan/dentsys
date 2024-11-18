@@ -16,7 +16,7 @@ export default class PatientConditionController{
     static async getPatientCondition(req, res) {
         const data = req.params.id;
         try {
-            const patientCondition = await PatientCondition.getPatientCondition(data);
+            const patientCondition = await PatientCondition.getPatientConditions(data);
             return res.status(200).json({ message: 'Patient Condition retrieved successfully from controller', patientCondition});
         } catch (error) {
             return res.status(500).json({ error: error.message });
@@ -41,7 +41,7 @@ export default class PatientConditionController{
     static async removePatientCondition(req, res) {
         const data = req.params.id;
         try {
-            const delPatientCondition = await PatientCondition.deletePatientCondition(data);
+            const delPatientCondition = await PatientCondition.removePatientCondition(data);
             return res.status(200).json({ message: 'Patient Condition deleted successfully from controller', delPatientCondition});
         } catch (error) {
             res.status(500).json({ error: error.message });

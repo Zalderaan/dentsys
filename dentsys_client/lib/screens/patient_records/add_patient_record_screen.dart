@@ -9,6 +9,22 @@ import 'package:dentsys_client/models/patient_model.dart';
 import 'package:dentsys_client/controllers/contact_controller.dart';
 import 'package:dentsys_client/models/contact_model.dart';
 
+import 'package:dentsys_client/controllers/insurance_controller.dart';
+import 'package:dentsys_client/models/insurance_model.dart';
+
+import 'package:dentsys_client/controllers/dental_controller.dart';
+import 'package:dentsys_client/models/dental_model.dart';
+
+import 'package:dentsys_client/controllers/medical_controller.dart';
+import 'package:dentsys_client/models/medical_model.dart';
+
+import 'package:dentsys_client/controllers/allergies_controller.dart';
+import 'package:dentsys_client/models/allergies_model.dart';
+
+import 'package:dentsys_client/controllers/conditions_controller.dart';
+import 'package:dentsys_client/models/patient_conditions/conditions_model.dart';
+import 'package:dentsys_client/models/patient_conditions/patientConditions_model.dart';
+
 class AddPatientRecordScreen extends StatefulWidget {
   const AddPatientRecordScreen({super.key});
 
@@ -58,6 +74,38 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
   final TextEditingController _mobileNoController = TextEditingController();
   final ContactController contactController = ContactController(); // contact controller
 
+  // insurance info
+  final TextEditingController _insuranceNameController = TextEditingController();
+  final TextEditingController _insuranceEffectiveDateController = TextEditingController();
+  final InsuranceController insuranceController = InsuranceController(); // insurance controller
+
+  // dental history info
+  final TextEditingController _previousDentistController = TextEditingController();
+  final TextEditingController _lastVisitController = TextEditingController();
+  final DentalController dentalController = DentalController(); // dental history controller
+
+  // medical history info
+  final TextEditingController _physicianNameController = TextEditingController();
+  final TextEditingController _physicianSpecialtyController = TextEditingController();
+  final TextEditingController _officeAddressController = TextEditingController();
+  final TextEditingController _officeNumberController = TextEditingController();
+  final TextEditingController _treatmentDetailsController = TextEditingController();
+  final TextEditingController _seriousOperationDetailsController = TextEditingController();
+  final TextEditingController _hospitalizedDetailsController = TextEditingController();
+  final TextEditingController _medicationDetailsController = TextEditingController();
+  final TextEditingController _bleedingTimeController = TextEditingController();
+  final TextEditingController _bloodPressureController = TextEditingController();
+  final TextEditingController _bloodTypeController = TextEditingController();
+  final MedicalController medicalController = MedicalController(); // medical history controller  
+
+  // allergies info
+  final TextEditingController _otherAllergiesController = TextEditingController();
+  final AllergiesController allergiesController = AllergiesController(); // allergies controller
+
+  // patient conditions info
+  final ConditionsController conditionsController = ConditionsController(); // conditions controller
+  final TextEditingController _otherConditionsController = TextEditingController();
+
   Future<void> _handleAddPatient() async {
     final patient = Patient(
       firstName: _firstNameController.text,
@@ -97,6 +145,8 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
       ).show(context);
     }
   }
+
+  
 
   
 
@@ -141,6 +191,189 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
   }
 
 
+  Future<void> _handleAddInsurance() async {
+    final insurance = Insurance(
+      patient_id: _patientId!,
+      insurance_name: _insuranceNameController.text,
+      effective_date: _insuranceEffectiveDateController.text
+    );
+
+    try {
+      final createdInsurance = await insuranceController.createInsurance(insurance);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Insurance added successfuly: $createdInsurance'),
+          duration: const Duration(seconds: 2)
+        )
+      );
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error creating insurance: $error'),
+          duration: const Duration(seconds: 2)  
+        )
+      );
+    }
+  }
+
+  Future<void> _handleAddDental() async {
+    final dental = Dental(
+      patient_id: _patientId!,
+      previous_dentist: _previousDentistController.text,
+      last_visit: _lastVisitController.text
+    );
+
+    try {
+      final createdDental = await dentalController.createDentalHistory(dental);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Dental history added successfuly: $createdDental'),
+          duration: const Duration(seconds: 2)
+        )
+      );
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error creating dental history: $error'),
+          duration: const Duration(seconds: 2),
+        )
+      );
+    }
+  }
+
+  Future<void> _handleAddMedical() async {
+    final medical = Medical(
+      patient_id: _patientId!,
+      medical_physician: _physicianNameController.text,
+      medical_physicianSpec: _physicianSpecialtyController.text,
+      medical_officeAddress: _officeAddressController.text,
+      medical_officeNo: _officeNumberController.text,
+      medical_goodHealth: _isInGoodHealth,
+      medical_isUnderTreatment: _isUnderTreatment,
+      medical_treatmentDetails: _treatmentDetailsController.text,
+      medical_seriousOperation: _isSeriousIllness,
+      medical_seriousOperationDetails: _seriousOperationDetailsController.text,
+      medical_hospitalized: _isHospitalized,
+      medical_hospitalizedDetails: _hospitalizedDetailsController.text,
+      medical_isMedication: _isTakingMedication,
+      medical_medicationDetails: _medicationDetailsController.text,
+      medical_isTobacco: _isUsingTobacco,
+      medical_dangerousSubstance: _isUsingDangerousDrugs,
+      medical_bleedingTime: _bleedingTimeController.text,
+      medical_bloodPressure: _bloodPressureController.text,
+      medical_bloodType: _bloodTypeController.text,
+      medical_isPregnant: _isPregnant,
+      medical_isNursing: _isNursing,
+      medical_isBirthControl: _isTakingBirthControl,
+    );
+    try {
+      final createdMedical = await medicalController.createMedicalHistory(medical);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Medical history added successfuly: $createdMedical'),
+          duration: const Duration(seconds: 2)
+        )
+      );
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error creating medical history: $error'),
+          duration: const Duration(seconds: 2),
+          )
+      );
+    }
+  }
+
+  Future<void> _handleAddAllergies() async {
+    final allergies = Allergies(
+      patient_id: _patientId!,
+      allergies_anesthetic: _isAllergicToAnesthetic,
+      allergies_penicillin: _isAllergicToPenicillin,
+      allergies_sulfaDrugs: _isAllergicToSulfa,
+      allergies_aspirin: _isAllergicToAspirin,
+      allergies_latex: _isAllergicToLatex,
+      allergies_others: _otherAllergiesController.text
+    );
+    try {
+      final createdAllergies = await allergiesController.createAllergy(allergies);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Allergies added successfuly: $createdAllergies'),
+          duration: const Duration(seconds: 2)
+        )
+      );
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error creating allergies: $error'),
+          duration: const Duration(seconds: 2)
+        )
+      );
+    }
+  }
+
+  Future<void> _handleAddConditions() async {
+    List<Conditions> conditions = [
+      Conditions(condition_id: 1, patientCondition_status: _isHighBlood),
+      Conditions(condition_id: 2, patientCondition_status: _isLowBlood),
+      Conditions(condition_id: 3, patientCondition_status: _isEpilepsy),
+      Conditions(condition_id: 4, patientCondition_status: _isAIDSorHIV),
+      Conditions(condition_id: 5, patientCondition_status: _isSTD),
+      Conditions(condition_id: 6, patientCondition_status: _isUlcers),
+      Conditions(condition_id: 7, patientCondition_status: _isFaintingSeizure),
+      Conditions(condition_id: 8, patientCondition_status: _isRapidWeigthLoss),
+      Conditions(condition_id: 9, patientCondition_status: _isRadiationTherapy),
+      Conditions(condition_id: 10, patientCondition_status: _isJointReplacement),
+      Conditions(condition_id: 11, patientCondition_status: _isHeartSurgery),
+      Conditions(condition_id: 12, patientCondition_status: _isHeartAttack),
+      Conditions(condition_id: 13,patientCondition_status: _isHeartDisease),
+      Conditions(condition_id: 14, patientCondition_status: _isHeartMurmur),
+      Conditions(condition_id: 15, patientCondition_status: _isThyroidProblem),
+      Conditions(condition_id: 16, patientCondition_status: _isLiverDisease),
+      Conditions(condition_id: 17, patientCondition_status: _isJaundice),
+      Conditions(condition_id: 18, patientCondition_status: _isRheumaticFever),
+      Conditions(condition_id: 19, patientCondition_status: _isHayFever),
+      Conditions(condition_id: 20, patientCondition_status: _isRespiratoryProblems),
+      Conditions(condition_id: 21, patientCondition_status: _isTuberculosis),
+      Conditions(condition_id: 22, patientCondition_status: _isSwollenAnkles),
+      Conditions(condition_id: 23, patientCondition_status: _isKidneyDisease),
+      Conditions(condition_id: 24, patientCondition_status: _isDiabetes),
+      Conditions(condition_id: 25, patientCondition_status: _isChestPain),
+      Conditions(condition_id: 26, patientCondition_status: _isStroke),
+      Conditions(condition_id: 27, patientCondition_status: _isCancer),
+      Conditions(condition_id: 28, patientCondition_status: _isAnemia),
+      Conditions(condition_id: 29, patientCondition_status: _isAngina),
+      Conditions(condition_id: 30, patientCondition_status: _isAsthma),
+      Conditions(condition_id: 31, patientCondition_status: _isEmphysema),
+      Conditions(condition_id: 32, patientCondition_status: _isBleedingProblem),
+      Conditions(condition_id: 33, patientCondition_status: _isBloodDisease),
+      Conditions(condition_id: 34, patientCondition_status: _isHeadInjuries),
+      Conditions(condition_id: 35, patientCondition_status: _isArthritis),
+      Conditions(condition_id: 36, patientCondition_status: _othersDisease),
+    ];
+
+    final filteredConditions = conditions.where((condition) => condition.patientCondition_status == true).toList();
+    final patientConditions = PatientConditions(
+      patient_id: _patientId!,
+      conditions: filteredConditions,
+    );
+
+    try {
+      final createdPatientConditions = await conditionsController.addPatientCondition(patientConditions);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Patient conditions added successfuly: $createdPatientConditions'),
+          duration: const Duration(seconds: 2)
+        )
+      );
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error creating patient conditions: $error'),
+          duration: const Duration(seconds: 2)
+        )
+      );
+    }
+  }
 
   String? selectedSex;
   int userAge = 0;
@@ -618,12 +851,11 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                     ElevatedButton(
                                       onPressed: () async
                                       {
-                                        var createdPatient = await _handleAddPatient();
-
                                         _validateAndEnableNextSection(
                                           _personalInfoFormKey,
                                           (isValid) => setState(() => isContactInformationEnabled = isValid),
                                         );
+                                        var createdPatient = await _handleAddPatient();
                                       },
                                       child: const Text("Next"),
                                     ),
@@ -894,6 +1126,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                           children: [
                                             Expanded(
                                               child: TextFormField(
+                                                controller: _insuranceNameController,
                                                 decoration: const InputDecoration(
                                                   labelText: "Dental Insurance",
                                                   border: OutlineInputBorder(),
@@ -909,9 +1142,9 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                             const SizedBox(width: 10),
                                             Expanded(
                                               child: TextFormField(
-                                                controller: _dateController, // Controller to manage the selected date text
+                                                controller: _insuranceEffectiveDateController, // Controller to manage the selected date text
                                                 decoration: const InputDecoration(
-                                                  labelText: "Effective Date (MM-DD-YYYY)",
+                                                  labelText: "Effective Date (YYYY-MM-DD)",
                                                   border: OutlineInputBorder(),
                                                 ),
                                                 readOnly: false, // Make the field non-editable
@@ -924,8 +1157,8 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                   );
                                 
                                                   if (pickedDate != null) {
-                                                    String formattedDate = DateFormat('MM-dd-yyyy').format(pickedDate);
-                                                    _dateController.text = formattedDate; // Set the selected date
+                                                    String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+                                                    _insuranceEffectiveDateController.text = formattedDate; // Set the selected date
                                                   }
                                                 },
                                                 validator: (value) {
@@ -945,10 +1178,14 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                             children: [
                                               //if (isDentalHistoryEnabled)
                                                 ElevatedButton(
-                                                  onPressed: () => _validateAndEnableNextSection(
-                                                    _dentalInsuranceFormKey,
-                                                    (isValid) => setState(() => isDentalHistoryEnabled = isValid),
-                                                  ),
+                                                  onPressed: () async {
+                                                    _validateAndEnableNextSection(
+                                                      _dentalInsuranceFormKey,
+                                                      (isValid) => setState(() => isDentalHistoryEnabled = isValid),
+                                                    );
+
+                                                    var createdInsurance = _handleAddInsurance();
+                                                  },
                                                   child: const Text("Next"),
                                                 ),
                                           // Add more fields as needed for dental history
@@ -1029,9 +1266,10 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                           children: [
                                             Expanded(
                                               child: TextFormField(
-                                              decoration: const InputDecoration(
-                                                labelText: "Previous Dentist",
-                                                border: OutlineInputBorder(),
+                                                controller: _previousDentistController,
+                                                decoration: const InputDecoration(
+                                                  labelText: "Previous Dentist",
+                                                  border: OutlineInputBorder(),
                                                 ),
                                                 validator: (value) {
                                                   if (value == null || value.isEmpty) {
@@ -1044,9 +1282,10 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                             const SizedBox(width: 10),
                                             Expanded(
                                               child: TextFormField(
-                                              decoration: const InputDecoration(
-                                                labelText: "Latest Dental Visit",
-                                                border: OutlineInputBorder(),
+                                                controller: _lastVisitController,
+                                                decoration: const InputDecoration(
+                                                  labelText: "Latest Dental Visit",
+                                                  border: OutlineInputBorder(),
                                                 ),
                                                 validator: (value) {
                                                   if (value == null || value.isEmpty) {
@@ -1064,10 +1303,16 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                             children: [
                                               //if (isDentalHistoryEnabled)
                                                 ElevatedButton(
-                                                  onPressed: () => _validateAndEnableNextSection(
-                                                    _dentalHistoryFormKey,
-                                                    (isValid) => setState(() => isMedicalHistoryEnabled = isValid),
-                                                  ),
+                                                  onPressed: () async 
+                                                  {
+
+                                                    _validateAndEnableNextSection(
+                                                      _dentalHistoryFormKey,
+                                                      (isValid) => setState(() => isMedicalHistoryEnabled = isValid),
+                                                    );
+
+                                                    var createdDental = await _handleAddDental();
+                                                  },
                                                   child: const Text("Next"),
                                                 ),
                                           // Add more fields as needed for dental history
@@ -1147,6 +1392,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                     children: [
                                       Expanded(
                                         child: TextFormField(
+                                          controller: _physicianNameController,
                                           decoration: const InputDecoration(
                                             labelText: "Name of Physician",
                                             border: OutlineInputBorder(),
@@ -1156,6 +1402,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                       const SizedBox(width: 10),
                                       Expanded(
                                         child: TextFormField(
+                                          controller: _physicianSpecialtyController,
                                           decoration: const InputDecoration(
                                             labelText: "Specialty, if applicable",
                                             border: OutlineInputBorder(),
@@ -1172,6 +1419,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                     children: [
                                       Expanded(
                                         child: TextFormField(
+                                          controller: _officeAddressController,
                                           decoration: const InputDecoration(
                                             labelText: "Office Address",
                                             border: OutlineInputBorder(),
@@ -1181,6 +1429,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                       const SizedBox(width: 10),
                                       Expanded(
                                         child: TextFormField(
+                                          controller: _officeNumberController,
                                           decoration: const InputDecoration(
                                             labelText: "Office Number",
                                             border: OutlineInputBorder(),
@@ -1276,6 +1525,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                   SizedBox(
                                                     width: 200, // Adjust width as needed
                                                     child: TextFormField(
+                                                      controller: _treatmentDetailsController,
                                                       enabled: _isUnderTreatment, // Disable the field if not under treatment
                                                       decoration: const InputDecoration(
                                                         hintText: "Specify condition",
@@ -1348,6 +1598,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                   SizedBox(
                                                     width: 200, // Adjust width as needed
                                                     child: TextFormField(
+                                                      controller: _seriousOperationDetailsController,
                                                       enabled: _isSeriousIllness, // Disable the field if not under treatment
                                                       decoration: const InputDecoration(
                                                         hintText: "Specify condition",
@@ -1420,6 +1671,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                   SizedBox(
                                                     width: 200, // Adjust width as needed
                                                     child: TextFormField(
+                                                      controller: _hospitalizedDetailsController,
                                                       enabled: _isHospitalized, // Disable the field if not under treatment
                                                       decoration: const InputDecoration(
                                                         hintText: "Specify condition",
@@ -1492,6 +1744,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                   SizedBox(
                                                     width: 200, // Adjust width as needed
                                                     child: TextFormField(
+                                                      controller: _medicationDetailsController,
                                                       enabled: _isTakingMedication, // Disable the field if not under treatment
                                                       decoration: const InputDecoration(
                                                         hintText: "Specify condition",
@@ -1585,6 +1838,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                       SizedBox(
                                         width: 200, // Adjust width as needed
                                         child: TextFormField(
+                                          controller: _bloodTypeController,
                                           decoration: const InputDecoration(
                                             hintText: "",
                                             border: UnderlineInputBorder(),
@@ -1609,6 +1863,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                       SizedBox(
                                         width: 200, // Adjust width as needed
                                         child: TextFormField(
+                                          controller: _bloodPressureController,
                                           decoration: const InputDecoration(
                                             hintText: "",
                                             border: UnderlineInputBorder(),
@@ -1633,6 +1888,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                       SizedBox(
                                         width: 200, // Adjust width as needed
                                         child: TextFormField(
+                                          controller: _bleedingTimeController,
                                           decoration: const InputDecoration(
                                             hintText: "",
                                             border: UnderlineInputBorder(),
@@ -1796,10 +2052,15 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                         children: [
                                           //if (isDentalHistoryEnabled)
                                             ElevatedButton(
-                                              onPressed: () => _validateAndEnableNextSection(
-                                                _medicalHistoryFormKey,
-                                                (isValid) => setState(() => isAllergicFormEnabled = isValid),
-                                              ),
+                                              onPressed: () async {
+
+                                                _validateAndEnableNextSection(
+                                                  _medicalHistoryFormKey,
+                                                  (isValid) => setState(() => isAllergicFormEnabled = isValid),
+                                                );
+
+                                                var createdMedical = _handleAddMedical();
+                                              }, 
                                               child: const Text("Next"),
                                             ),
                                       // Add more fields as needed for dental history
@@ -1980,6 +2241,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                     SizedBox(
                                                       width: 150, // Adjust width as needed
                                                       child: TextFormField(
+                                                        controller: _otherAllergiesController,
                                                         enabled: _isAllergicToOthers,
                                                         decoration: const InputDecoration(
                                                           hintText: "Specify other allergies",
@@ -2000,10 +2262,13 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                               children: [
                                                 //if (isMedicalHistoryEnabled)
                                                   ElevatedButton(
-                                                    onPressed: () => _validateAndEnableNextSection(
-                                                      _allergicFormKey,
-                                                      (isValid) => setState(() => isDiseasesEnabled = isValid),
-                                                    ),
+                                                    onPressed: () async {
+                                                      _validateAndEnableNextSection(
+                                                        _allergicFormKey,
+                                                        (isValid) => setState(() => isDiseasesEnabled = isValid),
+                                                      );
+                                                      _handleAddAllergies();
+                                                    },
                                                     child: const Text("Next"),
                                                   ),
                                             // Add more fields as needed for dental history
@@ -2780,6 +3045,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                         SizedBox(
                                                           width: 150, // Adjust width as needed
                                                           child: TextFormField(
+                                                            controller: _otherConditionsController,
                                                             enabled: _othersDisease,
                                                             decoration: const InputDecoration(
                                                               hintText: "Specify other disease",
@@ -2800,10 +3066,13 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                           mainAxisAlignment: MainAxisAlignment.end,
                                             children: [
                                                 ElevatedButton(
-                                                  onPressed: () => _validateAndEnableNextSection(
-                                                    _diseasesFormKey,
-                                                    (isValid) => setState(() => isMedicalHistoryEnabled = isValid),
-                                                  ),
+                                                  onPressed: () async {
+                                                    _validateAndEnableNextSection(
+                                                      _diseasesFormKey,
+                                                      (isValid) => setState(() => isMedicalHistoryEnabled = isValid),
+                                                    );
+                                                    var addedConditions = await _handleAddConditions();
+                                                  },
                                                   child: const Text("Sumbit All"),
                                                 ),
                                           // Add more fields as needed for dental history

@@ -38,6 +38,7 @@ export default class PatientController {
         const data = req.body;
         try {
             const patients = await Patient.getAllPatients(data);
+            console.log('Patients retrieved successfully from controller:', patients);
             return res.status(200).json({ message: 'Patients retrieved successfully from controller', patients});
         } catch (error) {
             res.status(500).json({ error: error.message });

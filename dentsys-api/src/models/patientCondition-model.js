@@ -15,7 +15,7 @@ export default class PatientCondition {
         try {
             // get current conditions of patient
             const currentConditions = await this.getPatientConditions(patient_id) || []; // NOTE: '|| []' is just a fallback to prevent 'undefined' error
-            console.log('currentConditions:', currentConditions);
+            // console.log('currentConditions:', currentConditions);
 
             // create a map of existing conditions
             const currentConditionsMap = new Map(currentConditions.map(condition => [condition.condition_id, condition]));
@@ -34,7 +34,7 @@ export default class PatientCondition {
                     const values = [patientCondition_status, patient_id, condition_id];
                     const [condition_result] = await connection.query(queryStr, values);
                     insertedConditions.push(
-                        {
+                        {   
                             patient_id: patient_id,
                             condition_id: condition_id,
                             patientCondition_status: patientCondition_status,
@@ -45,8 +45,11 @@ export default class PatientCondition {
                     const queryStr = 'INSERT INTO patient_conditions (patient_id, condition_id, patientCondition_status) VALUES (?, ?, ?)';
                     const values = [patient_id, condition_id, patientCondition_status];    
                     const [condition_result] = await connection.query(queryStr, values);
+                    const pcon_id = condition_result.insertId;
+
                     insertedConditions.push(
                         {
+                            patientCondition_id: pcon_id,
                             patient_id: patient_id,
                             condition_id: condition_id,
                             patientCondition_status: patientCondition_status,
@@ -74,7 +77,19 @@ export default class PatientCondition {
     }
 
     static async getPatientConditions(patient_id) {
-        const queryStr = 'SELECT * FROM patient_conditions WHERE patient_id = ?';
+        const queryStr = `
+            SELECT 
+                pc.*, 
+                c.condition_name 
+            FROM 
+                patient_conditions pc
+            INNER JOIN 
+                conditions c 
+            ON 
+                pc.condition_id = c.condition_id
+            WHERE 
+                pc.patient_id = ?;
+        `;
 
         try {
             const [conditions_result] = await pool.query(queryStr, [patient_id]); // a patient can have 0 to many medical conditions
@@ -83,6 +98,46 @@ export default class PatientCondition {
         } catch (error) {
             console.log('Error getting patient conditions from model', error);
             throw error;  
+        }
+    }
+
+    static async getByPconId(patientCondition_id){
+        const queryStr = 
+        `SELECT * 
+        FROM patient_conditions 
+        WHERE patientCondition_id = ?;
+        `
+        try {
+            const [condition_result] = await pool.query(queryStr, [patientCondition_id]);
+            if (condition_result.length === 0) {
+                console.log('Patient condition not found');
+                throw new Error('Patient condition not found');
+            } else {
+                console.log('Patient condition retrieved successfully');
+                return condition_result;
+            }
+        } catch (error) {
+            console.log('Error getting patient condition by ID from model', error);
+            throw error;
+        }
+    }
+
+    static async removePatientCondition(data) {
+        const {patient_id, condition_id} = data;
+        const queryStr = 'DELETE FROM patient_conditions WHERE patient_id = ? AND condition_id = ?';
+        const values = [patient_id, condition_id];
+        try {
+            const [condition_result] = await pool.query(queryStr, values);
+            if (condition_result.affectedRows === 0) {
+                console.log('Patient condition not found');
+                throw new Error('Patient condition not found');
+            } else {
+                console.log('Patient condition deleted successfully');
+                return condition_result;
+            }
+        } catch (error) {
+            console.log('Error deleting patient condition from model', error);
+            throw error;
         }
     }
 }

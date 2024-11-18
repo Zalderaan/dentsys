@@ -28,8 +28,23 @@ export default class Insurance {
         }
     }
 
-    static async getInsurance(id, ){
+    static async getInsurance(id){
         const queryStr = 'SELECT * FROM insurance WHERE patient_id = ?';
+        try {
+            const [insurance] = await pool.query(queryStr, [id]);
+            
+            if (insurance.length === 0) {
+                throw new Error('Patient insurance not found');
+            }
+            return insurance;
+        } catch (error) {
+            console.log('Error getting insurance from model', error);
+            throw error;
+        }
+    }
+
+    static async getByInsuranceId(id){
+        const queryStr = 'SELECT * FROM insurance WHERE insurance_id = ?';
         try {
             const [insurance] = await pool.query(queryStr, [id]);
             

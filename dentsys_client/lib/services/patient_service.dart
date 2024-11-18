@@ -65,11 +65,11 @@ class PatientService {
         headers: headers,
       );
       if (response.statusCode == 200) {
-        //print (jsonDecode(response.body));
-        final responseData = jsonDecode(response.body) as List;
-        //print ('$responseData');
-        final responseMap = responseData.map((data) => Patient.fromJson(data)).toList();
-        //print ('$responseMap');
+        final data = jsonDecode(response.body);
+        final fetchedPatients = data['patients'] as List<dynamic>;
+        // print('fetched patients: $fetchedPatients');
+        final responseMap = fetchedPatients.map((data) => Patient.fromJson(data)).toList();
+        // print ('response map: $responseMap');
         return responseMap;
       } else {
         throw Exception('Failed to load patients: ${response.body}');

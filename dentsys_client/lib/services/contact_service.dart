@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 class ContactService {
   final String baseUrl = 'http://localhost:3000/dentsys-api';
   
-  // TODO use in add contact form
   Future<Contact> addContactService(Contact contact) async {
     const headers = {
       'Content-Type': 'application/json'

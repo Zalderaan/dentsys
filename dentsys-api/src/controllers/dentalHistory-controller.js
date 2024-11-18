@@ -5,7 +5,8 @@ export default class DentalHistoryController {
     static async addDentalHistory(req, res) {
         const data = req.body;
         try {
-            const newDentalHistory = await DentalHistory.createDentalHist(req.body);
+            const newDentalHistoryId = await DentalHistory.createDentalHist(data);
+            const newDentalHistory = await DentalHistory.getDentalHistByDentalId(newDentalHistoryId);
             return res.status(201).json({ message: 'Dental history created successfully from controller', newDentalHistory});
         } catch (error) {
             res.status(500).json({ error: error.message });
