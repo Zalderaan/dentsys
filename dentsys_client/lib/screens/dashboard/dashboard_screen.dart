@@ -34,7 +34,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       const AddApppointmentScreen(),
       const AddApppointmentScreen(),
       PatientRecords(
-        onAddPatient: _handleAddPatient,
+        onAddPatient: _handleAddPatient, 
+        onReports: _handlePatientReports,
       ),
       const AddPatientRecordScreen(),
       const ReportsScreen(),
@@ -46,6 +47,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void _handleAddPatient() {
     setState(() {
       selectedIndex = 3; // Set index for AddPatientRecordScreen
+    });
+  }
+
+  void _handlePatientReports() {
+    setState(() {
+      selectedIndex = 4; // Set index for AddPatientRecordScreen
     });
   }
 
