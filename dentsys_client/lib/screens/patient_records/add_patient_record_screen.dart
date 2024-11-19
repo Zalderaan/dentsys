@@ -145,12 +145,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
       ).show(context);
     }
   }
-
   
-
-  
-
-
   Future<void> _handleAddContact() async {
     if (_patientId == null) {
       // Handle the case where _patientId is null

@@ -37,7 +37,7 @@ class Patient {
 
   @override
   String toString() {
-    var fullName = '$firstName' '$lastName';
+    var fullName = '$firstName ' '$lastName';
     return fullName;
   }
 
@@ -64,27 +64,28 @@ class Patient {
 
   factory Patient.fromJson(Map<String, dynamic> json){
     // print ('received in fromJson patient: $json');
-    final patient = json['newPatient'] != null ? json['newPatient'][0] : json; // if 'newPatient' exists in json response, use it, else use json 
+    final patientData = json['newPatient'] != null ? json['newPatient'][0] : json; // if 'newPatient' exists in json response, use it, else use json 
+    print('patient in fromJson: $patientData');
     // NOTE: newPatient is for add-patient, patient is for get-patient (next time be consistent in sending response data from backend)
     return Patient(
-      id: patient['patient_id'],
-      firstName: patient['patient_firstName'],
-      lastName: patient['patient_lastName'],
-      middleName: patient['patient_middleName'],
-      nickname: patient['patient_nickname'],
-      birthDate: patient['patient_birthdate'],
-      age: patient['patient_age'] is String 
-        ? int.tryParse(patient['patient_age']) ?? 0 
-        : patient['patient_age'] as int,
-      sex: patient['patient_sex'],
-      nationality: patient['patient_nationality'],
-      religion: patient['patient_religion'],
-      occupation:  patient['patient_occupation'],
-      reason: patient['patient_reason'],
-      balance: patient['patient_totalBal'],
-      parentName: patient['patient_parentName'],
-      parentOccupation: patient['patient_parentOccupation'],
-      referrer: patient['patient_referrer']
+      id: patientData['patient_id'],
+      firstName: patientData['patient_firstName'],
+      lastName: patientData['patient_lastName'],
+      middleName: patientData['patient_middleName'],
+      nickname: patientData['patient_nickname'],
+      birthDate: patientData['patient_birthdate'],
+      age: patientData['patient_age'] is String 
+        ? int.tryParse(patientData['patient_age']) ?? 0 
+        : patientData['patient_age'] as int,
+      sex: patientData['patient_sex'],
+      nationality: patientData['patient_nationality'],
+      religion: patientData['patient_religion'],
+      occupation:  patientData['patient_occupation'],
+      reason: patientData['patient_reason'],
+      balance: patientData['patient_totalBal'],
+      parentName: patientData['patient_parentName'],
+      parentOccupation: patientData['patient_parentOccupation'],
+      referrer: patientData['patient_referrer']
     );
     // remember: balance temporarily removed
   }

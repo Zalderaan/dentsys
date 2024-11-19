@@ -1,3 +1,4 @@
+import 'package:dentsys_client/models/patientDetails_model.dart';
 import 'package:dentsys_client/models/patient_model.dart';
 import 'package:dentsys_client/services/patient_service.dart';
 
@@ -16,7 +17,7 @@ class PatientController {
   }
 
   // GET
-  Future<Patient> getPatientById(String patient_id) async {
+  Future<PatientDetails> getPatientById(String patient_id) async {
     try {
       final fetchedPatient = await _patientService.getPatientByIdService(patient_id);
       return fetchedPatient;

@@ -1,3 +1,4 @@
+import 'package:dentsys_client/models/patientDetails_model.dart';
 import 'package:dentsys_client/screens/reports/forms/allergies_forms.dart';
 import 'package:dentsys_client/screens/reports/forms/contact_info_forms.dart';
 import 'package:dentsys_client/screens/reports/forms/dental_history_forms.dart';
@@ -7,18 +8,45 @@ import 'package:dentsys_client/screens/reports/forms/medical_history_forms.dart'
 import 'package:flutter/material.dart';
 import 'package:dentsys_client/screens/reports/forms/personal_info_forms.dart';
 
+import 'package:dentsys_client/controllers/patient_controller.dart';
+
 class ReportsScreen extends StatefulWidget {
-  const ReportsScreen({super.key});
+  final int? patient_id;
+  const ReportsScreen({super.key , this.patient_id});
 
   @override
   State<ReportsScreen> createState() => _ReportsScreenState();
 }
 
 class _ReportsScreenState extends State<ReportsScreen> {
+  final PatientController patientController = PatientController();
+  late PatientDetails patientDetails;
 
+  @override
+  void initState() {
+    super.initState();
+    loadPatientDetails();
+  }
+
+  // get patient details
+  void loadPatientDetails() async {
+    try {
+      final details = await patientController.getPatientById(widget.patient_id.toString());
+      print('$details'); // debug line
+      setState(() {
+        patientDetails = details;
+      });
+    } catch (error) {
+      print('Error getting patient details: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    int? patientId = widget.patient_id;
+    // print('patient id in reports: $patientId'); //debug line
+    
+
     return Material(
       child: SizedBox(
         child: SingleChildScrollView(
@@ -43,12 +71,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     ],
                   ),
                   padding: const EdgeInsets.all(20.0),
-                  child: const Row(
+                  child: Row(
                     children: [
                       Expanded(
                         child: Text(
-                          "Patient Record",
-                          style: TextStyle(
+                          "Patient Record for ${patientId ?? 'Unknown'}",
+                          style: const TextStyle(
                             fontSize: 24.0,
                             fontWeight: FontWeight.bold,
                             color: Color.fromARGB(255, 66, 43, 21),

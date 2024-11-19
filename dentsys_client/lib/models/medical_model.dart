@@ -84,7 +84,8 @@ String toString() {
 }
 
   factory Medical.fromJson(Map<String, dynamic> json){
-    final medical = json['newMedicalHistory'][0];
+    print('Medical.fromJson: $json');
+    final medical = json['newMedicalHistory'] != null ? json['newMedicalHistory'][0] : json;
     return Medical(
       medical_id: medical['medical_id'],
       patient_id: medical['patient_id'],

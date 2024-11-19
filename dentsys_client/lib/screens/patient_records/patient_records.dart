@@ -8,7 +8,7 @@ import 'package:dentsys_client/models/patient_model.dart';
 
 class PatientRecords extends StatefulWidget {
   final VoidCallback onAddPatient; // Add this parameter
-  final VoidCallback onReports;
+  final Function(int?) onReports;
 
   const PatientRecords({super.key, required this.onAddPatient, required this.onReports});
 
@@ -310,7 +310,7 @@ class _PatientRecordsState extends State<PatientRecords> {
       itemBuilder: (context, index) {
         final patient = filteredRecords[index];
         return buildRecordItem(
-          "${patient.firstName} ${patient.lastName}"
+          "${patient.firstName} ${patient.lastName}," , patient.id,
           //patient.status ?? "Unknown",
           //patient.schedule ?? "Unscheduled",
         );
@@ -318,9 +318,15 @@ class _PatientRecordsState extends State<PatientRecords> {
     );
   }
 
- Widget buildRecordItem(String name) {
+  Widget buildRecordItem(String name, int? id) {
     return  TextButton(
-    onPressed: widget.onReports,
+    onPressed: () {
+      print ("Patient ID: $id");
+      widget.onReports(id);
+      // Navigator.of(context).push(
+      //   MaterialPageRoute(builder: (context) => ReportsScreen(patient_id: id,)),
+      // ); 
+    },
     child: Card(
         color: Colors.white,
         child: Padding(
@@ -330,15 +336,26 @@ class _PatientRecordsState extends State<PatientRecords> {
             children: [
               Expanded(
                 flex: 3,
-                child: Text(
-                  name,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20.0,
-                    color: Colors.brown[900],
-                  ),
-                  textAlign: TextAlign.left,
-                ),
+                child: Row (
+                  children: [
+                    Text(
+                      name,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0,
+                        color: Colors.brown[900],
+                      ),
+                      textAlign: TextAlign.left,
+                    ),
+                    Text(
+                      "ID: $id",
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        color: Colors.brown[600],
+                      ),
+                    ),
+                  ],
+                ) 
               ),
               const Expanded(
                 flex: 1,
