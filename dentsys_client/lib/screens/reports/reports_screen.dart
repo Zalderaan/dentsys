@@ -32,7 +32,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
   void loadPatientDetails() async {
     try {
       final details = await patientController.getPatientById(widget.patient_id.toString());
-      print('$details'); // debug line
       setState(() {
         patientDetails = details;
       });
@@ -44,6 +43,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
   @override
   Widget build(BuildContext context) {
     int? patientId = widget.patient_id;
+    final patient = patientDetails.patient;
+    final contact = patientDetails.contact;
+    final dental = patientDetails.dental;
+    final insurance = patientDetails.insurance;
+    final medical = patientDetails.medical;
+    final allergies = patientDetails.allergies;
+    final conditions = patientDetails.conditions;
     // print('patient id in reports: $patientId'); //debug line
     
 
@@ -71,12 +77,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     ],
                   ),
                   padding: const EdgeInsets.all(20.0),
-                  child: Row(
+                  child: const Row(
                     children: [
                       Expanded(
                         child: Text(
-                          "Patient Record for ${patientId ?? 'Unknown'}",
-                          style: const TextStyle(
+                          "Patient Record",
+                          style: TextStyle(
                             fontSize: 24.0,
                             fontWeight: FontWeight.bold,
                             color: Color.fromARGB(255, 66, 43, 21),
