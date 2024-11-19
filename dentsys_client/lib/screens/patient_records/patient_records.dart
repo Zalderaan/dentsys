@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import  'package:dentsys_client/services/patient_service.dart';
 import 'package:dentsys_client/models/patient_model.dart';
 
-
-
-
 class PatientRecords extends StatefulWidget {
   final VoidCallback onAddPatient; // Add this parameter
   final Function(int?) onReports;
@@ -321,7 +318,7 @@ class _PatientRecordsState extends State<PatientRecords> {
   Widget buildRecordItem(String name, int? id) {
     return  TextButton(
     onPressed: () {
-      print ("Patient ID: $id");
+      // print ("Patient ID: $id"); // debug line
       widget.onReports(id);
       // Navigator.of(context).push(
       //   MaterialPageRoute(builder: (context) => ReportsScreen(patient_id: id,)),
