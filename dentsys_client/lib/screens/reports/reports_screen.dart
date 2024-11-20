@@ -40,21 +40,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
   PatientDetails? patientDetails;
   bool isLoading = true;
 
-  // TODO: place handle update functions in the dialog class down below
-  // Future<void> handleUpdateContact(Contact updatedContact) async {
-  //   try {
-  //     final ContactController contactController = ContactController();
-  //     final  updateContactResult = await contactController.updateContact(updatedContact);
-      
-  //     if (updateContactResult != null) {
-  //       print('Contact updated successfully');
-  //     } else {
-  //       print('Error updating contact: $updateContactResult');
-  //     }
-  //   } catch (error) {
-  //     print('Error updating contact: $error');
-  //   }
-  // }
 
   @override
   void initState() {
@@ -931,7 +916,6 @@ void _showEditPatientFormsDialog(BuildContext context, PatientDetails details) {
     // if (allergies.allergies_others != null && allergies.allergies_others.isNotEmpty) {
     //   trueAllergies.add(allergies.allergies_others);
     // }
-
     return trueAllergies;
   }
   //

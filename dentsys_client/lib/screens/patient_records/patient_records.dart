@@ -129,37 +129,45 @@ class _PatientRecordsState extends State<PatientRecords> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          buildInfoCard(
-                            "NUMBER OF PATIENTS",
-                            ["Returnee: ", "14", "New: ", "10", "Total: ", "24"],
-                            Icons.people,
-                            color: Colors.white,
+                          Expanded(
+                            child: buildInfoCard(
+                              "NUMBER OF PATIENTS",
+                              ["Returnee: ", "14", "New: ", "10", "Total: ", "24"],
+                              Icons.people,
+                              color: Colors.white,
+                            ),
                           ),
-                          buildInfoCard(
-                            "LAST PATIENT DONE",
-                            [
-                              "Patient Name: ",
-                              "Gofrey Eclarinal",
-                              "Procedure Done: ",
-                              "Keme",
-                              "Dentist: ",
-                              "Dr. John Eric Dedicatoria"
-                            ],
-                            Icons.person,
-                            color: Colors.white,
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: buildInfoCard(
+                              "LAST PATIENT DONE",
+                              [
+                                "Patient Name: ",
+                                "Godfrey Eclarinal",
+                                "Procedure Done: ",
+                                "Keme",
+                                "Dentist: ",
+                                "Dr. John Eric Dedicatoria"
+                              ],
+                              Icons.person,
+                              color: Colors.white,
+                            ),
                           ),
-                          buildInfoCard(
-                            "LATEST NEW PATIENT",
-                            [
-                              "Patient Name: ",
-                              "Jane Doe",
-                              "Procedure Done: ",
-                              "Consultation",
-                              "Dentist: ",
-                              "Dr. John Eric Dedicatoria"
-                            ],
-                            Icons.person,
-                            color: Colors.white,
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: buildInfoCard(
+                              "LATEST NEW PATIENT",
+                              [
+                                "Patient Name: ",
+                                "Jane Doe",
+                                "Procedure Done: ",
+                                "Consultation",
+                                "Dentist: ",
+                                "Dr. John Eric Dedicatoria"
+                              ],
+                              Icons.person,
+                              color: Colors.white,
+                            ),
                           ),
                         ],
                       ),
@@ -197,48 +205,85 @@ class _PatientRecordsState extends State<PatientRecords> {
   }
 
 
-  Widget buildInfoCard(String title, List<String> details, IconData icon, {Color color = Colors.white}) {
-  return Flexible(
-    child: Card(
-      color: const Color.fromARGB(255, 66, 43, 21),
-      child: Padding(
-        padding: const EdgeInsets.all(18.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              children: [
-                Icon(icon, size: 100.0, color: color),
-              ],
-            ),
-            const SizedBox(width: 10.0),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: color),
-                  ),
-                  const SizedBox(height: 10.0),
-                  // Insert details based on the provided details list
-                  for (int i = 0; i < details.length; i += 2)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+ Widget buildInfoCard(String title, List<String> details, IconData icon, {Color color = Colors.white}) {
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      return Card(
+        color: const Color.fromARGB(255, 66, 43, 21),
+        child: Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: constraints.maxWidth > 400
+              ? Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
                       children: [
-                        Text(details[i], style: TextStyle(fontSize: 16, color: color)),
-                        Text(details[i + 1], style: TextStyle(fontSize: 16, color: color)),
+                        Icon(icon, size: 80.0, color: color),
                       ],
                     ),
-                ],
-              ),
-            ),
-          ],
+                    const SizedBox(width: 10.0),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            title,
+                            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: color),
+                          ),
+                          const SizedBox(height: 10.0),
+                          // Insert details based on the provided details list
+                          for (int i = 0; i < details.length; i += 2)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(details[i], style: TextStyle(fontSize: 16, color: color)),
+                                Text(details[i + 1], style: TextStyle(fontSize: 16, color: color)),
+                              ],
+                            ),
+                        ],
+                      ),
+                    ),
+                  ],
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(child: Icon(icon, size: 80.0, color: color)),
+                    const SizedBox(height: 10.0),
+                    Text(
+                      title,
+                      style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: color),
+                    ),
+                    const SizedBox(height: 10.0),
+                    // Insert details based on the provided details list
+                    for (int i = 0; i < details.length; i += 2)
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          
+                          Row(
+                            children: [
+                              Text(details[i], style: TextStyle(fontSize: 16, color: color)),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text(details[i + 1], style: TextStyle(fontSize: 16, color: color)),
+                            ],
+                          ),
+                        ],
+                      ),
+                  ],
+                ),
         ),
-      ),
-    ),
+      );
+    },
   );
 }
+
+
+
+
 
   Widget buildSearchAndFilterSection() {
   return Row(
