@@ -27,7 +27,9 @@ class Insurance{
   }
 
   factory Insurance.fromJson(Map<String, dynamic> json){
-    final insurance = json['newInsurance'][0];
+    print('Insurance.fromJson: $json');
+    final insurance = json['newInsurance'] != null ? json['newInsurance'][0] : json;
+
     return Insurance(
       id: insurance['insruance_id'],
       patient_id: insurance['patent_id'],

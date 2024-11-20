@@ -15,7 +15,7 @@ class Conditions {
   factory Conditions.fromJson(Map<String, dynamic> json) {
     return Conditions(
       condition_id: json['condition_id'],
-      patientCondition_status: json['patientCondition_status'],
+      patientCondition_status: json['patientCondition_status'] == 1 ? true : false,
     );
   }
 

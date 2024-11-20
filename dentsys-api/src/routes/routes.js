@@ -19,6 +19,8 @@ router.post('/register', UserController.registerUser);
 router.post('/login', UserController.loginUser);
 // router.post('/logout', logout);
 
+// patient full detail routes
+
 // patient routes
 router.post('/add-patient', PatientController.addPatient);
 router.get('/patients/:id', PatientController.getPatientDetails);
@@ -38,7 +40,7 @@ router.get('/get-dental-history/:id', DentalHistoryController.getDentalHistory);
 router.put('/update-dental-history/:id', DentalHistoryController.updateDentalHistory);
 router.delete('/delete-dental-history/:id', DentalHistoryController.removeDentalHistory);
 
-// insruance routes
+// insurance routes
 router.post('/add-insurance', InsuranceController.addInsurance);
 router.get('/get-insurance/:id', InsuranceController.getInsurance);
 router.put('/update-insurance/:id', InsuranceController.updateInsurance);

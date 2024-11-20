@@ -1,3 +1,5 @@
+import 'package:dentsys_client/models/patientDetails_model.dart';
+
 import '../models/patient_model.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -32,7 +34,7 @@ class PatientService {
 
   // TODO: use in patient details
   // get patient by id (GET)
-  Future<Patient> getPatientByIdService(String patient_id) async {
+  Future<PatientDetails> getPatientByIdService(String patient_id) async {
     const headers = {
       'Content-Type': 'application/json'
     };
@@ -42,9 +44,9 @@ class PatientService {
         Uri.parse('$baseUrl/patients/$patient_id'),
         headers: headers
       );
-
+      // print('response: ${response.body}'); //debug line
       if (response.statusCode == 200) {
-        return Patient.fromJson(jsonDecode(response.body));
+        return PatientDetails.fromJson(jsonDecode(response.body));
       } else {
         throw Exception('Failed to load patient: ${response.body}');
       }
@@ -53,7 +55,6 @@ class PatientService {
     }
   }
 
-  // TODO use in patient list
   Future<List<Patient>> getAllPatientsService() async {
     const headers = {
       'Content-Type': 'applicaton/json'

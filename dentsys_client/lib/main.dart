@@ -26,15 +26,18 @@ class MyApp extends StatelessWidget {
         '/dashboard': (context) => const DashboardScreen(),
         '/patient_records': (context) => PatientRecords(
           onAddPatient: () {
+            print('onAddPatient in main');
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => const AddPatientRecordScreen()),
             );
-          }, onReports: () { 
+          }, onReports: (int? id) { 
+            print('onReports in main $id');
             Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const ReportsScreen()),
+              MaterialPageRoute(builder: (context) => ReportsScreen(patient_id: id,)),
             ); 
           },
         ),
+        // '/patient-details': (context) => const ReportsScreen(),
       }
     );
   }
