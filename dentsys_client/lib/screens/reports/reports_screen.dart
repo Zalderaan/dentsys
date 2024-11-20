@@ -84,6 +84,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         child: Column(
                           children: [
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 const Expanded(
                                   child: Text(
@@ -129,378 +130,129 @@ class _ReportsScreenState extends State<ReportsScreen> {
                               ],
                             ),
                             const SizedBox(height: 5.0),
-                                      Divider(
+                            Divider(
                                         height: 10,
                                         color: Colors.grey[800],
                                         thickness: 0.5,
                                       ),
-                                const SizedBox(height: 10),
+                            const SizedBox(height: 10),
                             
-                            //NAME
-                            const Column(
+                            
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Row(
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      "NAME",
-                                      style: TextStyle(
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color.fromARGB(255, 66, 43, 21),
-                                      ),
-                                    ),
+                                    buildInfoSection("Name", "Erix"),
+                                    const SizedBox(height: 15.0),
+                                    
+                                    buildInfoSection("Age", "21"),
+                                    const SizedBox(height: 15.0),
+
+                                    buildInfoSection("Age", "21"),
+                                    const SizedBox(height: 15.0),
+
+                                    buildInfoSection("Birthdate", "21"),
+                                    const SizedBox(height: 15.0),
+
+                                    buildInfoSection("Gender", "21"),
+                                    const SizedBox(height: 15.0),
+
+                                    buildInfoSection("Occupation", "21"),
+                                    const SizedBox(height: 15.0),
+
+                                    buildInfoSection("Home Address", "21"),
+                                    const SizedBox(height: 15.0),
+
+                                    buildInfoSection("Contact Number", "21"),
+                                    const SizedBox(height: 15.0),
+
+                                    buildInfoSection("Email Address", "21"),
+                                    const SizedBox(height: 15.0),
+
+                                    buildInfoSection("Fax Number", "21"),
+                                    const SizedBox(height: 15.0),
+
+                                    buildInfoSection("Blood Type", "21"),
+                                    const SizedBox(height: 15.0),
+
+                                    buildInfoSection("Allergies", "21"),
+                                    const SizedBox(height: 15.0),
+
+                                    buildInfoSection("Diseases", "21"),
+                                    const SizedBox(height: 15.0),
+
+                                    buildInfoSection("Age", "21"),
+                                    const SizedBox(height: 15.0),
+
+                                    buildInfoSection("Age", "21"),
+                                    const SizedBox(height: 15.0),
                                   ],
                                 ),
-                                Row(
+                                const SizedBox(width: 300),
+
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      "Vinsmoke Sanji",
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(255, 66, 43, 21),
-                                      ),
-                                    ),
+                                    buildInfoSection("Name", "Erix"),
+                                    const SizedBox(height: 15.0),
+                                    
+                                    buildInfoSection("Age", "21"),
+                                    const SizedBox(height: 15.0),
+
+                                    buildInfoSection("Age", "21"),
+                                    const SizedBox(height: 15.0),
+
+                                    buildInfoSection("Birthdate", "21"),
+                                    const SizedBox(height: 15.0),
+
+                                    buildInfoSection("Gender", "21"),
+                                    const SizedBox(height: 15.0),
+
+                                    buildInfoSection("Occupation", "21"),
+                                    const SizedBox(height: 15.0),
+
+                                    buildInfoSection("Home Address", "21"),
+                                    const SizedBox(height: 15.0),
+
+                                    buildInfoSection("Contact Number", "21"),
+                                    const SizedBox(height: 15.0),
+
+                                    buildInfoSection("Email Address", "21"),
+                                    const SizedBox(height: 15.0),
+
+                                    buildInfoSection("Fax Number", "21"),
+                                    const SizedBox(height: 15.0),
+
+                                    buildInfoSection("Blood Type", "21"),
+                                    const SizedBox(height: 15.0),
+
+                                    buildInfoSection("Allergies", "21"),
+                                    const SizedBox(height: 15.0),
+
+                                    buildInfoSection("Diseases", "21"),
+                                    const SizedBox(height: 15.0),
+
+                                    buildInfoSection("Age", "21"),
+                                    const SizedBox(height: 15.0),
+
+                                    buildInfoSection("Age", "21"),
+                                    const SizedBox(height: 15.0),
                                   ],
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 15.0),
-                            //AGE
-                            const Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "AGE",
-                                      style: TextStyle(
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color.fromARGB(255, 66, 43, 21),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "21",
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(255, 66, 43, 21),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 15.0),
-                            //BIRTHDAY
-                            const Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "BIRTHDAY",
-                                      style: TextStyle(
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color.fromARGB(255, 66, 43, 21),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "12-20-2003",
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(255, 66, 43, 21),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 15.0),
-                            //GENDER
-                            const Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "GENDER",
-                                      style: TextStyle(
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color.fromARGB(255, 66, 43, 21),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Male",
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(255, 66, 43, 21),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 15.0),
-                            //OCCUPATION
-                            const Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "OCCUPATION",
-                                      style: TextStyle(
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color.fromARGB(255, 66, 43, 21),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Chef",
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(255, 66, 43, 21),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 15.0),
-                            //HOME ADDRESS
-                            const Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "HOME ADDRESS",
-                                      style: TextStyle(
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color.fromARGB(255, 66, 43, 21),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "North Blue",
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(255, 66, 43, 21),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 15.0),
-                            //CONTACT NUMBER
-                            const Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "CONTACT NUMBER",
-                                      style: TextStyle(
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color.fromARGB(255, 66, 43, 21),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "09732178319",
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(255, 66, 43, 21),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 15.0),
-                            //EMAIL ADDRESS
-                            const Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "EMAIL ADDRESS",
-                                      style: TextStyle(
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color.fromARGB(255, 66, 43, 21),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "sanjiv@gmail.com",
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(255, 66, 43, 21),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 15.0),
-                            //FAX NUMBER
-                            const Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "FAX NUMBER",
-                                      style: TextStyle(
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color.fromARGB(255, 66, 43, 21),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Vinsmoke Sanji",
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(255, 66, 43, 21),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 15.0),
-                            //BLOOD TYPE
-                            const Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "BLOOD TYPE",
-                                      style: TextStyle(
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color.fromARGB(255, 66, 43, 21),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "B",
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(255, 66, 43, 21),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 15.0),
-                            //ALLERGIES
-                            const Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "ALLERGIES",
-                                      style: TextStyle(
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color.fromARGB(255, 66, 43, 21),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Latex",
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(255, 66, 43, 21),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 15.0),
-                            //DISEASES
-                            const Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "DISEASES",
-                                      style: TextStyle(
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color.fromARGB(255, 66, 43, 21),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "High Blood Pressure",
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(255, 66, 43, 21),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 15.0),
+                            
+
+                            
 
                           ],
                         ),
                       ),
                     ),
+                    
+                    
                     const SizedBox(width: 15.0),
 
                     // COLUMN FOR TREATMENT RECORD AND APPOINTMENTS
@@ -830,3 +582,37 @@ void _showEditPatientFormsDialog(BuildContext context) {
   
  
   
+Widget buildInfoSection(String label, String value) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start, // Align text to the start
+    children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text(
+            label.toUpperCase(),
+            style: const TextStyle(
+              fontSize: 12.0,
+              fontWeight: FontWeight.w500,
+              color: Color.fromARGB(255, 66, 43, 21),
+            ),
+          ),
+        ],
+      ),
+      const SizedBox(height: 4.0), // Spacing between label and value
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 20.0,
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 66, 43, 21),
+            ),
+          ),
+        ],
+      ),
+    ],
+  );
+}
