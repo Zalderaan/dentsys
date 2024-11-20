@@ -1,3 +1,4 @@
+import 'package:dentsys_client/models/allergies_model.dart';
 import 'package:dentsys_client/models/patientDetails_model.dart';
 import 'package:dentsys_client/screens/reports/forms/allergies_forms.dart';
 import 'package:dentsys_client/screens/reports/forms/contact_info_forms.dart';
@@ -6,6 +7,7 @@ import 'package:dentsys_client/screens/reports/forms/dental_insurance_forms.dart
 import 'package:dentsys_client/screens/reports/forms/diseases_forms.dart';
 import 'package:dentsys_client/screens/reports/forms/medical_history_forms.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:dentsys_client/screens/reports/forms/personal_info_forms.dart';
 
 import 'package:dentsys_client/controllers/patient_controller.dart';
@@ -20,7 +22,12 @@ class ReportsScreen extends StatefulWidget {
 
 class _ReportsScreenState extends State<ReportsScreen> {
   final PatientController patientController = PatientController();
-  late PatientDetails patientDetails;
+  PatientDetails? patientDetails;
+  bool isLoading = true;
+
+
+  
+
 
   @override
   void initState() {
@@ -29,27 +36,32 @@ class _ReportsScreenState extends State<ReportsScreen> {
   }
 
   // get patient details
-  void loadPatientDetails() async {
+ void loadPatientDetails() async {
     try {
       final details = await patientController.getPatientById(widget.patient_id.toString());
       setState(() {
         patientDetails = details;
+        isLoading = false;
       });
     } catch (error) {
       print('Error getting patient details: $error');
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    int? patientId = widget.patient_id;
-    final patient = patientDetails.patient;
-    final contact = patientDetails.contact;
-    final dental = patientDetails.dental;
-    final insurance = patientDetails.insurance;
-    final medical = patientDetails.medical;
-    final allergies = patientDetails.allergies;
-    final conditions = patientDetails.conditions;
+    
+    // int? patientId = widget.patient_id;
+    // final patient = patientDetails.patient;
+    // final contact = patientDetails.contact;
+    // final dental = patientDetails.dental;
+    // final insurance = patientDetails.insurance;
+    // final medical = patientDetails.medical;
+    // final allergies = patientDetails.allergies;
+    // final conditions = patientDetails.conditions;
     // print('patient id in reports: $patientId'); //debug line
     
 
@@ -172,113 +184,131 @@ class _ReportsScreenState extends State<ReportsScreen> {
                             const SizedBox(height: 10),
                             
                             
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    buildInfoSection("Name", "Erix"),
-                                    const SizedBox(height: 15.0),
-                                    
-                                    buildInfoSection("Age", "21"),
-                                    const SizedBox(height: 15.0),
-
-                                    buildInfoSection("Age", "21"),
-                                    const SizedBox(height: 15.0),
-
-                                    buildInfoSection("Birthdate", "21"),
-                                    const SizedBox(height: 15.0),
-
-                                    buildInfoSection("Gender", "21"),
-                                    const SizedBox(height: 15.0),
-
-                                    buildInfoSection("Occupation", "21"),
-                                    const SizedBox(height: 15.0),
-
-                                    buildInfoSection("Home Address", "21"),
-                                    const SizedBox(height: 15.0),
-
-                                    buildInfoSection("Contact Number", "21"),
-                                    const SizedBox(height: 15.0),
-
-                                    buildInfoSection("Email Address", "21"),
-                                    const SizedBox(height: 15.0),
-
-                                    buildInfoSection("Fax Number", "21"),
-                                    const SizedBox(height: 15.0),
-
-                                    buildInfoSection("Blood Type", "21"),
-                                    const SizedBox(height: 15.0),
-
-                                    buildInfoSection("Allergies", "21"),
-                                    const SizedBox(height: 15.0),
-
-                                    buildInfoSection("Diseases", "21"),
-                                    const SizedBox(height: 15.0),
-
-                                    buildInfoSection("Age", "21"),
-                                    const SizedBox(height: 15.0),
-
-                                    buildInfoSection("Age", "21"),
-                                    const SizedBox(height: 15.0),
-                                  ],
-                                ),
-                                const SizedBox(width: 300),
-
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    buildInfoSection("Name", "Erix"),
-                                    const SizedBox(height: 15.0),
-                                    
-                                    buildInfoSection("Age", "21"),
-                                    const SizedBox(height: 15.0),
-
-                                    buildInfoSection("Age", "21"),
-                                    const SizedBox(height: 15.0),
-
-                                    buildInfoSection("Birthdate", "21"),
-                                    const SizedBox(height: 15.0),
-
-                                    buildInfoSection("Gender", "21"),
-                                    const SizedBox(height: 15.0),
-
-                                    buildInfoSection("Occupation", "21"),
-                                    const SizedBox(height: 15.0),
-
-                                    buildInfoSection("Home Address", "21"),
-                                    const SizedBox(height: 15.0),
-
-                                    buildInfoSection("Contact Number", "21"),
-                                    const SizedBox(height: 15.0),
-
-                                    buildInfoSection("Email Address", "21"),
-                                    const SizedBox(height: 15.0),
-
-                                    buildInfoSection("Fax Number", "21"),
-                                    const SizedBox(height: 15.0),
-
-                                    buildInfoSection("Blood Type", "21"),
-                                    const SizedBox(height: 15.0),
-
-                                    buildInfoSection("Allergies", "21"),
-                                    const SizedBox(height: 15.0),
-
-                                    buildInfoSection("Diseases", "21"),
-                                    const SizedBox(height: 15.0),
-
-                                    buildInfoSection("Age", "21"),
-                                    const SizedBox(height: 15.0),
-
-                                    buildInfoSection("Age", "21"),
-                                    const SizedBox(height: 15.0),
-                                  ],
-                                ),
-                              ],
-                            ),
                             
+                            patientDetails == null
+                                  ? const Text('No patient data available')
+                                  : buildPatientDetails(patientDetails!),
+                            // Details Fields
+                            // FutureBuilder<PatientDetails>(
+                            //   future: fetchPatientDetails(patientId!), // Replace 9 with the relevant patient ID
+                            //   builder: (context, snapshot) {
+                            //     if (snapshot.connectionState == ConnectionState.waiting) {
+                            //       return const Center(child: CircularProgressIndicator());
+                            //     } else if (snapshot.hasError) {
+                            //       return Center(child: Text('Error: ${snapshot.error}'));
+                            //     } else if (!snapshot.hasData || snapshot.data == null) {
+                            //       return const Center(child: Text('No data available'));
+                            //     } else {
+                            //       return Row(
+                            //         mainAxisAlignment: MainAxisAlignment.start,
+                            //         children: [
+                            //           Column(
+                            //             mainAxisAlignment: MainAxisAlignment.start,
+                            //             children: [
+                            //               buildInfoSection("Name", patient.firstName),
+                            //               const SizedBox(height: 15.0),
+                                          
+                            //               buildInfoSection("Age", "21"),
+                            //               const SizedBox(height: 15.0),
 
+                            //               buildInfoSection("Age", "21"),
+                            //               const SizedBox(height: 15.0),
+
+                            //               buildInfoSection("Birthdate", "21"),
+                            //               const SizedBox(height: 15.0),
+
+                            //               buildInfoSection("Gender", "21"),
+                            //               const SizedBox(height: 15.0),
+
+                            //               buildInfoSection("Occupation", "21"),
+                            //               const SizedBox(height: 15.0),
+
+                            //               buildInfoSection("Home Address", "21"),
+                            //               const SizedBox(height: 15.0),
+
+                            //               buildInfoSection("Contact Number", "21"),
+                            //               const SizedBox(height: 15.0),
+
+                            //               buildInfoSection("Email Address", "21"),
+                            //               const SizedBox(height: 15.0),
+
+                            //               buildInfoSection("Fax Number", "21"),
+                            //               const SizedBox(height: 15.0),
+
+                            //               buildInfoSection("Blood Type", "21"),
+                            //               const SizedBox(height: 15.0),
+
+                            //               buildInfoSection("Allergies", "21"),
+                            //               const SizedBox(height: 15.0),
+
+                            //               buildInfoSection("Diseases", "21"),
+                            //               const SizedBox(height: 15.0),
+
+                            //               buildInfoSection("Age", "21"),
+                            //               const SizedBox(height: 15.0),
+
+                            //               buildInfoSection("Age", "21"),
+                            //               const SizedBox(height: 15.0),
+                            //             ],
+                            //           ),
+                            //           const SizedBox(width: 300),
+
+                            //           Column(
+                            //             mainAxisAlignment: MainAxisAlignment.start,
+                            //             children: [
+                            //               buildInfoSection("Name", "Erix"),
+                            //               const SizedBox(height: 15.0),
+                                          
+                            //               buildInfoSection("Age", "21"),
+                            //               const SizedBox(height: 15.0),
+
+                            //               buildInfoSection("Age", "21"),
+                            //               const SizedBox(height: 15.0),
+
+                            //               buildInfoSection("Birthdate", "21"),
+                            //               const SizedBox(height: 15.0),
+
+                            //               buildInfoSection("Gender", "21"),
+                            //               const SizedBox(height: 15.0),
+
+                            //               buildInfoSection("Occupation", "21"),
+                            //               const SizedBox(height: 15.0),
+
+                            //               buildInfoSection("Home Address", "21"),
+                            //               const SizedBox(height: 15.0),
+
+                            //               buildInfoSection("Contact Number", "21"),
+                            //               const SizedBox(height: 15.0),
+
+                            //               buildInfoSection("Email Address", "21"),
+                            //               const SizedBox(height: 15.0),
+
+                            //               buildInfoSection("Fax Number", "21"),
+                            //               const SizedBox(height: 15.0),
+
+                            //               buildInfoSection("Blood Type", "21"),
+                            //               const SizedBox(height: 15.0),
+
+                            //               buildInfoSection("Allergies", "21"),
+                            //               const SizedBox(height: 15.0),
+
+                            //               buildInfoSection("Diseases", "21"),
+                            //               const SizedBox(height: 15.0),
+
+                            //               buildInfoSection("Age", "21"),
+                            //               const SizedBox(height: 15.0),
+
+                            //               buildInfoSection("Age", "21"),
+                            //               const SizedBox(height: 15.0),
+                            //             ],
+                            //           ),
+                            //         ],
+                            //       );
+                            //     }
+                            //   }
+                            // )   
+
+                            
                             
 
                           ],
@@ -532,9 +562,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
       ),
     );
   }
+  
+  fetchPatientDetails(int i) {
+
+  }
 }
 
-
+// Edit Patient Forms
 void _showEditPatientFormsDialog(BuildContext context) {
   final TextEditingController dialogBirthdateController = TextEditingController();
   final TextEditingController dialogEffectiveDateController = TextEditingController();
@@ -615,38 +649,128 @@ void _showEditPatientFormsDialog(BuildContext context) {
 
   
  
+
+ Widget buildPatientDetails(PatientDetails details) {
+    return Row(
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            buildInfoSection("Name", [details.patient.firstName, details.patient.lastName]),
+            buildInfoSection("Age", [details.patient.age.toString()]),
+            buildInfoSection("Birthdate", [formatDate(details.patient.birthDate)]),
+            buildInfoSection("Gender", [details.patient.sex.toString()]),
+            buildInfoSection("Nationality", [details.patient.nationality]),
+            buildInfoSection("Occupation", [details.patient.occupation]),
+            buildInfoSection("Religion", [details.patient.religion]),
+            buildInfoSection("Email Address", [details.contact.email]),
+            buildInfoSection("Contact Number", [details.contact.mobile_number]),
+            buildInfoSection("Address", [details.contact.home_number, details.contact.home_address]),
+            buildInfoSection("Fax Number", [details.contact.fax_number]),
+            buildInfoSection("Office Number", [details.contact.work_number]),
+            buildInfoSection("Good Health", [details.medical.medical_goodHealth.toString()]),
+            buildInfoSection("Under Medical Treatment", [details.medical.medical_isMedication.toString()]),
+            buildInfoSection("Blood Type", [details.medical.medical_bloodType]),
+            buildInfoSection("Blood Pressure", [details.medical.medical_bloodPressure]),
+            buildInfoSection("Bleeding Time", [details.medical.medical_bleedingTime]),
+
+            
+            // Add other patient fields as needed
+          ],
+        ),
+        const SizedBox(width: 100),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            buildInfoSection("Dental Insurance", [details.insurance.insurance_name]),
+            buildInfoSection("Effective Date", [formatDate(details.insurance.effective_date)]),
+            buildInfoSection("Previous Dentist", [details.dental.previous_dentist]),
+            buildInfoSection("latest Visit", [formatDate(details.dental.last_visit)]),
+            buildInfoSection("Physician", [details.medical.medical_physician]),
+            buildInfoSection("Speciality", [details.medical.medical_physicianSpec.toString()]),
+            buildInfoSection("Office Address", [details.medical.medical_officeAddress]),
+            buildInfoSection("Office Number", [details.medical.medical_officeNo]),
+            buildInfoSection("Usage of Tobacco", [details.medical.medical_isTobacco.toString()]),
+            buildInfoSection("Usage of Alcohol", [details.medical.medical_dangerousSubstance.toString()]),
+            buildInfoSection("Hospitalized", [details.medical.medical_hospitalized.toString()]),
+            buildInfoSection("Taking Prescriptions", [details.medical.medical_isMedication.toString()]),
+            buildInfoSection("Serious Illness", [details.medical.medical_seriousOperation.toString()]),
+            buildInfoSection("Pregant", [details.medical.medical_isPregnant.toString()]),
+            buildInfoSection("Taking Birth Controls", [details.medical.medical_isBirthControl.toString()]),
+            buildInfoSection("Nursing", [details.medical.medical_isNursing.toString()]),
+            buildInfoSection(
+              "Allergies",
+              getTrueAllergies(details.allergies),
+            ),
+            
+
+        
+          ],
+        ),
+      ]
+    );
+
+
+
+      
+  }
   
-Widget buildInfoSection(String label, String value) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start, // Align text to the start
-    children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Text(
-            label.toUpperCase(),
-            style: const TextStyle(
-              fontSize: 12.0,
-              fontWeight: FontWeight.w500,
-              color: Color.fromARGB(255, 66, 43, 21),
+  // Format the date
+  String formatDate(String dateTime) {
+    DateTime parsedDate = DateTime.parse(dateTime);
+    return DateFormat('yyyy-MM-dd').format(parsedDate);
+  }
+
+  List<String> getTrueAllergies(Allergies allergies) {
+    List<String> trueAllergies = [];
+
+    if (allergies.allergies_anesthetic) trueAllergies.add("Anesthetic");
+    if (allergies.allergies_penicillin) trueAllergies.add("Penicillin");
+    if (allergies.allergies_sulfaDrugs) trueAllergies.add("Sulfa Drugs");
+    if (allergies.allergies_aspirin) trueAllergies.add("Aspirin");
+    if (allergies.allergies_latex) trueAllergies.add("Latex");
+    // if (allergies.allergies_others != null && allergies.allergies_others.isNotEmpty) {
+    //   trueAllergies.add(allergies.allergies_others);
+    // }
+
+    return trueAllergies;
+  }
+  //
+  Widget buildInfoSection(String label, List<String> values) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start, // Align text to the start
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              label.toUpperCase(),
+              style: const TextStyle(
+                fontSize: 12.0,
+                fontWeight: FontWeight.w500,
+                color: Color.fromARGB(255, 66, 43, 21),
+              ),
             ),
-          ),
-        ],
-      ),
-      const SizedBox(height: 4.0), // Spacing between label and value
-      Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 20.0,
-              fontWeight: FontWeight.bold,
-              color: Color.fromARGB(255, 66, 43, 21),
-            ),
-          ),
-        ],
-      ),
-    ],
-  );
-}
+          ],
+        ),
+        const SizedBox(height: 3.0), // Spacing between label and value
+        ...values.map((value) => Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 66, 43, 21),
+                  ),
+                ),
+              ],
+            )),
+        const SizedBox(height: 15.0), // Spacing between sections
+      ],
+    );
+  }
+
+
+
