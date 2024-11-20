@@ -26,9 +26,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
   bool isLoading = true;
 
 
-  
-
-
   @override
   void initState() {
     super.initState();
@@ -732,7 +729,6 @@ void _showEditPatientFormsDialog(BuildContext context) {
     // if (allergies.allergies_others != null && allergies.allergies_others.isNotEmpty) {
     //   trueAllergies.add(allergies.allergies_others);
     // }
-
     return trueAllergies;
   }
   //
