@@ -30,4 +30,24 @@ class InsuranceService {
       throw Exception('Error in service: $error');
     }
   }
+
+  Future<void> updateInsuranceService(Insurance insurance) async {
+    const headers = {
+      'Content-Type': 'application/json'
+    };
+
+    try {
+      final response = await http.put(
+        Uri.parse('$baseUrl/update-insurance/${insurance.patient_id}'),
+        headers: headers,
+        body: jsonEncode(insurance.toJson())
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to update insurance ${response.body}');
+      }
+    } catch (error) {
+      throw Exception('Error updating insurance from service: $error');
+    }
+  }
 }

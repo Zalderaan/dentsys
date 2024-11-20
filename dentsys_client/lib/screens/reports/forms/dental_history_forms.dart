@@ -2,9 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class DentalHistoryForms extends StatefulWidget {
+  final TextEditingController previousDentistController;
   final TextEditingController latestvisitController;
 
-   const DentalHistoryForms({super.key, required GlobalKey<FormState> formKey, required this.latestvisitController});
+  const DentalHistoryForms({
+    super.key, 
+    required GlobalKey<FormState> formKey,
+    required this.latestvisitController,
+    required this.previousDentistController,
+  });
 
   @override
   DentalHistoryFormsState createState() => DentalHistoryFormsState();
@@ -70,6 +76,7 @@ class DentalHistoryFormsState extends State<DentalHistoryForms> {
                     children: [
                       Expanded(
                         child: TextFormField(
+                          controller: widget.previousDentistController,
                           decoration: const InputDecoration(
                             labelText: "Previous Dentist",
                             border: OutlineInputBorder(),

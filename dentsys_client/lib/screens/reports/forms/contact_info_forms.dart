@@ -1,10 +1,28 @@
 // lib/forms/personal_info_form.dart
 import 'package:dentsys_client/controllers/contact_controller.dart';
+import 'package:dentsys_client/models/contact_model.dart';
 import 'package:flutter/material.dart';
 
 class ContactInfoForms extends StatefulWidget {
+  final Contact? contact;
+  final TextEditingController emailController;
+  final TextEditingController homeAddressController;
+  final TextEditingController homeNoController;
+  final TextEditingController faxNoController;
+  final TextEditingController workNoController;
+  final TextEditingController mobileNoController;
 
-   const ContactInfoForms({super.key, required GlobalKey<FormState> formKey});
+  const ContactInfoForms({
+    super.key, 
+    required this.emailController,
+    required this.homeAddressController,
+    required this.homeNoController,
+    required this.faxNoController,
+    required this.workNoController,
+    required this.mobileNoController,
+    required GlobalKey<FormState> formKey, 
+    this.contact
+  });
 
   @override
   ContactInfoFormsState createState() => ContactInfoFormsState();
@@ -12,15 +30,46 @@ class ContactInfoForms extends StatefulWidget {
 
 class ContactInfoFormsState extends State<ContactInfoForms> {
   final _contactInformationFormKey =  GlobalKey<FormState>();
-  
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _homeAddressController = TextEditingController();
-  final TextEditingController _homeNoController = TextEditingController();
-  final TextEditingController _faxNoController = TextEditingController();
-  final TextEditingController _workNoController = TextEditingController();
-  final TextEditingController _mobileNoController = TextEditingController();
-  final ContactController contactController = ContactController();
 
+  // Future<void> handleUpdateContact() async {
+  //   var patient_id = widget.contact?.patient_id;
+  //   final updatedContact = Contact(
+  //     patient_id: patient_id!,
+  //     email: _emailController.text, 
+  //     home_address: _homeAddressController.text,
+  //     home_number: _homeNoController.text,
+  //     fax_number: _faxNoController.text,
+  //     work_number: _workNoController.text,
+  //     mobile_number: _mobileNoController.text,
+  //   );
+
+  //   try {
+  //     await contactController.updateContact(updatedContact);
+  //     print('Contact updated successfully');
+  //   } catch (error) {
+  //     print('Error updating contact: $error');
+  //   }
+  // }
+
+  // Contact getContactFormsData()
+  // {  
+  //   var patientId = widget.contact?.patient_id;
+  //   return Contact (
+  //     patient_id: patientId!, 
+  //     email: _emailController.text, 
+  //     home_address: _homeAddressController.text,
+  //     home_number: _homeNoController.text,
+  //     fax_number: _faxNoController.text,
+  //     work_number: _workNoController.text,
+  //     mobile_number: _mobileNoController.text,
+  //   );
+  // }
+
+  @override
+  void initState(){
+    super.initState();
+  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +103,7 @@ class ContactInfoFormsState extends State<ContactInfoForms> {
                     const SizedBox(height: 10),
                     // Home Adress
                     TextFormField(
-                      controller: _homeAddressController,
+                      controller: widget.homeAddressController,
                       decoration: const InputDecoration(
                         labelText: "Home Address",
                         border: OutlineInputBorder(),
@@ -73,7 +122,7 @@ class ContactInfoFormsState extends State<ContactInfoForms> {
                       children: [
                         Expanded(
                           child: TextFormField(
-                            controller:  _homeNoController,
+                            controller:  widget.homeNoController,
                             decoration: const InputDecoration(
                               labelText: "Home Number",
                               border: OutlineInputBorder(),
@@ -89,7 +138,7 @@ class ContactInfoFormsState extends State<ContactInfoForms> {
                         const SizedBox(width: 10),
                         Expanded(
                           child: TextFormField(
-                            controller: _workNoController,
+                            controller: widget.workNoController,
                             decoration: const InputDecoration(
                               labelText: "Office Number",
                               border: OutlineInputBorder(),
@@ -105,7 +154,7 @@ class ContactInfoFormsState extends State<ContactInfoForms> {
                         const SizedBox(width: 10),
                         Expanded(
                           child: TextFormField(
-                            controller: _faxNoController,
+                            controller: widget.faxNoController,
                             decoration: const InputDecoration(
                               labelText: "Fax Number",
                               border: OutlineInputBorder(),
@@ -128,7 +177,7 @@ class ContactInfoFormsState extends State<ContactInfoForms> {
                       children: [
                         Expanded(
                           child: TextFormField(
-                            controller: _mobileNoController,
+                            controller: widget.mobileNoController,
                             decoration: const InputDecoration(
                               labelText: "Contact Number",
                               border: OutlineInputBorder(),
@@ -144,7 +193,7 @@ class ContactInfoFormsState extends State<ContactInfoForms> {
                         const SizedBox(width: 10),
                         Expanded(
                           child: TextFormField(
-                            controller: _emailController,
+                            controller: widget.emailController,
                             decoration: const InputDecoration(
                               labelText: "Email Address",
                               border: OutlineInputBorder(),

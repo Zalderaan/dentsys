@@ -2,11 +2,44 @@ import 'package:dentsys_client/controllers/patient_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:dentsys_client/models/patient_model.dart';
+
 
 class PersonalInfoForms extends StatefulWidget {
+  final Patient? patient;
+  final TextEditingController firstNameController;
+  final TextEditingController lastNameController;
+  final TextEditingController middleNameController;
+  final TextEditingController nicknameController;
+  final TextEditingController sexController;
+  final TextEditingController ageController;
+  final TextEditingController religionController;
+  final TextEditingController nationalityController;
+  final TextEditingController occupationController;
+  final TextEditingController parentNameController;
+  final TextEditingController parentOccupationController;
+  final TextEditingController referrerController;
+  final TextEditingController reasonController;
   final TextEditingController birthdateController;
 
-  const PersonalInfoForms({super.key, required this.birthdateController, required GlobalKey<FormState> formKey});
+  const PersonalInfoForms({
+    super.key, 
+    required GlobalKey<FormState> formKey, this.patient,
+    required this.firstNameController,
+    required this.lastNameController,
+    required this.middleNameController,
+    required this.nicknameController,
+    required this.sexController,
+    required this.ageController,
+    required this.birthdateController, 
+    required this.religionController,
+    required this.nationalityController,
+    required this.occupationController,
+    required this.referrerController,
+    required this.reasonController,
+    required this.parentNameController,
+    required this.parentOccupationController,
+  });
 
   @override
   PersonalInfoFormsState createState() => PersonalInfoFormsState();
@@ -14,25 +47,6 @@ class PersonalInfoForms extends StatefulWidget {
 
 class PersonalInfoFormsState extends State<PersonalInfoForms> {
   final _personalInfoFormKey = GlobalKey<FormState>();
-  
-
-  // personal info
-  final TextEditingController _firstNameController = TextEditingController();
-  final TextEditingController _lastNameController = TextEditingController();
-  final TextEditingController _middleNameController = TextEditingController();
-  final TextEditingController _nicknameController = TextEditingController();
-  final TextEditingController _dateController = TextEditingController();
-  final TextEditingController _ageController = TextEditingController();
-  final TextEditingController _religionController = TextEditingController();
-  final TextEditingController _nationalityController = TextEditingController();
-  final TextEditingController _occupationController = TextEditingController();
-  final TextEditingController _parentGuardianController = TextEditingController();
-  final TextEditingController _parentGuardianOccupationController = TextEditingController();
-  final TextEditingController _referrerController = TextEditingController();
-  final TextEditingController _reasonController = TextEditingController();
-  final PatientController patientController = PatientController();
-  
-
   String? selectedSex;
   int userAge = 0;
   
@@ -52,11 +66,14 @@ class PersonalInfoFormsState extends State<PersonalInfoForms> {
   }
   @override
   void dispose() {
-    _dateController.dispose(); // Dispose the controller when the widget is disposed
+    // _dateController.dispose(); // Dispose the controller when the widget is disposed
     super.dispose();
   }
 
-
+  @override 
+  void initState(){
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +106,7 @@ class PersonalInfoFormsState extends State<PersonalInfoForms> {
                     children: [
                       Expanded(
                         child: TextFormField(
-                          controller: _lastNameController,
+                          controller: widget.lastNameController,
                           decoration: const InputDecoration(
                             labelText: "Lastname",
                             border: OutlineInputBorder(),
@@ -105,7 +122,7 @@ class PersonalInfoFormsState extends State<PersonalInfoForms> {
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
-                          controller: _firstNameController,
+                          controller: widget.firstNameController,
                           decoration: const InputDecoration(
                             labelText: "Firstname",
                             border: OutlineInputBorder(),
@@ -121,7 +138,7 @@ class PersonalInfoFormsState extends State<PersonalInfoForms> {
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
-                          controller: _middleNameController,
+                          controller: widget.middleNameController,
                           decoration: const InputDecoration(
                             labelText: "Middle Name",
                             border: OutlineInputBorder(),
@@ -137,7 +154,7 @@ class PersonalInfoFormsState extends State<PersonalInfoForms> {
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
-                          controller: _nicknameController,
+                          controller: widget.nicknameController,
                           decoration: const InputDecoration(
                             labelText: "Nickname",
                             border: OutlineInputBorder(),
@@ -159,7 +176,7 @@ class PersonalInfoFormsState extends State<PersonalInfoForms> {
                     children: [
                       Expanded(
                         child: TextFormField(
-                          controller: _dateController, // Controller to manage the selected date text
+                          controller: widget.birthdateController, // Controller to manage the selected date text
                           decoration: const InputDecoration(
                             labelText: "Birth Date (YYYY-MM-DD)",
                             border: OutlineInputBorder(),
@@ -175,7 +192,7 @@ class PersonalInfoFormsState extends State<PersonalInfoForms> {
           
                             if (pickedDate != null) {
                               String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-                              _dateController.text = formattedDate; // Set the selected date
+                              widget.birthdateController.text = formattedDate; // Set the selected date
                             }
                           },
                           validator: (value) {
@@ -189,7 +206,7 @@ class PersonalInfoFormsState extends State<PersonalInfoForms> {
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
-                          controller: _ageController,
+                          controller: widget.ageController,
                           decoration: const InputDecoration(
                             labelText: "Age",
                             border: OutlineInputBorder(),
@@ -246,7 +263,7 @@ class PersonalInfoFormsState extends State<PersonalInfoForms> {
                     children: [
                       Expanded(
                         child: TextFormField(
-                          controller: _religionController,
+                          controller: widget.religionController,
                           decoration: const InputDecoration(
                             labelText: "Religion",
                             border: OutlineInputBorder(),
@@ -262,7 +279,7 @@ class PersonalInfoFormsState extends State<PersonalInfoForms> {
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
-                          controller: _nationalityController,
+                          controller: widget.nationalityController,
                           decoration: const InputDecoration(
                             labelText: "Nationality",
                             border: OutlineInputBorder(),
@@ -278,7 +295,7 @@ class PersonalInfoFormsState extends State<PersonalInfoForms> {
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
-                          controller: _occupationController,
+                          controller: widget.occupationController,
                           decoration: const InputDecoration(
                             labelText: "Occupation",
                             border: OutlineInputBorder(),
@@ -323,7 +340,7 @@ class PersonalInfoFormsState extends State<PersonalInfoForms> {
                               children: [
                                 Expanded(
                                   child: TextFormField(
-                                    controller: _parentGuardianController,
+                                    controller: widget.parentNameController,
                                     decoration: const InputDecoration(
                                       labelText: "Parent/Guardian's Name",
                                       border: OutlineInputBorder(),
@@ -333,7 +350,7 @@ class PersonalInfoFormsState extends State<PersonalInfoForms> {
                                 const SizedBox(width: 10),
                                 Expanded(
                                   child: TextFormField(
-                                    controller: _parentGuardianOccupationController,
+                                    controller: widget.parentOccupationController,
                                     decoration: const InputDecoration(
                                       labelText: "Occupation",
                                       border: OutlineInputBorder(),
@@ -354,7 +371,7 @@ class PersonalInfoFormsState extends State<PersonalInfoForms> {
                     children: [
                       Expanded(
                         child: TextFormField(
-                          controller: _referrerController,
+                          controller: widget.referrerController,
                           decoration: const InputDecoration(
                             labelText: "Whom may we thank for referring you?",
                             border: OutlineInputBorder(),
@@ -370,7 +387,7 @@ class PersonalInfoFormsState extends State<PersonalInfoForms> {
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
-                          controller: _reasonController,
+                          controller: widget.reasonController,
                           decoration: const InputDecoration(
                             labelText: "What is your reason for dental consultation?",
                             border: OutlineInputBorder(),

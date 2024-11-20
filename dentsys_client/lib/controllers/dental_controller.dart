@@ -13,4 +13,12 @@ class DentalController {
       throw Exception('Error in dental frontend controller: $error');
     }
   }
+
+  Future<void> updateDentalHistory(Dental dental) async {
+    try {
+      await _dentalService.updateDentalService(dental);
+    } catch (error) {
+      throw Exception('Error in dental frontend controller: $error');
+    }
+  }
 }
