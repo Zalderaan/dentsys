@@ -2,8 +2,55 @@
 import 'package:flutter/material.dart';
 
 class MedicalHistoryForms extends StatefulWidget {
+  final TextEditingController physicianNameController;
+  final TextEditingController physicianSpecialtyController;
+  final TextEditingController officeAddressController;
+  final TextEditingController officeNumberController;
+  final TextEditingController medicalTreatmentDetailsController;
+  final TextEditingController seriousIllnessDetailsController;
+  final TextEditingController hospitalizationDetailsController;
+  final TextEditingController medicationDetailsController;
+  final TextEditingController bloodTypeController;
+  final TextEditingController bloodPressureController;
+  final TextEditingController bleedingTimeController;
+  final bool isInGoodHealth;
+  final bool isUnderTreatment;
+  final bool isSeriousIllness;
+  final bool isHospitalized;
+  final bool isTakingMedication;
+  final bool isUsingTobacco;
+  final bool isUsingDangerousDrugs;
+  final bool? isPregnant;
+  final bool? isNursing;
+  final bool? isTakingBirthControl;
+  final Function(bool, bool, bool, bool, bool, bool, bool, bool?, bool?, bool?) onUpdated; // callback function
   
-  const MedicalHistoryForms({super.key, required GlobalKey<FormState> formKey});
+  MedicalHistoryForms({
+    super.key, 
+    required GlobalKey<FormState> formKey,
+    required this.physicianNameController,
+    required this.physicianSpecialtyController,
+    required this.officeAddressController,
+    required this.officeNumberController,
+    required this.medicalTreatmentDetailsController,
+    required this.seriousIllnessDetailsController,
+    required this.hospitalizationDetailsController,
+    required this.medicationDetailsController,
+    required this.bloodTypeController,
+    required this.bloodPressureController,
+    required this.bleedingTimeController,
+    required this.isInGoodHealth,
+    required this.isUnderTreatment,
+    required this.isSeriousIllness,
+    required this.isHospitalized,
+    required this.isTakingMedication,
+    required this.isUsingTobacco,
+    required this.isUsingDangerousDrugs,
+    required this.isPregnant,
+    required this.isNursing,
+    required this.isTakingBirthControl,
+    required this.onUpdated,
+  });
 
   @override
   MedicalHistoryFormsState createState() => MedicalHistoryFormsState();
@@ -13,16 +60,31 @@ class MedicalHistoryFormsState extends State<MedicalHistoryForms> {
   final _medicalHistoryFormKey = GlobalKey<FormState>();
   
   String? selectedSex;
-  bool _isInGoodHealth = false;
-  bool _isUnderTreatment = false;
-  bool _isSeriousIllness = false;
-  bool _isHospitalized = false;
-  bool _isTakingMedication = false;
-  bool _isUsingTobacco = false;
-  bool _isUsingDangerousDrugs = false;
-  bool _isPregnant = false;
-  bool _isNursing = false;
-  bool _isTakingBirthControl = false;
+  late bool _isInGoodHealth;
+  late bool _isUnderTreatment;
+  late bool _isSeriousIllness;
+  late bool _isHospitalized;
+  late bool _isTakingMedication;
+  late bool _isUsingTobacco;
+  late bool _isUsingDangerousDrugs;
+  late bool? _isPregnant;
+  late bool? _isNursing;
+  late bool? _isTakingBirthControl;
+
+  @override
+  void initState() {
+    super.initState();
+    _isInGoodHealth = widget.isInGoodHealth;
+    _isUnderTreatment = widget.isUnderTreatment;
+    _isSeriousIllness = widget.isSeriousIllness;
+    _isHospitalized = widget.isHospitalized;
+    _isTakingMedication = widget.isTakingMedication;
+    _isUsingTobacco = widget.isUsingTobacco;
+    _isUsingDangerousDrugs = widget.isUsingDangerousDrugs;
+    _isPregnant = widget.isPregnant;
+    _isNursing = widget.isNursing;
+    _isTakingBirthControl = widget.isTakingBirthControl;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +121,7 @@ class MedicalHistoryFormsState extends State<MedicalHistoryForms> {
               children: [
                 Expanded(
                   child: TextFormField(
+                    controller: widget.physicianNameController,
                     decoration: const InputDecoration(
                       labelText: "Name of Physician",
                       border: OutlineInputBorder(),
@@ -68,6 +131,7 @@ class MedicalHistoryFormsState extends State<MedicalHistoryForms> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: TextFormField(
+                    controller: widget.physicianSpecialtyController,
                     decoration: const InputDecoration(
                       labelText: "Specialty, if applicable",
                       border: OutlineInputBorder(),
@@ -84,6 +148,7 @@ class MedicalHistoryFormsState extends State<MedicalHistoryForms> {
               children: [
                 Expanded(
                   child: TextFormField(
+                    controller: widget.officeAddressController,
                     decoration: const InputDecoration(
                       labelText: "Office Address",
                       border: OutlineInputBorder(),
@@ -93,6 +158,7 @@ class MedicalHistoryFormsState extends State<MedicalHistoryForms> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: TextFormField(
+                    controller: widget.officeNumberController,
                     decoration: const InputDecoration(
                       labelText: "Office Number",
                       border: OutlineInputBorder(),
@@ -121,12 +187,14 @@ class MedicalHistoryFormsState extends State<MedicalHistoryForms> {
                       setState(() {
                         _isInGoodHealth = value!;
                       });
+                      widget.onUpdated(_isInGoodHealth, _isUnderTreatment, _isSeriousIllness, _isHospitalized, _isTakingMedication, _isUsingTobacco, _isUsingDangerousDrugs, _isPregnant, _isNursing, _isTakingBirthControl);
                     }),
                     const Text("No"),
                     Radio(value: false, groupValue: _isInGoodHealth, onChanged: (value) {
                       setState(() {
                         _isInGoodHealth = value!;
                       });
+                      widget.onUpdated(_isInGoodHealth, _isUnderTreatment, _isSeriousIllness, _isHospitalized, _isTakingMedication, _isUsingTobacco, _isUsingDangerousDrugs, _isPregnant, _isNursing, _isTakingBirthControl);
                     }),
                   ],
                 ),
@@ -159,6 +227,7 @@ class MedicalHistoryFormsState extends State<MedicalHistoryForms> {
                             setState(() {
                               _isUnderTreatment = value!;
                             });
+                            widget.onUpdated(_isInGoodHealth, _isUnderTreatment, _isSeriousIllness, _isHospitalized, _isTakingMedication, _isUsingTobacco, _isUsingDangerousDrugs, _isPregnant, _isNursing, _isTakingBirthControl);
                           },
                         ),
                         const Text("No"),
@@ -169,6 +238,7 @@ class MedicalHistoryFormsState extends State<MedicalHistoryForms> {
                             setState(() {
                               _isUnderTreatment = value!;
                             });
+                            widget.onUpdated(_isInGoodHealth, _isUnderTreatment, _isSeriousIllness, _isHospitalized, _isTakingMedication, _isUsingTobacco, _isUsingDangerousDrugs, _isPregnant, _isNursing, _isTakingBirthControl);
                           },
                         ),
                       ],
@@ -188,6 +258,7 @@ class MedicalHistoryFormsState extends State<MedicalHistoryForms> {
                             SizedBox(
                               width: 200, // Adjust width as needed
                               child: TextFormField(
+                                controller: widget.medicalTreatmentDetailsController,
                                 enabled: _isUnderTreatment, // Disable the field if not under treatment
                                 decoration: const InputDecoration(
                                   hintText: "Specify condition",
@@ -231,6 +302,7 @@ class MedicalHistoryFormsState extends State<MedicalHistoryForms> {
                             setState(() {
                               _isSeriousIllness = value!;
                             });
+                            widget.onUpdated(_isInGoodHealth, _isUnderTreatment, _isSeriousIllness, _isHospitalized, _isTakingMedication, _isUsingTobacco, _isUsingDangerousDrugs, _isPregnant, _isNursing, _isTakingBirthControl);
                           },
                         ),
                         const Text("No"),
@@ -241,6 +313,7 @@ class MedicalHistoryFormsState extends State<MedicalHistoryForms> {
                             setState(() {
                               _isSeriousIllness = value!;
                             });
+                            widget.onUpdated(_isInGoodHealth, _isUnderTreatment, _isSeriousIllness, _isHospitalized, _isTakingMedication, _isUsingTobacco, _isUsingDangerousDrugs, _isPregnant, _isNursing, _isTakingBirthControl);
                           },
                         ),
                       ],
@@ -260,6 +333,7 @@ class MedicalHistoryFormsState extends State<MedicalHistoryForms> {
                             SizedBox(
                               width: 200, // Adjust width as needed
                               child: TextFormField(
+                                controller: widget.seriousIllnessDetailsController,
                                 enabled: _isSeriousIllness, // Disable the field if not under treatment
                                 decoration: const InputDecoration(
                                   hintText: "Specify condition",
@@ -303,6 +377,7 @@ class MedicalHistoryFormsState extends State<MedicalHistoryForms> {
                             setState(() {
                               _isHospitalized = value!;
                             });
+                            widget.onUpdated(_isInGoodHealth, _isUnderTreatment, _isSeriousIllness, _isHospitalized, _isTakingMedication, _isUsingTobacco, _isUsingDangerousDrugs, _isPregnant, _isNursing, _isTakingBirthControl);
                           },
                         ),
                         const Text("No"),
@@ -313,6 +388,7 @@ class MedicalHistoryFormsState extends State<MedicalHistoryForms> {
                             setState(() {
                               _isHospitalized = value!;
                             });
+                            widget.onUpdated(_isInGoodHealth, _isUnderTreatment, _isSeriousIllness, _isHospitalized, _isTakingMedication, _isUsingTobacco, _isUsingDangerousDrugs, _isPregnant, _isNursing, _isTakingBirthControl);
                           },
                         ),
                       ],
@@ -332,6 +408,7 @@ class MedicalHistoryFormsState extends State<MedicalHistoryForms> {
                             SizedBox(
                               width: 200, // Adjust width as needed
                               child: TextFormField(
+                                controller: widget.hospitalizationDetailsController,
                                 enabled: _isHospitalized, // Disable the field if not under treatment
                                 decoration: const InputDecoration(
                                   hintText: "Specify condition",
@@ -375,6 +452,7 @@ class MedicalHistoryFormsState extends State<MedicalHistoryForms> {
                             setState(() {
                               _isTakingMedication = value!;
                             });
+                            widget.onUpdated(_isInGoodHealth, _isUnderTreatment, _isSeriousIllness, _isHospitalized, _isTakingMedication, _isUsingTobacco, _isUsingDangerousDrugs, _isPregnant, _isNursing, _isTakingBirthControl);
                           },
                         ),
                         const Text("No"),
@@ -385,6 +463,7 @@ class MedicalHistoryFormsState extends State<MedicalHistoryForms> {
                             setState(() {
                               _isTakingMedication = value!;
                             });
+                            widget.onUpdated(_isInGoodHealth, _isUnderTreatment, _isSeriousIllness, _isHospitalized, _isTakingMedication, _isUsingTobacco, _isUsingDangerousDrugs, _isPregnant, _isNursing, _isTakingBirthControl);
                           },
                         ),
                       ],
@@ -404,6 +483,7 @@ class MedicalHistoryFormsState extends State<MedicalHistoryForms> {
                             SizedBox(
                               width: 200, // Adjust width as needed
                               child: TextFormField(
+                                controller: widget.medicationDetailsController,
                                 enabled: _isTakingMedication, // Disable the field if not under treatment
                                 decoration: const InputDecoration(
                                   hintText: "Specify condition",
@@ -440,12 +520,14 @@ class MedicalHistoryFormsState extends State<MedicalHistoryForms> {
                       setState(() {
                         _isUsingTobacco = value!;
                       });
+                      widget.onUpdated(_isInGoodHealth, _isUnderTreatment, _isSeriousIllness, _isHospitalized, _isTakingMedication, _isUsingTobacco, _isUsingDangerousDrugs, _isPregnant, _isNursing, _isTakingBirthControl);
                     }),
                     const Text("No"),
                     Radio(value: false, groupValue: _isUsingTobacco, onChanged: (value) {
                       setState(() {
                         _isUsingTobacco = value!;
                       });
+                      widget.onUpdated(_isInGoodHealth, _isUnderTreatment, _isSeriousIllness, _isHospitalized, _isTakingMedication, _isUsingTobacco, _isUsingDangerousDrugs, _isPregnant, _isNursing, _isTakingBirthControl);                      
                     }),
                   ],
                 ),
@@ -471,12 +553,14 @@ class MedicalHistoryFormsState extends State<MedicalHistoryForms> {
                       setState(() {
                         _isUsingDangerousDrugs = value!;
                       });
+                      widget.onUpdated(_isInGoodHealth, _isUnderTreatment, _isSeriousIllness, _isHospitalized, _isTakingMedication, _isUsingTobacco, _isUsingDangerousDrugs, _isPregnant, _isNursing, _isTakingBirthControl);
                     }),
                     const Text("No"),
                     Radio(value: false, groupValue: _isUsingDangerousDrugs, onChanged: (value) {
                       setState(() {
                         _isUsingDangerousDrugs = value!;
                       });
+                      widget.onUpdated(_isInGoodHealth, _isUnderTreatment, _isSeriousIllness, _isHospitalized, _isTakingMedication, _isUsingTobacco, _isUsingDangerousDrugs, _isPregnant, _isNursing, _isTakingBirthControl);
                     }),
                   ],
                 ),
@@ -497,6 +581,7 @@ class MedicalHistoryFormsState extends State<MedicalHistoryForms> {
                 SizedBox(
                   width: 200, // Adjust width as needed
                   child: TextFormField(
+                    controller: widget.bloodTypeController,
                     decoration: const InputDecoration(
                       hintText: "",
                       border: UnderlineInputBorder(),
@@ -521,6 +606,7 @@ class MedicalHistoryFormsState extends State<MedicalHistoryForms> {
                 SizedBox(
                   width: 200, // Adjust width as needed
                   child: TextFormField(
+                    controller: widget.bloodPressureController,
                     decoration: const InputDecoration(
                       hintText: "",
                       border: UnderlineInputBorder(),
@@ -545,6 +631,7 @@ class MedicalHistoryFormsState extends State<MedicalHistoryForms> {
                 SizedBox(
                   width: 200, // Adjust width as needed
                   child: TextFormField(
+                    controller: widget.bleedingTimeController,
                     decoration: const InputDecoration(
                       hintText: "",
                       border: UnderlineInputBorder(),
@@ -598,12 +685,14 @@ class MedicalHistoryFormsState extends State<MedicalHistoryForms> {
                                 setState(() {
                                   _isPregnant = value!;
                                 });
+                                widget.onUpdated(_isInGoodHealth, _isUnderTreatment, _isSeriousIllness, _isHospitalized, _isTakingMedication, _isUsingTobacco, _isUsingDangerousDrugs, _isPregnant, _isNursing, _isTakingBirthControl);
                               }),
                               const Text("No"),
                               Radio(value: false, groupValue: _isPregnant, onChanged: (value) {
                                 setState(() {
                                   _isPregnant = value!;
                                 });
+                                widget.onUpdated(_isInGoodHealth, _isUnderTreatment, _isSeriousIllness, _isHospitalized, _isTakingMedication, _isUsingTobacco, _isUsingDangerousDrugs, _isPregnant, _isNursing, _isTakingBirthControl);
                               }),
                             ],
                           ),
@@ -629,12 +718,14 @@ class MedicalHistoryFormsState extends State<MedicalHistoryForms> {
                                 setState(() {
                                   _isNursing = value!;
                                 });
+                                widget.onUpdated(_isInGoodHealth, _isUnderTreatment, _isSeriousIllness, _isHospitalized, _isTakingMedication, _isUsingTobacco, _isUsingDangerousDrugs, _isPregnant, _isNursing, _isTakingBirthControl);
                               }),
                               const Text("No"),
                               Radio(value: false, groupValue: _isNursing, onChanged: (value) {
                                 setState(() {
                                   _isNursing = value!;
                                 });
+                                widget.onUpdated(_isInGoodHealth, _isUnderTreatment, _isSeriousIllness, _isHospitalized, _isTakingMedication, _isUsingTobacco, _isUsingDangerousDrugs, _isPregnant, _isNursing, _isTakingBirthControl);
                               }),
                             ],
                           ),
@@ -660,12 +751,14 @@ class MedicalHistoryFormsState extends State<MedicalHistoryForms> {
                                 setState(() {
                                   _isTakingBirthControl = value!;
                                 });
+                                widget.onUpdated(_isInGoodHealth, _isUnderTreatment, _isSeriousIllness, _isHospitalized, _isTakingMedication, _isUsingTobacco, _isUsingDangerousDrugs, _isPregnant, _isNursing, _isTakingBirthControl);
                               }),
                               const Text("No"),
                               Radio(value: false, groupValue: _isTakingBirthControl, onChanged: (value) {
                                 setState(() {
                                   _isTakingBirthControl = value!;
                                 });
+                                widget.onUpdated(_isInGoodHealth, _isUnderTreatment, _isSeriousIllness, _isHospitalized, _isTakingMedication, _isUsingTobacco, _isUsingDangerousDrugs, _isPregnant, _isNursing, _isTakingBirthControl);
                               }),
                             ],
                           ),

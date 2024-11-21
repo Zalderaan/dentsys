@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:dentsys_client/models/patientDetails_model.dart';
 import 'package:dentsys_client/screens/reports/forms/allergies_forms.dart';
 import 'package:dentsys_client/screens/reports/forms/contact_info_forms.dart';
@@ -629,20 +631,24 @@ void _showEditPatientFormsDialog(BuildContext context, PatientDetails details) {
   final TextEditingController dialogPhysicianController = TextEditingController(text: details.medical.medical_physician);
   final TextEditingController dialogPhysicianSpecController = TextEditingController(text: details.medical.medical_physicianSpec);
   final TextEditingController dialogOfficeAddressController = TextEditingController(text: details.medical.medical_officeAddress);
-  final TextEditingController dialogOfficeNoController = TextEditingController(text: details.medical.medical_officeNo);  
-
+  final TextEditingController dialogOfficeNoController = TextEditingController(text: details.medical.medical_officeNo);
+  final TextEditingController dialogUnderTreatmentDetailsController = TextEditingController(text: details.medical.medical_treatmentDetails);
+  final TextEditingController dialogSeriousOperationDetails = TextEditingController(text: details.medical.medical_seriousOperationDetails);
+  final TextEditingController dialogMedicalHospitalizedDetails = TextEditingController(text: details.medical.medical_hospitalizedDetails);
+  final TextEditingController dialogMedicationDetails = TextEditingController(text: details.medical.medical_medicationDetails);
   final TextEditingController dialogBloodTypeController = TextEditingController(text: details.medical.medical_bloodType);
   final TextEditingController dialogBloodPressureController = TextEditingController(text: details.medical.medical_bloodPressure);
   final TextEditingController dialogBleedingTimeController = TextEditingController(text: details.medical.medical_bleedingTime);
-
-  final TextEditingController dialogTobaccoController = TextEditingController(text: details.medical.medical_isTobacco.toString());
-  final TextEditingController dialogAlcoholController = TextEditingController(text: details.medical.medical_dangerousSubstance.toString());
-  final TextEditingController dialogMedicationController = TextEditingController(text: details.medical.medical_isMedication.toString());
-  final TextEditingController dialogHospitalizedController = TextEditingController(text: details.medical.medical_hospitalized.toString());
-  final TextEditingController dialogSeriousOperationController = TextEditingController(text: details.medical.medical_seriousOperation.toString());
-  final TextEditingController dialogPregnantController = TextEditingController(text: details.medical.medical_isPregnant.toString());
-  final TextEditingController dialogBirthControlController = TextEditingController(text: details.medical.medical_isBirthControl.toString());
-  final TextEditingController dialogNursingController = TextEditingController(text: details.medical.medical_isNursing.toString());
+  late bool dialogGoodHealthValue = details.medical.medical_goodHealth;
+  late bool dialogUnderTreatmentValue = details.medical.medical_isUnderTreatment;
+  late bool dialogSeriousOperationValue = details.medical.medical_seriousOperation;
+  late bool dialogHospitalizedValue = details.medical.medical_hospitalized;
+  late bool dialogMedicationValue = details.medical.medical_isMedication;
+  late bool dialogTobaccoValue = details.medical.medical_isTobacco;
+  late bool dialogDangerousSubstanceValue = details.medical.medical_dangerousSubstance;
+  late bool? dialogPregnantValue = details.medical.medical_isPregnant;
+  late bool? dialogNursingValue = details.medical.medical_isNursing;
+  late bool? dialogBirthControlValue = details.medical.medical_isBirthControl;
   late MedicalController medicalController = MedicalController(); // medical controller
   
   Future<void> saveUpdatePatient() async {
@@ -723,6 +729,67 @@ void _showEditPatientFormsDialog(BuildContext context, PatientDetails details) {
     }
   }
 
+  dynamic retrieveMedicalStates(
+    bool goodHealth,
+    bool underTreatment,
+    bool seriousOperation,
+    bool hospitalized,
+    bool medication,
+    bool tobacco,
+    bool dangerousSubstance,
+    bool? pregnant,
+    bool? nursing,
+    bool? birthControl,
+  ) async {
+      dialogGoodHealthValue = goodHealth;
+      dialogUnderTreatmentValue = underTreatment;
+      dialogSeriousOperationValue = seriousOperation;
+      dialogHospitalizedValue = hospitalized;
+      dialogMedicationValue = medication;
+      dialogTobaccoValue = tobacco;
+      dialogDangerousSubstanceValue = dangerousSubstance;
+      print('dangerousSubstance: $dangerousSubstance');
+      dialogPregnantValue = pregnant;
+      dialogNursingValue = nursing;
+      dialogBirthControlValue = birthControl;
+  }
+
+  Future<void> saveUpdateMedical() async {
+    final updatedMedical = Medical(
+      patient_id: details.medical.patient_id,
+      medical_physician: dialogPhysicianController.text,
+      medical_physicianSpec: dialogPhysicianSpecController.text,
+      medical_officeAddress: dialogOfficeAddressController.text,
+      medical_officeNo: dialogOfficeNoController.text,
+      medical_goodHealth: dialogGoodHealthValue,
+      medical_isUnderTreatment: dialogUnderTreatmentValue,
+      medical_treatmentDetails: dialogUnderTreatmentDetailsController.text,
+      medical_seriousOperation: dialogSeriousOperationValue,
+      medical_seriousOperationDetails: dialogSeriousOperationDetails.text,
+      medical_hospitalized: dialogHospitalizedValue,
+      medical_hospitalizedDetails: dialogMedicalHospitalizedDetails.text,
+      medical_isMedication: dialogMedicationValue,
+      medical_medicationDetails: dialogMedicationDetails.text,
+      medical_bloodType: dialogBloodTypeController.text,
+      medical_bloodPressure: dialogBloodPressureController.text,
+      medical_bleedingTime: dialogBleedingTimeController.text,
+      medical_isTobacco: dialogTobaccoValue,
+      medical_dangerousSubstance: dialogDangerousSubstanceValue,
+      medical_isPregnant: dialogPregnantValue,
+      medical_isNursing: dialogNursingValue,
+      medical_isBirthControl: dialogBirthControlValue,
+    );
+
+    print('updatedMedical in saveUpdateMedical: $updatedMedical');
+
+    try {
+      await medicalController.updateMedicalHistory(updatedMedical);
+      print('Medical updated successfully');
+    } catch (error) {
+      print('Error updating medical: $error');
+    } 
+  }
+
   // Future<void> saveUpdateMedical() async {
   //   final updatedMedical = Medical(
 
@@ -791,7 +858,29 @@ void _showEditPatientFormsDialog(BuildContext context, PatientDetails details) {
                   latestvisitController: dialogLatestVisitController, 
                 ),
                 MedicalHistoryForms(
-                  formKey: dialogMedicalHistoryFormKey, 
+                  formKey: dialogMedicalHistoryFormKey,
+                  physicianNameController: dialogPhysicianController,
+                  physicianSpecialtyController: dialogPhysicianSpecController,
+                  officeAddressController: dialogOfficeAddressController,
+                  officeNumberController: dialogOfficeNoController,
+                  isInGoodHealth: dialogGoodHealthValue,
+                  isUnderTreatment: dialogUnderTreatmentValue,
+                  medicalTreatmentDetailsController: dialogUnderTreatmentDetailsController,
+                  isSeriousIllness: dialogSeriousOperationValue,
+                  seriousIllnessDetailsController: dialogSeriousOperationDetails,
+                  isHospitalized: dialogHospitalizedValue,
+                  hospitalizationDetailsController: dialogMedicalHospitalizedDetails,
+                  isTakingMedication: dialogMedicationValue,
+                  medicationDetailsController: dialogMedicationDetails,
+                  isUsingTobacco: dialogTobaccoValue,
+                  isUsingDangerousDrugs: dialogDangerousSubstanceValue,
+                  bloodTypeController: dialogBloodTypeController,
+                  bloodPressureController: dialogBloodPressureController,
+                  bleedingTimeController: dialogBleedingTimeController,
+                  isNursing: dialogNursingValue,
+                  isPregnant: dialogPregnantValue,
+                  isTakingBirthControl: dialogBirthControlValue,
+                  onUpdated: retrieveMedicalStates,
                 ),
                 AllergiesForms(formKey: dialogAllergiesFormKey, ),
                 DiseasesForms(formKey: dialogDiseasesFormKey, ),
@@ -823,7 +912,7 @@ void _showEditPatientFormsDialog(BuildContext context, PatientDetails details) {
               await saveUpdateContact();
               await saveUpdateInsurance();
               await saveUpdateDental();
-              // await saveUpdateMedical();
+              await saveUpdateMedical();
             },
           ),
         ],
