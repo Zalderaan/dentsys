@@ -19,6 +19,8 @@ router.post('/register', UserController.registerUser);
 router.post('/login', UserController.loginUser);
 // router.post('/logout', logout);
 
+// patient full detail routes
+
 // patient routes
 router.post('/add-patient', PatientController.addPatient);
 router.get('/patients/:id', PatientController.getPatientDetails);
@@ -38,7 +40,7 @@ router.get('/get-dental-history/:id', DentalHistoryController.getDentalHistory);
 router.put('/update-dental-history/:id', DentalHistoryController.updateDentalHistory);
 router.delete('/delete-dental-history/:id', DentalHistoryController.removeDentalHistory);
 
-// insruance routes
+// insurance routes
 router.post('/add-insurance', InsuranceController.addInsurance);
 router.get('/get-insurance/:id', InsuranceController.getInsurance);
 router.put('/update-insurance/:id', InsuranceController.updateInsurance);
@@ -51,9 +53,9 @@ router.put('/update-medical-history/:id', MedicalHistoryController.updateMedical
 router.delete('/delete-medical-history/:id', MedicalHistoryController.removeMedicalHistory);
 
 // patient condition routes
-router.put('/change-patient-condition', PatientConditionController.changePatientCondition);
-// router.get('/get-patient-condition/:id', PatientConditionController.getPatientCondition);
-// router.delete('/delete-patient-condition/:id', PatientConditionController.removePatientCondition);
+router.put('/change-patient-conditions', PatientConditionController.changePatientCondition);
+router.get('/get-patient-conditions/:id', PatientConditionController.getPatientCondition);
+router.delete('/delete-patient-conditions/:id', PatientConditionController.removePatientCondition);
 
 // allergies routes
 router.post('/add-allergies', AllergiesController.addAllergies);

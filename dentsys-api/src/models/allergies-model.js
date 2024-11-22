@@ -75,9 +75,19 @@ export default class Allergies {
     }
 
     static async updateAllergies(data) {
-        const {anesthetic, penicillin, antibiotics, sulfaDrugs, aspirin, latex, others, patient_id} = data;
-        const queryStr = 'UPDATE allergies SET allergies_anesthetic = ?, allergies_penicillin = ?, allergies_antibiotics = ?, allergies_sulfaDrugs = ?, allergies_aspirin = ?, allergies_latex = ?, allergies_others = ? WHERE patient_id = ?';
-        const values = [anesthetic, penicillin, antibiotics, sulfaDrugs, aspirin, latex, others, patient_id];
+        console.log('data received in allergies model:', data);
+        const {allergies_anesthetic, allergies_penicillin, allergies_sulfaDrugs, allergies_aspirin, allergies_latex, allergies_others, patient_id} = data;
+        const queryStr = `
+            UPDATE allergies 
+            SET 
+                allergies_anesthetic = ?, 
+                allergies_penicillin = ?, 
+                allergies_sulfaDrugs = ?, 
+                allergies_aspirin = ?, 
+                allergies_latex = ?, 
+                allergies_others = ? 
+            WHERE patient_id = ?`;
+        const values = [allergies_anesthetic, allergies_penicillin, allergies_sulfaDrugs, allergies_aspirin, allergies_latex, allergies_others, patient_id];
 
         try {
             const [result] = await pool.query(queryStr, values);

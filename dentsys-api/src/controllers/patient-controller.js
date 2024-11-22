@@ -1,4 +1,10 @@
+import Contact from '../models/contact-model.js';
 import Patient from '../models/patient-model.js';
+import DentalHistory from '../models/dentalHistory-model.js';
+import Insurance from '../models/insurance-model.js';
+import Allergies from '../models/allergies-model.js';
+import MedicalHistory from '../models/medicalHistory-model.js';
+import PatientCondition from '../models/patientCondition-model.js';
 
 export default class PatientController {
     // POST
@@ -26,8 +32,17 @@ export default class PatientController {
         const data = req.params.id;
         try {
             const patient = await Patient.getPatientById(data);
+            const contact = await Contact.getContact(data);
+            const dentalHistory = await DentalHistory.getDentalHist(data); // OK
+            const insurance = await Insurance.getInsurance(data);
+            const allergies = await Allergies.getAllergies(data);
+            const medicalHistory = await MedicalHistory.getMedicalHistory(data);
+            const patientCondition = await PatientCondition.getPatientConditions(data); // OK
+
+            const patientDetails = {patient, contact, dentalHistory, insurance, allergies, medicalHistory, patientCondition};
+            
             if (patient.length === 0) throw new Error('Patient data not found');
-            return res.status(200).json({ message: 'Patient retrieved successfully from controller', patient});
+            return res.status(200).json({ message: 'Patient retrieved successfully from controller', patientDetails});
         } 
         catch (error) {
             res.status(500).json({ error: error.message });
@@ -38,6 +53,7 @@ export default class PatientController {
         const data = req.body;
         try {
             const patients = await Patient.getAllPatients(data);
+            // console.log('Patients retrieved successfully from controller:', patients);
             return res.status(200).json({ message: 'Patients retrieved successfully from controller', patients});
         } catch (error) {
             res.status(500).json({ error: error.message });

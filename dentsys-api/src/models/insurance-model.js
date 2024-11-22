@@ -59,6 +59,7 @@ export default class Insurance {
     }
 
     static async updateInsurance(data) {
+        console.log('data from model in update insurance', data);
         const {insurance_name, effective_date, patient_id} = data;
         const queryStr = 'UPDATE insurance SET insurance_name = ?, effective_date = ? WHERE patient_id = ?';
         const values = [insurance_name, effective_date, patient_id];

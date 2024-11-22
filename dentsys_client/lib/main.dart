@@ -1,4 +1,5 @@
 import 'package:dentsys_client/screens/patient_records/patient_records.dart';
+import 'package:dentsys_client/screens/reports/reports_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:dentsys_client/screens/login/login_screen.dart';
 import 'package:dentsys_client/screens/dashboard/dashboard_screen.dart';
@@ -25,11 +26,18 @@ class MyApp extends StatelessWidget {
         '/dashboard': (context) => const DashboardScreen(),
         '/patient_records': (context) => PatientRecords(
           onAddPatient: () {
+            print('onAddPatient in main');
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => const AddPatientRecordScreen()),
             );
+          }, onReports: (int? id) { 
+            print('onReports in main $id');
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => ReportsScreen(patient_id: id,)),
+            ); 
           },
         ),
+        // '/patient-details': (context) => const ReportsScreen(),
       }
     );
   }

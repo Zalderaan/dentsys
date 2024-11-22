@@ -13,4 +13,12 @@ class ContactController {
       throw Exception('Error creating contact in frontend controller: $error');
     }
   }
+
+  Future<void> updateContact(Contact contact) async {
+    try {
+      await _contactService.updateContactService(contact);
+    } catch (error) {
+      throw Exception('Error updating contact in frontend controller: $error');
+    }
+  }
 }

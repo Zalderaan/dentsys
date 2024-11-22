@@ -27,6 +27,7 @@ export default class MedicalHistoryController {
 
     static async updateMedicalHistory(req, res) {
         const data = req.body;
+        console.log('data in mh controller update', data);
         const patient_id = req.params.id;
         data.patient_id = patient_id;
         try {

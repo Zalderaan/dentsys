@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 
 import 'package:dentsys_client/controllers/patient_controller.dart';
 import 'package:dentsys_client/models/patient_model.dart';
@@ -19,6 +20,10 @@ import 'package:dentsys_client/models/medical_model.dart';
 
 import 'package:dentsys_client/controllers/allergies_controller.dart';
 import 'package:dentsys_client/models/allergies_model.dart';
+
+import 'package:dentsys_client/controllers/conditions_controller.dart';
+import 'package:dentsys_client/models/patient_conditions/conditions_model.dart';
+import 'package:dentsys_client/models/patient_conditions/patientConditions_model.dart';
 
 class AddPatientRecordScreen extends StatefulWidget {
   const AddPatientRecordScreen({super.key});
@@ -97,6 +102,10 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
   final TextEditingController _otherAllergiesController = TextEditingController();
   final AllergiesController allergiesController = AllergiesController(); // allergies controller
 
+  // patient conditions info
+  final ConditionsController conditionsController = ConditionsController(); // conditions controller
+  final TextEditingController _otherConditionsController = TextEditingController();
+
   Future<void> _handleAddPatient() async {
     final patient = Patient(
       firstName: _firstNameController.text,
@@ -116,30 +125,37 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
     );
 
     try {
-      final createdPatient = await patientController.createPatient(patient);    
+      final createdPatient = await patientController.createPatient(patient);
       setState(() {
         _patientId = createdPatient.id;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Patient ${createdPatient.firstName} ${createdPatient.lastName} created successfully'),
-        )
-      );
+
+      AnimatedSnackBar.material(
+        'Patient ${createdPatient.firstName} ${createdPatient.lastName} created successfully',
+        type: AnimatedSnackBarType.success,
+        duration: const Duration(seconds: 3),
+      ).show(context);
     } catch (error) {
       print(error);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error creating patient: $error'),
-        )
-      );
+
+      AnimatedSnackBar.material(
+        'Error creating patient: $error',
+        type: AnimatedSnackBarType.error,
+        duration: const Duration(seconds: 5),
+      ).show(context);
     }
   }
-
   
   Future<void> _handleAddContact() async {
     if (_patientId == null) {
       // Handle the case where _patientId is null
       print('Patient ID is not available');
+      AnimatedSnackBar.material(
+        'Patient ID is not available',
+        type: AnimatedSnackBarType.warning,
+        duration: const Duration(seconds: 3),
+      ).show(context);
+      return;
     }
 
     final contact = Contact(
@@ -149,24 +165,26 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
       home_number: _homeNoController.text,
       work_number: _workNoController.text,
       mobile_number: _mobileNoController.text,
-      email: _emailController.text
+      email: _emailController.text,
     );
 
     try {
       final createdContact = await contactController.createContact(contact);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('contact created successfully, $createdContact'),
-        )
-      );
+
+      AnimatedSnackBar.material(
+        'Contact created successfully: $createdContact',
+        type: AnimatedSnackBarType.success,
+        duration: const Duration(seconds: 3),
+      ).show(context);
     } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-        content: Text('Error creating contact: $error')
-        )
-      );
+      AnimatedSnackBar.material(
+        'Error creating contact: $error',
+        type: AnimatedSnackBarType.error,
+        duration: const Duration(seconds: 5),
+      ).show(context);
     }
   }
+
 
   Future<void> _handleAddInsurance() async {
     final insurance = Insurance(
@@ -178,11 +196,17 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
     try {
       final createdInsurance = await insuranceController.createInsurance(insurance);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Insurance added successfuly: $createdInsurance'))
+        SnackBar(
+          content: Text('Insurance added successfuly: $createdInsurance'),
+          duration: const Duration(seconds: 2)
+        )
       );
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error creating insurance: $error'))
+        SnackBar(
+          content: Text('Error creating insurance: $error'),
+          duration: const Duration(seconds: 2)  
+        )
       );
     }
   }
@@ -197,11 +221,17 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
     try {
       final createdDental = await dentalController.createDentalHistory(dental);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Dental history added successfuly: $createdDental'))
+        SnackBar(
+          content: Text('Dental history added successfuly: $createdDental'),
+          duration: const Duration(seconds: 2)
+        )
       );
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error creating dental history: $error'))
+        SnackBar(
+          content: Text('Error creating dental history: $error'),
+          duration: const Duration(seconds: 2),
+        )
       );
     }
   }
@@ -234,11 +264,16 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
     try {
       final createdMedical = await medicalController.createMedicalHistory(medical);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Medical history added successfuly: $createdMedical'))
+        SnackBar(content: Text('Medical history added successfuly: $createdMedical'),
+          duration: const Duration(seconds: 2)
+        )
       );
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error creating medical history: $error'))
+        SnackBar(
+          content: Text('Error creating medical history: $error'),
+          duration: const Duration(seconds: 2),
+          )
       );
     }
   }
@@ -256,15 +291,85 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
     try {
       final createdAllergies = await allergiesController.createAllergy(allergies);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Allergies added successfuly: $createdAllergies'))
+        SnackBar(
+          content: Text('Allergies added successfuly: $createdAllergies'),
+          duration: const Duration(seconds: 2)
+        )
       );
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error creating allergies: $error'))
+        SnackBar(
+          content: Text('Error creating allergies: $error'),
+          duration: const Duration(seconds: 2)
+        )
       );
     }
   }
-  
+
+  Future<void> _handleAddConditions() async {
+    List<Conditions> conditions = [
+      Conditions(condition_id: 1, patientCondition_status: _isHighBlood),
+      Conditions(condition_id: 2, patientCondition_status: _isLowBlood),
+      Conditions(condition_id: 3, patientCondition_status: _isEpilepsy),
+      Conditions(condition_id: 4, patientCondition_status: _isAIDSorHIV),
+      Conditions(condition_id: 5, patientCondition_status: _isSTD),
+      Conditions(condition_id: 6, patientCondition_status: _isUlcers),
+      Conditions(condition_id: 7, patientCondition_status: _isFaintingSeizure),
+      Conditions(condition_id: 8, patientCondition_status: _isRapidWeigthLoss),
+      Conditions(condition_id: 9, patientCondition_status: _isRadiationTherapy),
+      Conditions(condition_id: 10, patientCondition_status: _isJointReplacement),
+      Conditions(condition_id: 11, patientCondition_status: _isHeartSurgery),
+      Conditions(condition_id: 12, patientCondition_status: _isHeartAttack),
+      Conditions(condition_id: 13,patientCondition_status: _isHeartDisease),
+      Conditions(condition_id: 14, patientCondition_status: _isHeartMurmur),
+      Conditions(condition_id: 15, patientCondition_status: _isThyroidProblem),
+      Conditions(condition_id: 16, patientCondition_status: _isLiverDisease),
+      Conditions(condition_id: 17, patientCondition_status: _isJaundice),
+      Conditions(condition_id: 18, patientCondition_status: _isRheumaticFever),
+      Conditions(condition_id: 19, patientCondition_status: _isHayFever),
+      Conditions(condition_id: 20, patientCondition_status: _isRespiratoryProblems),
+      Conditions(condition_id: 21, patientCondition_status: _isTuberculosis),
+      Conditions(condition_id: 22, patientCondition_status: _isSwollenAnkles),
+      Conditions(condition_id: 23, patientCondition_status: _isKidneyDisease),
+      Conditions(condition_id: 24, patientCondition_status: _isDiabetes),
+      Conditions(condition_id: 25, patientCondition_status: _isChestPain),
+      Conditions(condition_id: 26, patientCondition_status: _isStroke),
+      Conditions(condition_id: 27, patientCondition_status: _isCancer),
+      Conditions(condition_id: 28, patientCondition_status: _isAnemia),
+      Conditions(condition_id: 29, patientCondition_status: _isAngina),
+      Conditions(condition_id: 30, patientCondition_status: _isAsthma),
+      Conditions(condition_id: 31, patientCondition_status: _isEmphysema),
+      Conditions(condition_id: 32, patientCondition_status: _isBleedingProblem),
+      Conditions(condition_id: 33, patientCondition_status: _isBloodDisease),
+      Conditions(condition_id: 34, patientCondition_status: _isHeadInjuries),
+      Conditions(condition_id: 35, patientCondition_status: _isArthritis),
+      Conditions(condition_id: 36, patientCondition_status: _othersDisease),
+    ];
+
+    final filteredConditions = conditions.where((condition) => condition.patientCondition_status == true).toList();
+    final patientConditions = PatientConditions(
+      patient_id: _patientId!,
+      conditions: filteredConditions,
+    );
+
+    try {
+      final createdPatientConditions = await conditionsController.addPatientCondition(patientConditions);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Patient conditions added successfuly: $createdPatientConditions'),
+          duration: const Duration(seconds: 2)
+        )
+      );
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error creating patient conditions: $error'),
+          duration: const Duration(seconds: 2)
+        )
+      );
+    }
+  }
+
   String? selectedSex;
   int userAge = 0;
   bool isContactInformationEnabled = false;
@@ -2935,6 +3040,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                         SizedBox(
                                                           width: 150, // Adjust width as needed
                                                           child: TextFormField(
+                                                            controller: _otherConditionsController,
                                                             enabled: _othersDisease,
                                                             decoration: const InputDecoration(
                                                               hintText: "Specify other disease",
@@ -2955,10 +3061,13 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                           mainAxisAlignment: MainAxisAlignment.end,
                                             children: [
                                                 ElevatedButton(
-                                                  onPressed: () => _validateAndEnableNextSection(
-                                                    _diseasesFormKey,
-                                                    (isValid) => setState(() => isMedicalHistoryEnabled = isValid),
-                                                  ),
+                                                  onPressed: () async {
+                                                    _validateAndEnableNextSection(
+                                                      _diseasesFormKey,
+                                                      (isValid) => setState(() => isMedicalHistoryEnabled = isValid),
+                                                    );
+                                                    var addedConditions = await _handleAddConditions();
+                                                  },
                                                   child: const Text("Sumbit All"),
                                                 ),
                                           // Add more fields as needed for dental history

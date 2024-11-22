@@ -34,7 +34,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       const AddApppointmentScreen(),
       const AddApppointmentScreen(),
       PatientRecords(
-        onAddPatient: _handleAddPatient,
+        onAddPatient: _handleAddPatient, 
+        onReports: _handlePatientReports,
       ),
       const AddPatientRecordScreen(),
       const ReportsScreen(),
@@ -48,6 +49,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
       selectedIndex = 3; // Set index for AddPatientRecordScreen
     });
   }
+
+void _handlePatientReports(int? id) {
+  if (id != null) {
+    print('Selected patient ID: $id');
+    _screens[4] = ReportsScreen(patient_id: id);
+    setState(() {
+      selectedIndex = 4; // Set index for ReportsScreen
+    });
+  } else {
+    print('No patient ID provided.');
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +83,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 setState(() {
                   selectedIndex = index;
                 });
+
+                if (index == 3) {
+                  _handleAddPatient();
+                }
+
               },
               leading: Column(
                 children: [

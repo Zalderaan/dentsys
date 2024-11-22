@@ -14,6 +14,15 @@ class InsuranceController {
       throw Exception('Error adding insurance from frontend controller: $error');
     }
   }
-
+  
   // GET
+
+  // PUT
+  Future<void> updateInsurance(Insurance insurance) async {
+    try {
+      await _insuranceService.updateInsuranceService(insurance);
+    } catch (error) {
+      throw Exception('Error updating insurance from frontend controller: $error');
+    }
+  }
 }

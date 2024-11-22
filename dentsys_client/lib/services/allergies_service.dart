@@ -31,4 +31,27 @@ class AllergiesService {
       throw Exception('Error creating allergies in frontend service: $error');
     }
   }
+
+  Future<void> updateAllergyService(Allergies allergies) async {
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+
+    try {
+      print('allergies.patient_id in fe service: ${allergies.patient_id}');
+      final response = await http.put(
+        Uri.parse('$baseUrl/update-allergies/${allergies.patient_id}'),
+        headers: headers,
+        body: jsonEncode(allergies.toJson()),
+      );
+      if (response.statusCode != 200) {
+        throw Exception(
+          'Failed to update allergies: ${response.body}'
+        );
+      }
+    } catch (error) {
+      print('Error updating allergies in frontend service: $error');
+      throw Exception('Error updating allergies in frontend service: $error');
+    }
+  }
 }

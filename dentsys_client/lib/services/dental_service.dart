@@ -28,6 +28,27 @@ class DentalService {
       print('error in dental service: $error');
       throw Exception('Error in dental service: $error');
     }
+  }
 
+  Future<void> updateDentalService(Dental dental) async {
+    const headers = {
+      'Content-Type': 'application/json'
+    };
+
+    try {
+      final response = await http.put(
+        Uri.parse('$baseUrl/update-dental-history/${dental.patient_id}'),
+        headers: headers,
+        body: jsonEncode(dental.toJson())
+      );
+      // print('response from update dental service: ${response.body}'); // debug line
+
+      if(response.statusCode != 200) {
+        throw Exception('Failed to update dental history: ${response.body}');
+      }
+    } catch (error) {
+      print('error in dental service: $error');
+      throw Exception('Error in dental service: $error');
+    }
   }
 }

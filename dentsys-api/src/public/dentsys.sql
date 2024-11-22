@@ -159,7 +159,7 @@ CREATE TABLE IF NOT EXISTS patient_conditions (
 
 
 -- insert default user
-INSERT INTO users (user_firstName, user_lastName, user_username, user_email, user_password) VALUES ('admin', 'admin', 'admin', 'admin@email.com','adminadmin');
+-- INSERT INTO users (user_firstName, user_lastName, user_username, user_email, user_password) VALUES ('admin', 'admin', 'admin', 'admin@email.com','adminadmin');
 
 -- insert default conditions data 
 INSERT INTO conditions (condition_name, condition_description) VALUES ('highBlood', 'High blood pressure');

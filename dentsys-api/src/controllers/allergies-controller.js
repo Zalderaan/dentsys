@@ -31,6 +31,7 @@ export default class AllergiesController {
     // PUT
     static async updateAllergies(req, res) {
         const data = req.body;
+        console.log('received allergy data in cont backend: ', data);
         try {
             const updatedAllergy = await Allergy.updateAllergies(data);
             return res.status(200).json({ message: 'Allergy updated successfully from controller', updatedAllergy });
