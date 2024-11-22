@@ -27,4 +27,25 @@ class MedicalService {
       throw Exception('Error in service: $error');
     }
   }
+
+  Future<void> updateMedicalService(Medical medical) async {
+    const headers = {
+      'Content-Type': 'application/json'
+    };
+
+    try {
+      final response = await http.put(
+        Uri.parse('$baseUrl/update-medical-history/${medical.patient_id}'),
+        headers: headers,
+        body: jsonEncode(medical.toJson())
+      );
+
+      if(response.statusCode != 200) {
+        throw Exception('Failed to update medical history: ${response.body}');
+      }
+    } catch (error) {
+      print('Error in service: $error');
+      throw Exception ('Error in service: $error');
+    }
+  }
 }

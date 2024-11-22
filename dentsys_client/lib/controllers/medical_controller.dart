@@ -14,4 +14,14 @@ class MedicalController {
       throw Exception('Error in medical frontend controller: $error');
     }
   }
+
+  Future<void> updateMedicalHistory(Medical medical) async {
+    print('medical model in service $medical');
+    try {
+      final updatedPatient = await _medicalService.updateMedicalService(medical);
+      print('Patient Medical History updated');
+    } catch (error) {
+      throw Exception('Error in medical frontend controller: $error');
+    }
+  }
 }

@@ -3,8 +3,27 @@ import 'package:flutter/material.dart';
 
 
 class AllergiesForms extends StatefulWidget {
+  final bool isAllergicToAnesthetic;
+  final bool isAllergicToAntibiotics;
+  final bool isAllergicToSulfa;
+  final bool isAllergicToAspirin;
+  final bool isAllergicToLatex;
+  final bool isAllergicToOthers;
+  final TextEditingController allergiesOthersController;
+  final Function(bool, bool, bool, bool, bool) onAllergiesChanged;
 
-   const AllergiesForms({super.key, required GlobalKey<FormState> formKey});
+  const AllergiesForms({
+    super.key, 
+    required GlobalKey<FormState> formKey,
+    required this.isAllergicToAnesthetic,
+    required this.isAllergicToAntibiotics,
+    required this.isAllergicToSulfa,
+    required this.isAllergicToAspirin,
+    required this.isAllergicToLatex,
+    required this.allergiesOthersController,
+    required this.isAllergicToOthers,
+    required this.onAllergiesChanged,
+  });
 
   @override
   AllergiesFormsState createState() => AllergiesFormsState();
@@ -14,13 +33,23 @@ class AllergiesFormsState extends State<AllergiesForms> {
   final _allergicFormKey = GlobalKey<FormState>();
 
 
-  bool _isAllergicToAnesthetic = false;
-  bool _isAllergicToPenicillin = false;
-  bool _isAllergicToSulfa = false;
-  bool _isAllergicToAspirin = false;
-  bool _isAllergicToLatex = false;
-  bool _isAllergicToOthers = false;
+  late bool _isAllergicToAnesthetic;
+  late bool _isAllergicToPenicillin;
+  late bool _isAllergicToSulfa;
+  late bool _isAllergicToAspirin;
+  late bool _isAllergicToLatex;
+  late bool _isAllergicToOthers;
 
+  @override
+  void initState(){
+    super.initState();
+    _isAllergicToAnesthetic = widget.isAllergicToAnesthetic;
+    _isAllergicToPenicillin = widget.isAllergicToAntibiotics;
+    _isAllergicToSulfa = widget.isAllergicToSulfa;
+    _isAllergicToAspirin = widget.isAllergicToAspirin;
+    _isAllergicToLatex = widget.isAllergicToLatex;
+    _isAllergicToOthers = widget.isAllergicToOthers;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +109,7 @@ class AllergiesFormsState extends State<AllergiesForms> {
                                 setState(() {
                                   _isAllergicToAnesthetic = value!;
                                 });
+                                widget.onAllergiesChanged(_isAllergicToAnesthetic, _isAllergicToPenicillin, _isAllergicToSulfa, _isAllergicToAspirin, _isAllergicToLatex);
                               },
                             ),
                             const Text("Local Anesthetic (ex. Lidocaine)"),
@@ -95,6 +125,7 @@ class AllergiesFormsState extends State<AllergiesForms> {
                                 setState(() {
                                   _isAllergicToPenicillin = value!;
                                 });
+                                widget.onAllergiesChanged(_isAllergicToAnesthetic, _isAllergicToPenicillin, _isAllergicToSulfa, _isAllergicToAspirin, _isAllergicToLatex);
                               },
                             ),
                             const Text("Penicillin, Antibiotics"),
@@ -110,6 +141,7 @@ class AllergiesFormsState extends State<AllergiesForms> {
                                 setState(() {
                                   _isAllergicToSulfa = value!;
                                 });
+                                widget.onAllergiesChanged(_isAllergicToAnesthetic, _isAllergicToPenicillin, _isAllergicToSulfa, _isAllergicToAspirin, _isAllergicToLatex);
                               },
                             ),
                             const Text("Sulfa drugs"),
@@ -125,6 +157,7 @@ class AllergiesFormsState extends State<AllergiesForms> {
                                 setState(() {
                                   _isAllergicToAspirin = value!;
                                 });
+                                widget.onAllergiesChanged(_isAllergicToAnesthetic, _isAllergicToPenicillin, _isAllergicToSulfa, _isAllergicToAspirin, _isAllergicToLatex);
                               },
                             ),
                             const Text("Aspirin"),
@@ -140,6 +173,7 @@ class AllergiesFormsState extends State<AllergiesForms> {
                                 setState(() {
                                   _isAllergicToLatex = value!;
                                 });
+                                widget.onAllergiesChanged(_isAllergicToAnesthetic, _isAllergicToPenicillin, _isAllergicToSulfa, _isAllergicToAspirin, _isAllergicToLatex);
                               },
                             ),
                             const Text("Latex"),
@@ -162,6 +196,7 @@ class AllergiesFormsState extends State<AllergiesForms> {
                             SizedBox(
                               width: 150, // Adjust width as needed
                               child: TextFormField(
+                                controller: widget.allergiesOthersController,
                                 enabled: _isAllergicToOthers,
                                 decoration: const InputDecoration(
                                   hintText: "Specify other allergies",

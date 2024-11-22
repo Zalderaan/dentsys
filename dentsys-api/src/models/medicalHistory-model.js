@@ -98,6 +98,7 @@ export default class MedicalHistory {
     }
 
     static async updateMedicalHistory(data) {
+        console.log('data received in mh model:', data);
         const { medical_physician, medical_physicianSpec, medical_officeAddress, medical_officeNo, medical_goodHealth, medical_isUnderTreatment, 
             medical_treatmentDetails, medical_seriousOperation, medical_seriousOperationDetails, medical_hospitalized, medical_hospitalizedDetails, medical_isMedication, 
             medical_medicationDetails, medical_isTobacco, medical_dangerousSubstance, medical_bleedingTime, medical_isPregnant, medical_isNursing, medical_isBirthControl, patient_id } = data;
