@@ -14,4 +14,13 @@ class AllergiesController {
       throw Exception('Error creating allergies in frontend controller: $error');
     }
   }
+
+  // PUT
+  Future<void> updateAllergy(Allergies allergies) async {
+    try {
+      await _allergiesService.updateAllergyService(allergies);
+    } catch (error) {
+      throw Exception('Error updating allergies in frontend controller: $error');
+    }
+  }
 }

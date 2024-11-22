@@ -27,6 +27,7 @@ import 'package:dentsys_client/models/medical_model.dart';
 import 'package:dentsys_client/controllers/medical_controller.dart';
 
 import 'package:dentsys_client/models/allergies_model.dart';
+import 'package:dentsys_client/controllers/allergies_controller.dart';
 
 
 class ReportsScreen extends StatefulWidget {
@@ -650,6 +651,16 @@ void _showEditPatientFormsDialog(BuildContext context, PatientDetails details) {
   late bool? dialogNursingValue = details.medical.medical_isNursing;
   late bool? dialogBirthControlValue = details.medical.medical_isBirthControl;
   late MedicalController medicalController = MedicalController(); // medical controller
+
+  // allergies info
+  final TextEditingController dialogAllergiesOthersController = TextEditingController(text: details.allergies.allergies_others);
+  late bool dialogAllergiesAnestheticValue = details.allergies.allergies_anesthetic;
+  late bool dialogAllergiesAntibioticsValue = details.allergies.allergies_penicillin;
+  late bool dialogAllergiesSulfaValue = details.allergies.allergies_sulfaDrugs;
+  late bool dialogAllergiesAspirinValue = details.allergies.allergies_aspirin;
+  late bool dialogAllergiesLatexValue = details.allergies.allergies_latex;
+  late bool dialogAllergiesOthersValue = details.allergies.allergies_others!.isNotEmpty;
+  late AllergiesController allergiesController = AllergiesController(); // allergies controller
   
   Future<void> saveUpdatePatient() async {
     final updatedPatient = Patient(
@@ -779,9 +790,7 @@ void _showEditPatientFormsDialog(BuildContext context, PatientDetails details) {
       medical_isNursing: dialogNursingValue,
       medical_isBirthControl: dialogBirthControlValue,
     );
-
-    print('updatedMedical in saveUpdateMedical: $updatedMedical');
-
+    // print('updatedMedical in saveUpdateMedical: $updatedMedical');
     try {
       await medicalController.updateMedicalHistory(updatedMedical);
       print('Medical updated successfully');
@@ -790,11 +799,38 @@ void _showEditPatientFormsDialog(BuildContext context, PatientDetails details) {
     } 
   }
 
-  // Future<void> saveUpdateMedical() async {
-  //   final updatedMedical = Medical(
+    dynamic retrieveAllergyStates(
+      bool anesthetic,
+      bool antibiotics,
+      bool sulfa,
+      bool aspirin,
+      bool latex,
+    ) async {
+      dialogAllergiesAnestheticValue = anesthetic;
+      dialogAllergiesAntibioticsValue = antibiotics;
+      dialogAllergiesSulfaValue = sulfa;
+      dialogAllergiesAspirinValue = aspirin;
+      dialogAllergiesLatexValue = latex;
+    }
 
-  //   );
-  // }
+    Future<void> saveUpdateAllergies() async {
+      final updatedAllergies = Allergies(
+        patient_id: details.allergies.patient_id,
+        allergies_anesthetic: dialogAllergiesAnestheticValue,
+        allergies_penicillin: dialogAllergiesAntibioticsValue,
+        allergies_sulfaDrugs: dialogAllergiesSulfaValue,
+        allergies_aspirin: dialogAllergiesAspirinValue,
+        allergies_latex: dialogAllergiesLatexValue,
+        allergies_others: dialogAllergiesOthersController.text,
+      );
+
+      try {
+        await allergiesController.updateAllergy(updatedAllergies);
+        print('Allergies updated successfully');
+      } catch(error){
+        print('Error updating allergies: $error');
+      }
+    }
 
   showDialog(
     context: context,
@@ -882,7 +918,17 @@ void _showEditPatientFormsDialog(BuildContext context, PatientDetails details) {
                   isTakingBirthControl: dialogBirthControlValue,
                   onUpdated: retrieveMedicalStates,
                 ),
-                AllergiesForms(formKey: dialogAllergiesFormKey, ),
+                AllergiesForms(
+                  formKey: dialogAllergiesFormKey, 
+                  isAllergicToAnesthetic: dialogAllergiesAnestheticValue,
+                  isAllergicToAntibiotics: dialogAllergiesAntibioticsValue,
+                  isAllergicToSulfa: dialogAllergiesSulfaValue,
+                  isAllergicToAspirin: dialogAllergiesAspirinValue,
+                  isAllergicToLatex: dialogAllergiesLatexValue,
+                  isAllergicToOthers: dialogAllergiesOthersValue,
+                  allergiesOthersController: dialogAllergiesOthersController,
+                  onAllergiesChanged: retrieveAllergyStates,
+                ),
                 DiseasesForms(formKey: dialogDiseasesFormKey, ),
                 //const ContactInfoForms()
                 
@@ -913,6 +959,7 @@ void _showEditPatientFormsDialog(BuildContext context, PatientDetails details) {
               await saveUpdateInsurance();
               await saveUpdateDental();
               await saveUpdateMedical();
+              await saveUpdateAllergies();
             },
           ),
         ],
