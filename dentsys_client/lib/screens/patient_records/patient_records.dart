@@ -40,6 +40,20 @@ class _PatientRecordsState extends State<PatientRecords> {
     });
   }
 
+  void filterRecords() {
+    patientRecords.then((records) {
+      setState(() {
+        filteredRecords = records.where((patient) {
+          final fullName = "${patient.firstName} ${patient.lastName}".toLowerCase();
+          return fullName.contains(searchQuery);
+        }).toList();
+      });
+    }).catchError((error) {
+      // ignore: avoid_print
+      print('Error filtering records: $error');
+    });
+  }
+
   // void applyFilters() {
   //   patientRecords.then((records) {
   //     setState(() {
@@ -332,6 +346,12 @@ class _PatientRecordsState extends State<PatientRecords> {
       SizedBox(
         width: 300.0,
         child: TextField(
+          onChanged: (value) {
+            setState(() {
+              searchQuery = value.toLowerCase();
+              filterRecords();
+            });
+          },
           decoration: InputDecoration(
             hintText: "Search Patient Records",
             prefixIcon: const Icon(Icons.search),
@@ -347,15 +367,26 @@ class _PatientRecordsState extends State<PatientRecords> {
 }
 
   Widget buildArticleList() {
-    return ListView.builder(
-      itemCount: filteredRecords.length,
-      itemBuilder: (context, index) {
-        final patient = filteredRecords[index];
-        return buildRecordItem(
-          "${patient.firstName} ${patient.lastName}," , patient.id,
-          //patient.status ?? "Unknown",
-          //patient.schedule ?? "Unscheduled",
-        );
+    return FutureBuilder<List<Patient>>(
+      future: patientRecords,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(child: Text('No patient records found.'));
+        } else {
+          return ListView.builder(
+            itemCount: filteredRecords.length,
+            itemBuilder: (context, index) {
+              final patient = filteredRecords[index];
+              return buildRecordItem(
+                "${patient.firstName} ${patient.lastName}", patient.id,
+              );
+            },
+          );
+        }
       },
     );
   }
