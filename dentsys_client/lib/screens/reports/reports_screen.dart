@@ -990,7 +990,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
         .map((condition) => conditionNames[condition.condition_id] ?? "Unknown Condition") // Map ID to name
         .join("\n"); // Join all names with a comma
   }
- 
 
   // Format the date
   String formatDate(String dateTime) {

@@ -850,7 +850,6 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                           _personalInfoFormKey,
                                           (isValid) => setState(() => isContactInformationEnabled = isValid),
                                         );
-                                        var createdPatient = await _handleAddPatient();
                                       },
                                       child: const Text("Next"),
                                     ),
@@ -1040,7 +1039,6 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                       _contactInformationFormKey,
                                                       (isValid) => setState(() => isDentalInsuranceEnabled = isValid),
                                                     );
-                                                    var createdContact = await _handleAddContact();
                                                   },
                                                   child: const Text("Next"),
                                                 ),
@@ -1179,7 +1177,6 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                       (isValid) => setState(() => isDentalHistoryEnabled = isValid),
                                                     );
 
-                                                    var createdInsurance = _handleAddInsurance();
                                                   },
                                                   child: const Text("Next"),
                                                 ),
@@ -1305,8 +1302,6 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                       _dentalHistoryFormKey,
                                                       (isValid) => setState(() => isMedicalHistoryEnabled = isValid),
                                                     );
-
-                                                    var createdDental = await _handleAddDental();
                                                   },
                                                   child: const Text("Next"),
                                                 ),
@@ -2054,7 +2049,6 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                   (isValid) => setState(() => isAllergicFormEnabled = isValid),
                                                 );
 
-                                                var createdMedical = _handleAddMedical();
                                               }, 
                                               child: const Text("Next"),
                                             ),
@@ -2262,7 +2256,6 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                         _allergicFormKey,
                                                         (isValid) => setState(() => isDiseasesEnabled = isValid),
                                                       );
-                                                      _handleAddAllergies();
                                                     },
                                                     child: const Text("Next"),
                                                   ),
@@ -3066,9 +3059,15 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                       _diseasesFormKey,
                                                       (isValid) => setState(() => isMedicalHistoryEnabled = isValid),
                                                     );
-                                                    var addedConditions = await _handleAddConditions();
+                                                    await _handleAddPatient();
+                                                    await _handleAddContact();
+                                                    await _handleAddInsurance();
+                                                    await _handleAddDental();
+                                                    await _handleAddMedical();
+                                                    await _handleAddAllergies();
+                                                    await _handleAddConditions();
                                                   },
-                                                  child: const Text("Sumbit All"),
+                                                  child: const Text("Submit All"),
                                                 ),
                                           // Add more fields as needed for dental history
                                         ],
