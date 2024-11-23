@@ -916,18 +916,26 @@ class _ReportsScreenState extends State<ReportsScreen> {
       Conditions(condition_id: 34, patientCondition_status: dialogHeadInjury),
       Conditions(condition_id: 35, patientCondition_status: dialogArthritis),
     ];
+    
 
-    final filteredConditions = updatedConditions.where((condition) => condition.patientCondition_status == true).toList();
+    final trueConditions = updatedConditions.where((condition) => condition.patientCondition_status == true).toList();
+    final falseConditions = updatedConditions.where((condition) => condition.patientCondition_status == false).toList();
+    
     final updPatientConditions = PatientConditions(
       patient_id: details.patient.id,
-      conditions: filteredConditions,
+      conditions: trueConditions,
+    );
+
+    final delPatientConditions = PatientConditions(
+      patient_id: details.patient.id,
+      conditions: falseConditions,
     );
 
     try {
       await conditionsController.addPatientCondition(updPatientConditions);
-
+      await conditionsController.deletePatientCondition(delPatientConditions);
        // Trigger refresh
-       onUpdate();
+      onUpdate();
     } catch (error) {
       print('Error updating conditions: $error');
     }

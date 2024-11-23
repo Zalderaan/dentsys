@@ -123,22 +123,67 @@ export default class PatientCondition {
     }
 
     static async removePatientCondition(data) {
-        const {patient_id, condition_id} = data;
-        const queryStr = 'DELETE FROM patient_conditions WHERE patient_id = ? AND condition_id = ?';
-        const values = [patient_id, condition_id];
+        console.log('data in remove conditions model:', data);
+        const {patient_id, conditions} = data;
+        console.log('patient_id in remove conditions model:', patient_id);
+        const deletedConditions = [];
+        const connection = await pool.getConnection();
+        connection.beginTransaction();
+
         try {
-            const [condition_result] = await pool.query(queryStr, values);
-            if (condition_result.affectedRows === 0) {
-                console.log('Patient condition not found');
-                throw new Error('Patient condition not found');
-            } else {
-                console.log('Patient condition deleted successfully');
-                return condition_result;
+            // get current conditions of patient
+            const currentConditions = await this.getPatientConditions(patient_id) || []; // NOTE: '|| []' is just a fallback to prevent 'undefined' error
+            // console.log('currentConditions:', currentConditions);
+
+            // create a map of existing conditions
+            const deleteConditionsMap = new Map(currentConditions.map(condition => [condition.condition_id, condition]));
+
+            
+            for (const condition of conditions) {
+                const {condition_id} = condition;
+                if(deleteConditionsMap.has(condition_id)){
+                    const queryStr = 'DELETE FROM patient_conditions WHERE patient_id = ? AND condition_id = ?';
+                    const values = [patient_id, condition_id];
+                    const [condition_result] = await connection.query(queryStr, values);
+                    deletedConditions.push(
+                        {
+                            patient_id: patient_id,
+                            condition_id: condition_id,
+                            status: 'deleted'
+                        }
+                    );
+                }
             }
+            if (deletedConditions.length === 0) {
+                console.log('No conditions were deleted (either patient has no conditions or error');
+                // throw new Error('No conditions were deleted (either patient has no conditions or error');
+            } else if (deletedConditions.length >= 1) {
+                console.log('Patient conditions deleted successfully', deletedConditions);
+            }
+            await connection.commit();
+            return deletedConditions;
         } catch (error) {
+            await connection.rollback();
             console.log('Error deleting patient condition from model', error);
             throw error;
+        } finally {
+            connection.release();
         }
+        // const queryStr = 'DELETE FROM patient_conditions WHERE patient_id = ? AND condition_id = ?';
+        // const values = [patient_id, condition_id];
+        // try {
+        //     const [condition_result] = await pool.query(queryStr, values);
+        //     if (condition_result.affectedRows === 0) {
+        //         console.log('Patient condition not found');
+        //         throw new Error('Patient condition not found');
+        //     } else {
+        //         console.log('Patient condition deleted successfully');
+        //         return condition_result;
+        //     }
+        // } catch (error) {
+        //     console.log('Error deleting patient condition from model', error);
+        //     throw error;
+        // }
     }
 }
 

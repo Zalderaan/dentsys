@@ -25,4 +25,25 @@ class ConditionsService {
             throw Exception('Error in service: $error');
         }
     }
+
+    Future<void> deletePatientConditionService(PatientConditions patientConditions) async {
+        try {
+            final headers = {
+                'Content-Type': 'application/json',
+            };
+            final response = await http.delete(
+                Uri.parse('$baseUrl/delete-patient-conditions/${patientConditions.patient_id}'),
+                headers: headers,
+                body: jsonEncode(patientConditions.toJson()),
+            );
+            if (response.statusCode == 200) {
+                print('Deleted patient condition');
+            } else {
+                throw Exception('Failed to delete patient condition: ${response.body}');
+            }
+        } catch (error) {
+            print ('Error in service: $error');
+            throw Exception('Error in service: $error');
+        }
+    }
 }
