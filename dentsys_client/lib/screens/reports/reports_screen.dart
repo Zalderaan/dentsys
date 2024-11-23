@@ -170,7 +170,14 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                   ),
                                   child: ElevatedButton.icon(
                                     onPressed: () {
-                                      _showEditPatientFormsDialog(context, patientDetails!);
+                                      _showEditPatientFormsDialog(
+                                        context,
+                                        patientDetails!,
+                                        () {
+                                          // Refresh patient details after update
+                                          loadPatientDetails();
+                                        },
+                                      );
                                     },
                                     icon: const Icon(
                                       Icons.edit,
@@ -488,7 +495,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
 }
 
 // Edit Patient Forms
-  void _showEditPatientFormsDialog(BuildContext context, PatientDetails details) {
+  void _showEditPatientFormsDialog(BuildContext context, PatientDetails details, VoidCallback onUpdate) {
     final GlobalKey<FormState> dialogPersonalInfoFormKey = GlobalKey<FormState>();
     final GlobalKey<FormState> dialogContactInfoFormKey = GlobalKey<FormState>();
     final GlobalKey<FormState> dialogDentalInsuranceFormKey = GlobalKey<FormState>();
@@ -590,6 +597,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
       try {
         await patientController.updatePatient(updatedPatient);
         print('Patient updated successfully');
+
+        // Trigger refresh
+        onUpdate();
       } catch (error) {
         print('Error updating patient: $error');
       }
@@ -609,6 +619,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
       try {
         await contactController.updateContact(updatedContact);
         print('Contact updated successfully');
+
+         // Trigger refresh
+        onUpdate();
       } catch (error) {
         print('Error updating contact: $error');
       }
@@ -625,6 +638,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
       try {
         await insuranceController.updateInsurance(updatedInsurance);
         print('Insurance updated successfully');
+
+         // Trigger refresh
+        onUpdate();
       } catch (error) {
         print('Error updating insurance: $error');
       }
@@ -640,6 +656,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
       try {
         await dentalController.updateDentalHistory(updatedDental);
         print('Dental updated successfully');
+
+         // Trigger refresh
+        onUpdate();
       } catch (error) {
         print('Error updating dental: $error');
       }
@@ -670,39 +689,42 @@ class _ReportsScreenState extends State<ReportsScreen> {
       dialogBirthControlValue = birthControl;
   }
 
-  Future<void> saveUpdateMedical() async {
-    final updatedMedical = Medical(
-      patient_id: details.medical.patient_id,
-      medical_physician: dialogPhysicianController.text,
-      medical_physicianSpec: dialogPhysicianSpecController.text,
-      medical_officeAddress: dialogOfficeAddressController.text,
-      medical_officeNo: dialogOfficeNoController.text,
-      medical_goodHealth: dialogGoodHealthValue,
-      medical_isUnderTreatment: dialogUnderTreatmentValue,
-      medical_treatmentDetails: dialogUnderTreatmentDetailsController.text,
-      medical_seriousOperation: dialogSeriousOperationValue,
-      medical_seriousOperationDetails: dialogSeriousOperationDetails.text,
-      medical_hospitalized: dialogHospitalizedValue,
-      medical_hospitalizedDetails: dialogMedicalHospitalizedDetails.text,
-      medical_isMedication: dialogMedicationValue,
-      medical_medicationDetails: dialogMedicationDetails.text,
-      medical_bloodType: dialogBloodTypeController.text,
-      medical_bloodPressure: dialogBloodPressureController.text,
-      medical_bleedingTime: dialogBleedingTimeController.text,
-      medical_isTobacco: dialogTobaccoValue,
-      medical_dangerousSubstance: dialogDangerousSubstanceValue,
-      medical_isPregnant: dialogPregnantValue,
-      medical_isNursing: dialogNursingValue,
-      medical_isBirthControl: dialogBirthControlValue,
-    );
-    // print('updatedMedical in saveUpdateMedical: $updatedMedical');
-    try {
-      await medicalController.updateMedicalHistory(updatedMedical);
-      print('Medical updated successfully');
-    } catch (error) {
-      print('Error updating medical: $error');
-    } 
-  }
+    Future<void> saveUpdateMedical() async {
+      final updatedMedical = Medical(
+        patient_id: details.medical.patient_id,
+        medical_physician: dialogPhysicianController.text,
+        medical_physicianSpec: dialogPhysicianSpecController.text,
+        medical_officeAddress: dialogOfficeAddressController.text,
+        medical_officeNo: dialogOfficeNoController.text,
+        medical_goodHealth: dialogGoodHealthValue,
+        medical_isUnderTreatment: dialogUnderTreatmentValue,
+        medical_treatmentDetails: dialogUnderTreatmentDetailsController.text,
+        medical_seriousOperation: dialogSeriousOperationValue,
+        medical_seriousOperationDetails: dialogSeriousOperationDetails.text,
+        medical_hospitalized: dialogHospitalizedValue,
+        medical_hospitalizedDetails: dialogMedicalHospitalizedDetails.text,
+        medical_isMedication: dialogMedicationValue,
+        medical_medicationDetails: dialogMedicationDetails.text,
+        medical_bloodType: dialogBloodTypeController.text,
+        medical_bloodPressure: dialogBloodPressureController.text,
+        medical_bleedingTime: dialogBleedingTimeController.text,
+        medical_isTobacco: dialogTobaccoValue,
+        medical_dangerousSubstance: dialogDangerousSubstanceValue,
+        medical_isPregnant: dialogPregnantValue,
+        medical_isNursing: dialogNursingValue,
+        medical_isBirthControl: dialogBirthControlValue,
+      );
+      // print('updatedMedical in saveUpdateMedical: $updatedMedical');
+      try {
+        await medicalController.updateMedicalHistory(updatedMedical);
+        print('Medical updated successfully');
+
+         // Trigger refresh
+        onUpdate();
+      } catch (error) {
+        print('Error updating medical: $error');
+      } 
+    }
 
     dynamic retrieveAllergyStates(
       bool anesthetic,
@@ -732,6 +754,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
       try {
         await allergiesController.updateAllergy(updatedAllergies);
         print('Allergies updated successfully');
+
+         // Trigger refresh
+        onUpdate();
       } catch(error){
         print('Error updating allergies: $error');
       }
@@ -747,100 +772,100 @@ class _ReportsScreenState extends State<ReportsScreen> {
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 36),
         ),
         content: SizedBox(
-          width: 1300,
-          height: 600,
-          child:  SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Divider(
-                  height: 10,
-                  color: Colors.grey[800],
-                  thickness: 0.5,
-                ),
-                const SizedBox(height: 15.0),
-                PersonalInfoForms(
-                  firstNameController: _dialogFirstNameController,
-                  lastNameController: _dialogLastNameController,
-                  middleNameController: _dialogMiddleNameController,
-                  nicknameController: _dialogNicknameController, 
-                  sexController: _dialogSexController,
-                  ageController: _dialogAgeController,
-                  birthdateController: _dialogBirthdateController, 
-                  nationalityController: _dialogNationalityController,
-                  occupationController: _dialogOccupationController,
-                  religionController: _dialogReligionController,
-                  reasonController: _dialogReasonController,
-                  referrerController: _dialogReferrerController,
-                  parentNameController: _guardianNameController,
-                  parentOccupationController: _guardianOccupationController,
-                  formKey: dialogPersonalInfoFormKey, 
-                  patient: details.patient
-                ),
-                ContactInfoForms(
-                  emailController: _emailController,
-                  homeAddressController: _homeAddressController,
-                  homeNoController: _homeNoController,
-                  faxNoController: _faxNoController,
-                  workNoController: _workNoController,
-                  mobileNoController: _mobileNoController,
-                  formKey: dialogContactInfoFormKey, 
-                  contact: details.contact
-                ),
-                DentalInsuranceForms(
-                  insuranceNameController: dialogInsuranceNameController,
-                  effectivedateController: dialogEffectiveDateController, 
-                  formKey: dialogDentalInsuranceFormKey, 
-                  insurance: details.insurance
-                ),
-                DentalHistoryForms(
-                  formKey: dialogDentalHistoryFormKey, 
-                  previousDentistController: dialogPreviousDentistController,
-                  latestvisitController: dialogLatestVisitController, 
-                ),
-                MedicalHistoryForms(
-                  formKey: dialogMedicalHistoryFormKey,
-                  physicianNameController: dialogPhysicianController,
-                  physicianSpecialtyController: dialogPhysicianSpecController,
-                  officeAddressController: dialogOfficeAddressController,
-                  officeNumberController: dialogOfficeNoController,
-                  isInGoodHealth: dialogGoodHealthValue,
-                  isUnderTreatment: dialogUnderTreatmentValue,
-                  medicalTreatmentDetailsController: dialogUnderTreatmentDetailsController,
-                  isSeriousIllness: dialogSeriousOperationValue,
-                  seriousIllnessDetailsController: dialogSeriousOperationDetails,
-                  isHospitalized: dialogHospitalizedValue,
-                  hospitalizationDetailsController: dialogMedicalHospitalizedDetails,
-                  isTakingMedication: dialogMedicationValue,
-                  medicationDetailsController: dialogMedicationDetails,
-                  isUsingTobacco: dialogTobaccoValue,
-                  isUsingDangerousDrugs: dialogDangerousSubstanceValue,
-                  bloodTypeController: dialogBloodTypeController,
-                  bloodPressureController: dialogBloodPressureController,
-                  bleedingTimeController: dialogBleedingTimeController,
-                  isNursing: dialogNursingValue,
-                  isPregnant: dialogPregnantValue,
-                  isTakingBirthControl: dialogBirthControlValue,
-                  onUpdated: retrieveMedicalStates,
-                ),
-                AllergiesForms(
-                  formKey: dialogAllergiesFormKey, 
-                  isAllergicToAnesthetic: dialogAllergiesAnestheticValue,
-                  isAllergicToAntibiotics: dialogAllergiesAntibioticsValue,
-                  isAllergicToSulfa: dialogAllergiesSulfaValue,
-                  isAllergicToAspirin: dialogAllergiesAspirinValue,
-                  isAllergicToLatex: dialogAllergiesLatexValue,
-                  isAllergicToOthers: dialogAllergiesOthersValue,
-                  allergiesOthersController: dialogAllergiesOthersController,
-                  onAllergiesChanged: retrieveAllergyStates,
-                ),
-                DiseasesForms(formKey: dialogDiseasesFormKey, ),
-                //const ContactInfoForms()
-                
-              ],
+            width: 1300,
+            height: 600,
+            child:  SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Divider(
+                    height: 10,
+                    color: Colors.grey[800],
+                    thickness: 0.5,
+                  ),
+                  const SizedBox(height: 15.0),
+                  PersonalInfoForms(
+                    firstNameController: _dialogFirstNameController,
+                    lastNameController: _dialogLastNameController,
+                    middleNameController: _dialogMiddleNameController,
+                    nicknameController: _dialogNicknameController, 
+                    sexController: _dialogSexController,
+                    ageController: _dialogAgeController,
+                    birthdateController: _dialogBirthdateController, 
+                    nationalityController: _dialogNationalityController,
+                    occupationController: _dialogOccupationController,
+                    religionController: _dialogReligionController,
+                    reasonController: _dialogReasonController,
+                    referrerController: _dialogReferrerController,
+                    parentNameController: _guardianNameController,
+                    parentOccupationController: _guardianOccupationController,
+                    formKey: dialogPersonalInfoFormKey, 
+                    patient: details.patient
+                  ),
+                  ContactInfoForms(
+                    emailController: _emailController,
+                    homeAddressController: _homeAddressController,
+                    homeNoController: _homeNoController,
+                    faxNoController: _faxNoController,
+                    workNoController: _workNoController,
+                    mobileNoController: _mobileNoController,
+                    formKey: dialogContactInfoFormKey, 
+                    contact: details.contact
+                  ),
+                  DentalInsuranceForms(
+                    insuranceNameController: dialogInsuranceNameController,
+                    effectivedateController: dialogEffectiveDateController, 
+                    formKey: dialogDentalInsuranceFormKey, 
+                    insurance: details.insurance
+                  ),
+                  DentalHistoryForms(
+                    formKey: dialogDentalHistoryFormKey, 
+                    previousDentistController: dialogPreviousDentistController,
+                    latestvisitController: dialogLatestVisitController, 
+                  ),
+                  MedicalHistoryForms(
+                    formKey: dialogMedicalHistoryFormKey,
+                    physicianNameController: dialogPhysicianController,
+                    physicianSpecialtyController: dialogPhysicianSpecController,
+                    officeAddressController: dialogOfficeAddressController,
+                    officeNumberController: dialogOfficeNoController,
+                    isInGoodHealth: dialogGoodHealthValue,
+                    isUnderTreatment: dialogUnderTreatmentValue,
+                    medicalTreatmentDetailsController: dialogUnderTreatmentDetailsController,
+                    isSeriousIllness: dialogSeriousOperationValue,
+                    seriousIllnessDetailsController: dialogSeriousOperationDetails,
+                    isHospitalized: dialogHospitalizedValue,
+                    hospitalizationDetailsController: dialogMedicalHospitalizedDetails,
+                    isTakingMedication: dialogMedicationValue,
+                    medicationDetailsController: dialogMedicationDetails,
+                    isUsingTobacco: dialogTobaccoValue,
+                    isUsingDangerousDrugs: dialogDangerousSubstanceValue,
+                    bloodTypeController: dialogBloodTypeController,
+                    bloodPressureController: dialogBloodPressureController,
+                    bleedingTimeController: dialogBleedingTimeController,
+                    isNursing: dialogNursingValue,
+                    isPregnant: dialogPregnantValue,
+                    isTakingBirthControl: dialogBirthControlValue,
+                    onUpdated: retrieveMedicalStates,
+                  ),
+                  AllergiesForms(
+                    formKey: dialogAllergiesFormKey, 
+                    isAllergicToAnesthetic: dialogAllergiesAnestheticValue,
+                    isAllergicToAntibiotics: dialogAllergiesAntibioticsValue,
+                    isAllergicToSulfa: dialogAllergiesSulfaValue,
+                    isAllergicToAspirin: dialogAllergiesAspirinValue,
+                    isAllergicToLatex: dialogAllergiesLatexValue,
+                    isAllergicToOthers: dialogAllergiesOthersValue,
+                    allergiesOthersController: dialogAllergiesOthersController,
+                    onAllergiesChanged: retrieveAllergyStates,
+                  ),
+                  DiseasesForms(formKey: dialogDiseasesFormKey, ),
+                  //const ContactInfoForms()
+                  
+                ],
+              ),
             ),
           ),
-        ),
           actions: <Widget>[
             TextButton(
               child: const Text('Cancel'),
@@ -865,6 +890,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 await saveUpdateDental();
                 await saveUpdateMedical();
                 await saveUpdateAllergies();
+                Navigator.of(context).pop();
               },
             ),
           ],
