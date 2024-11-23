@@ -91,23 +91,13 @@ CREATE TABLE IF NOT EXISTS allergies (
     ON DELETE CASCADE ON UPDATE CASCADE -- Applied cascading actions
 );
 
--- PRICING TYPES TABLE
-CREATE TABLE IF NOT EXISTS pricing_types (
-    prType_id INT AUTO_INCREMENT PRIMARY KEY,
-    prType_name VARCHAR(50) NOT NULL
-);
-
 -- PROCEDURES TABLE
 CREATE TABLE IF NOT EXISTS procedures (
     prcd_id INT AUTO_INCREMENT PRIMARY KEY,
-    prType_id INT NOT NULL,
     prcd_name VARCHAR(50) NOT NULL,
-    prcd_description VARCHAR(50) NOT NULL,
+    prcd_priceType ENUM('fixed', 'variable', 'downpayment', 'unit') NOT NULL,
     prcd_category VARCHAR(50) NOT NULL,
-    prcd_price FLOAT NOT NULL, -- Changed to FLOAT for price
-    prcd_minPrice INT NOT NULL,
-    prcd_maxPrice INT NOT NULL,
-    FOREIGN KEY (prType_id) REFERENCES pricing_types(prType_id) ON DELETE CASCADE ON UPDATE CASCADE
+    prcd_basePrice DECIMAL(10, 2) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS treatment_record (
@@ -156,10 +146,6 @@ CREATE TABLE IF NOT EXISTS patient_conditions (
     FOREIGN KEY (patient_id) REFERENCES patients(patient_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (condition_id) REFERENCES conditions(condition_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
-
-
--- insert default user
--- INSERT INTO users (user_firstName, user_lastName, user_username, user_email, user_password) VALUES ('admin', 'admin', 'admin', 'admin@email.com','adminadmin');
 
 -- insert default conditions data 
 INSERT INTO conditions (condition_name, condition_description) VALUES ('highBlood', 'High blood pressure');

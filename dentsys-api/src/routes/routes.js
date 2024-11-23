@@ -6,11 +6,9 @@ import DentalHistoryController from '../controllers/dentalHistory-controller.js'
 import InsuranceController from '../controllers/insurance-controller.js';
 import MedicalHistoryController from '../controllers/medicalHistory-controller.js';
 import PatientConditionController from '../controllers/patientCondition-controller.js';
-import AllergyController from '../controllers/allergies-controller.js';   
-
-import TestController from '../controllers/test-controller.js';
-import Allergies from '../models/allergies-model.js';
 import AllergiesController from '../controllers/allergies-controller.js';
+import ProcedureController from '../controllers/procedure-controller.js';
+import TestController from '../controllers/test-controller.js';
 
 const router = express.Router();
 
@@ -62,6 +60,12 @@ router.post('/add-allergies', AllergiesController.addAllergies);
 router.get('/get-allergies/:id', AllergiesController.getAllergies);
 router.put('/update-allergies/:id', AllergiesController.updateAllergies);
 router.delete('/delete-allergies/:id', AllergiesController.deleteAllergies);
+
+// procedures routes
+router.post('/add-procedure', ProcedureController.addProcedure);
+router.get('/get-procedures', ProcedureController.getAllProcedures);
+router.put('/update-procedure/:id', ProcedureController.updateProcedure);
+router.delete('/delete-procedure/:id', ProcedureController.deleteProcedure);
 
 // test routes
 router.post('/test/add-contact', TestController.createContact);

@@ -309,7 +309,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                   ),
                                   TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.pushNamed(context, '/register');
+                                  },
                                   child: Text(
                                     'Register',
                                     style: GoogleFonts.raleway(

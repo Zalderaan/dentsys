@@ -450,7 +450,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     ),
                                   ),
                                   TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.pushNamed(context, '/login');
+                                  },
                                   child: Text(
                                     'Login',
                                     style: GoogleFonts.raleway(
