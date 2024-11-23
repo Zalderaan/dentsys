@@ -33,6 +33,7 @@ class User {
 
   // factory constructor
   factory User.fromJson(Map<String, dynamic> json) {
+    print('User.fromJson: $json');
     // Adjust to match your API response structure for login
     if (json.containsKey('user')) {
       var userJson = json['user'];

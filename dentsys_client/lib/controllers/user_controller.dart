@@ -9,9 +9,10 @@ class UserController {
   User? _currentUser; // priv var to hold the current user
 
   // register a user
-  Future<String> register(User user) async {
+  Future<dynamic> register(User user) async {
     try {
       var registered = await userService.registerService(user);
+      // print('User registered: $registered');
       return 'User registered: ${registered.username}';
     } catch (e) {
       return 'Registration failed: $e';

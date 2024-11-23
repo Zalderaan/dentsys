@@ -51,32 +51,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
     String password = _passwordController.text.trim();
 
     // create user instance
-    User user = User.loginCons(username: username, password: password);
-
-    // Call login method and display result
-    String result = await userController.register(user);
-    print ('handleRegister result: $result');
-
-    // Navigate to dashboard if login is successful
-    if (result == 'User registered in: $username') {
-      Navigator.pushNamed(context, '/login');
-    } else {
-      // Clear input fields
-      _firstnameController.clear();
-      _lastnameController.clear();
-      _emailController.clear();
-      _passwordController.clear();
-      _usernameController.clear();
-      _passwordController.clear();
-    }
+    try {
+      User user = User.registerCons(firstName: firstname, lastName: lastname, email: email, username: username, password: password);
+      String result = await userController.register(user); // Call login method and display result
+      
+      // Navigate to dashboard if login is successful
+      if (result == 'User registered: $username') {
+        Navigator.pushNamed(context, '/login');
+      } else {
+        // Clear input fields
+        ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(result),
+          duration: const Duration(seconds: 3),
+        ),
+      );
+      }
 
     // Show a snackbar with the result
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(result),
-        duration: const Duration(seconds: 3),
-      ),
-    );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(result),
+          duration: const Duration(seconds: 3),
+        ),
+      );
+    } catch (error) {
+      print('Error: $error');
+    }
   }
 
   @override

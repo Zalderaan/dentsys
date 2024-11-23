@@ -17,12 +17,12 @@ class UserService {
       final response = await http.post(
         Uri.parse('$baseUrl/register'),
         headers: headers,
-        body: jsonEncode({
-          user.toJson(),
-        }),
+        body: jsonEncode(user.toJson()),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
+        // var UserRegRes = jsonDecode(response.body);
+        // print('in register $UserRegRes');
         return User.fromJson(jsonDecode(response.body));
       } else {
         throw Exception('Failed to register user');
