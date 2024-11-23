@@ -1,3 +1,4 @@
+import 'package:dentsys_client/screens/login/register_screen.dart';
 import 'package:dentsys_client/screens/patient_records/patient_records.dart';
 import 'package:dentsys_client/screens/reports/reports_screen.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/login',
       routes: {
         '/login': (context) => const LoginScreen(),
+        '/register': (context) => const RegisterScreen(),
         '/dashboard': (context) => const DashboardScreen(),
         '/patient_records': (context) => PatientRecords(
           onAddPatient: () {

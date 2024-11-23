@@ -9,14 +9,17 @@ import '../../controllers/user_controller.dart';
 import '../../models/user_model.dart';
 import '../../services/user_service.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
+  final TextEditingController _firstnameController = TextEditingController();
+  final TextEditingController _lastnameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -31,13 +34,19 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
+    _firstnameController.dispose();
+    _lastnameController.dispose();
+    _emailController.dispose();
     _usernameController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
-  Future<void> _handleLogin() async {
+  Future<void> _handleRegister() async {
     // get input values
+    String firstname = _firstnameController.text.trim();
+    String lastname = _lastnameController.text.trim();
+    String email = _emailController.text.trim();
     String username = _usernameController.text.trim();
     String password = _passwordController.text.trim();
 
@@ -45,14 +54,18 @@ class _LoginScreenState extends State<LoginScreen> {
     User user = User.loginCons(username: username, password: password);
 
     // Call login method and display result
-    String result = await userController.login(user);
-    print ('handleLogin result: $result');
+    String result = await userController.register(user);
+    print ('handleRegister result: $result');
 
     // Navigate to dashboard if login is successful
-    if (result == 'User logged in: $username') {
-      Navigator.pushNamed(context, '/dashboard');
+    if (result == 'User registered in: $username') {
+      Navigator.pushNamed(context, '/login');
     } else {
       // Clear input fields
+      _firstnameController.clear();
+      _lastnameController.clear();
+      _emailController.clear();
+      _passwordController.clear();
       _usernameController.clear();
       _passwordController.clear();
     }
@@ -131,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'Let’s Log In',
+                            'Let’s Register',
                             style: GoogleFonts.raleway(
                               fontSize: 25.0,
                               color: Colors.white,
@@ -140,7 +153,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           const SizedBox(height: 8.0),
                           Text(
-                            'Enter your details to log in to your account.',
+                            'Fill out the forms to create your account.',
                             textAlign: TextAlign.center,
                             style: GoogleFonts.raleway(
                               fontSize: 12.0,
@@ -161,7 +174,145 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Email input
+                            
+                             // Firstname input
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Text(
+                                'Firstname',
+                                style: GoogleFonts.raleway(
+                                  fontSize: 16.0,
+                                  color: AppColors.darkBrownColor,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 6.0),
+                            Container(
+                              height: 50.0,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16.0),
+                                color: AppColors.whiteColor,
+                              ),
+                              child: TextFormField(
+                                controller: _firstnameController, // set controller
+                                style: GoogleFonts.raleway(
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.darkBrownColor,
+                                  fontSize: 12.0,
+                                ),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  prefixIcon: IconButton(
+                                    onPressed: () {},
+                                    icon: Image.asset(AppIcons.emailIcon),
+                                  ),
+                                  contentPadding: const EdgeInsets.only(top: 16.0),
+                                  hintText: 'Enter Firstname',
+                                  hintStyle: GoogleFonts.raleway(
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.darkBrownColor.withOpacity(0.5),
+                                    fontSize: 12.0,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 16.0),
+
+
+                             // Lastname input
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Text(
+                                'Lastname',
+                                style: GoogleFonts.raleway(
+                                  fontSize: 16.0,
+                                  color: AppColors.darkBrownColor,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 6.0),
+                            Container(
+                              height: 50.0,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16.0),
+                                color: AppColors.whiteColor,
+                              ),
+                              child: TextFormField(
+                                controller: _lastnameController, // set controller
+                                style: GoogleFonts.raleway(
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.darkBrownColor,
+                                  fontSize: 12.0,
+                                ),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  prefixIcon: IconButton(
+                                    onPressed: () {},
+                                    icon: Image.asset(AppIcons.emailIcon),
+                                  ),
+                                  contentPadding: const EdgeInsets.only(top: 16.0),
+                                  hintText: 'Enter Lastname',
+                                  hintStyle: GoogleFonts.raleway(
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.darkBrownColor.withOpacity(0.5),
+                                    fontSize: 12.0,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 16.0),
+
+
+                             // Email input
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Text(
+                                'Email Address',
+                                style: GoogleFonts.raleway(
+                                  fontSize: 16.0,
+                                  color: AppColors.darkBrownColor,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 6.0),
+                            Container(
+                              height: 50.0,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16.0),
+                                color: AppColors.whiteColor,
+                              ),
+                              child: TextFormField(
+                                controller: _emailController, // set controller
+                                style: GoogleFonts.raleway(
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.darkBrownColor,
+                                  fontSize: 12.0,
+                                ),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  prefixIcon: IconButton(
+                                    onPressed: () {},
+                                    icon: Image.asset(AppIcons.emailIcon),
+                                  ),
+                                  contentPadding: const EdgeInsets.only(top: 16.0),
+                                  hintText: 'Enter Email Address',
+                                  hintStyle: GoogleFonts.raleway(
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.darkBrownColor.withOpacity(0.5),
+                                    fontSize: 12.0,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 16.0),
+                            
+                            // Username input
                             Padding(
                               padding: const EdgeInsets.only(left: 8.0),
                               child: Text(
@@ -205,6 +356,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                             const SizedBox(height: 16.0),
+
+
+
                             // Password input
                             Padding(
                               padding: const EdgeInsets.only(left: 8.0),
@@ -253,28 +407,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
                             ),
+                            
                             const SizedBox(height: 12.0),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: TextButton(
-                                onPressed: () {},
-                                child: Text(
-                                  'Forgot Password?',
-                                  style: GoogleFonts.raleway(
-                                    fontSize: 12.0,
-                                    color: Colors.lightGreen,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 12.0),
+                           
                             // Sign In button
                             Center(
                               child: Material(
                                 color: Colors.transparent,
                                 child: InkWell(
-                                  onTap: _handleLogin,
+                                  onTap: _handleRegister,
                                   borderRadius: BorderRadius.circular(16.0),
                                   child: Ink(
                                     padding: const EdgeInsets.symmetric(
@@ -284,7 +425,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       color: AppColors.goldColor,
                                     ),
                                     child: Text(
-                                      'Log In',
+                                      'Register',
                                       style: GoogleFonts.raleway(
                                         fontWeight: FontWeight.w700,
                                         color: AppColors.whiteColor,
@@ -295,13 +436,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 12.0),
+                            
                     
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                   Text(
-                                    'Don"t Have Account?',
+                                    'Already have an account?',
                                     style: GoogleFonts.raleway(
                                       fontSize: 12.0,
                                       color: Colors.black87,
@@ -311,7 +452,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   TextButton(
                                   onPressed: () {},
                                   child: Text(
-                                    'Register',
+                                    'Login',
                                     style: GoogleFonts.raleway(
                                       fontSize: 12.0,
                                       color: Colors.red[300],
