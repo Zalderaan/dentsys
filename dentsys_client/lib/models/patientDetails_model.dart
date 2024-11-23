@@ -42,47 +42,47 @@ class PatientDetails {
           .map((e) => Conditions.fromJson(e))
           .toList();
     
-    if (patient != null){
-      print(patient);
-    } else {
-      print('Patient is null');
-    }
+    // if (patient != null){
+    //   print(patient);
+    // } else {
+    //   print('Patient is null');
+    // }
 
-    if (contact != null){
-      print(contact);
-    } else {
-      print('Contact is null');
-    }
+    // if (contact != null){
+    //   print(contact);
+    // } else {
+    //   print('Contact is null');
+    // }
 
-    if (dental != null){
-      print(dental);
-    } else {
-      print('Dental is null');
-    }
+    // if (dental != null){
+    //   print(dental);
+    // } else {
+    //   print('Dental is null');
+    // }
 
-    if (insurance != null){
-      print(insurance);
-    } else {
-      print('Insurance is null');
-    }
+    // if (insurance != null){
+    //   print(insurance);
+    // } else {
+    //   print('Insurance is null');
+    // }
 
-    if (allergies != null){
-      print(allergies);
-    } else {
-      print('Allergies is null');
-    }
+    // if (allergies != null){
+    //   print(allergies);
+    // } else {
+    //   print('Allergies is null');
+    // }
 
-    if (medical != null){
-      print(medical);
-    } else {
-      print('Medical is null');
-    }
+    // if (medical != null){
+    //   print(medical);
+    // } else {
+    //   print('Medical is null');
+    // }
 
-    if (conditions != null){
-      print(conditions);
-    } else {
-      print('Conditions is null');
-    }
+    // if (conditions != null){
+    //   print(conditions);
+    // } else {
+    //   print('Conditions is null');
+    // }
     
     return PatientDetails(
       patient: patient,

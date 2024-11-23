@@ -639,7 +639,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
       try {
         await patientController.updatePatient(updatedPatient);
-        print('Patient updated successfully');
+        // print('Patient updated successfully');
 
         // Trigger refresh
         onUpdate();
@@ -661,7 +661,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
       try {
         await contactController.updateContact(updatedContact);
-        print('Contact updated successfully');
+        // print('Contact updated successfully');
 
          // Trigger refresh
         onUpdate();
@@ -677,10 +677,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
         effective_date: dialogEffectiveDateController.text,
       );
 
-      print('Insurance in saveUpdateInsurance: $updatedInsurance');
       try {
         await insuranceController.updateInsurance(updatedInsurance);
-        print('Insurance updated successfully');
+        // print('Insurance updated successfully');
 
          // Trigger refresh
         onUpdate();
@@ -698,7 +697,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
       try {
         await dentalController.updateDentalHistory(updatedDental);
-        print('Dental updated successfully');
+        // print('Dental updated successfully');
 
          // Trigger refresh
         onUpdate();
@@ -759,7 +758,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
       // print('updatedMedical in saveUpdateMedical: $updatedMedical');
       try {
         await medicalController.updateMedicalHistory(updatedMedical);
-        print('Medical updated successfully');
+        // print('Medical updated successfully');
 
          // Trigger refresh
         onUpdate();
@@ -795,7 +794,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
       try {
         await allergiesController.updateAllergy(updatedAllergies);
-        print('Allergies updated successfully');
+        // print('Allergies updated successfully');
 
          // Trigger refresh
         onUpdate();
@@ -930,6 +929,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
       patient_id: details.patient.id,
       conditions: falseConditions,
     );
+
+    print ('updPatientConditions: $updPatientConditions');
+    print ('delPatientConditions: $delPatientConditions');
 
     try {
       await conditionsController.addPatientCondition(updPatientConditions);

@@ -37,7 +37,7 @@ class Allergies {
   }
 
   factory Allergies.fromJson(Map<String, dynamic> json) {
-    print('Allergies.fromJson: $json');
+    // print('Allergies.fromJson: $json');
     final allergies = json['newAllergies'] != null ? json['newAllergies'][0] : json;
     return Allergies(
       allergy_id: allergies['allergies_id'],

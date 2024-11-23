@@ -151,9 +151,9 @@ class DiseasesFormsState extends State<DiseasesForms> {
     _isJointReplacement = widget.isJointReplacement;
     _isHeartSurgery = widget.isHeartSurgery;
     _isHeartAttack = widget.isHeartAttack;
-    _isThyroidProblem = widget.isThyroidProblem;
     _isHeartDisease = widget.isHeartDisease;
     _isHeartMurmur = widget.isHeartMurmur;
+    _isThyroidProblem = widget.isThyroidProblem;
     _isLiverDisease = widget.isLiverDisease;
     _isRheumaticFever = widget.isRheumaticFever;
     _isHayFever = widget.isHayFever;
@@ -243,6 +243,16 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                       setState(() {
                                         _isHighBlood = value!;
                                       });
+                                      widget.onConditionsChanged(
+                                        _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
+                                        _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
+                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                        _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                        _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                        _isDiabetes, _isChestPain, _isStroke, _isCancer, 
+                                        _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
+                                        _isBloodDisease, _isHeadInjuries, _isArthritis
+                                      );
                                     },
                                   ),
                                   const Text("High Blood Pressure"),
@@ -261,6 +271,16 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                       setState(() {
                                         _isLowBlood = value!;
                                       });
+                                      widget.onConditionsChanged(
+                                        _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
+                                        _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
+                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                        _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                        _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                        _isDiabetes, _isChestPain, _isStroke, _isCancer, 
+                                        _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
+                                        _isBloodDisease, _isHeadInjuries, _isArthritis
+                                      );
                                     },
                                   ),
                                   const Text("Low Blood Pressure"),
@@ -280,6 +300,16 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                       setState(() {
                                         _isEpilepsy = value!;
                                       });
+                                      widget.onConditionsChanged(
+                                        _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
+                                        _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
+                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                        _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                        _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                        _isDiabetes, _isChestPain, _isStroke, _isCancer, 
+                                        _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
+                                        _isBloodDisease, _isHeadInjuries, _isArthritis
+                                      );
                                     },
                                   ),
                                   const Text("Epilepsy / Convulsions"),
@@ -298,6 +328,16 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                       setState(() {
                                         _isAIDSorHIV = value!;
                                       });
+                                      widget.onConditionsChanged(
+                                        _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
+                                        _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
+                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                        _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                        _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                        _isDiabetes, _isChestPain, _isStroke, _isCancer, 
+                                        _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
+                                        _isBloodDisease, _isHeadInjuries, _isArthritis
+                                      );
                                     },
                                   ),
                                   const Text("AIDS or HIV Infection"),
@@ -317,6 +357,16 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                         setState(() {
                                           _isSTD = value!;
                                         });
+                                        widget.onConditionsChanged(
+                                          _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
+                                          _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
+                                          _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                          _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                          _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                          _isDiabetes, _isChestPain, _isStroke, _isCancer, 
+                                          _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
+                                          _isBloodDisease, _isHeadInjuries, _isArthritis
+                                        );
                                       },
                                     ),
                                     const Text("Sexual Transmitted Disease"),
@@ -335,6 +385,16 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                       setState(() {
                                         _isUlcers = value!;
                                       });
+                                      widget.onConditionsChanged(
+                                        _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
+                                        _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
+                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                        _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                        _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                        _isDiabetes, _isChestPain, _isStroke, _isCancer, 
+                                        _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
+                                        _isBloodDisease, _isHeadInjuries, _isArthritis
+                                      );
                                     },
                                   ),
                                   const Text("Stomach Troubles / Ulcers"),
@@ -353,6 +413,16 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                       setState(() {
                                         _isFaintingSeizure = value!;
                                       });
+                                      widget.onConditionsChanged(
+                                        _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
+                                        _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
+                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                        _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                        _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                        _isDiabetes, _isChestPain, _isStroke, _isCancer, 
+                                        _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
+                                        _isBloodDisease, _isHeadInjuries, _isArthritis
+                                      );
                                     },
                                   ),
                                   const Text("Fainting Seizure"),
@@ -375,9 +445,9 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                         widget.onConditionsChanged(
                                           _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
                                           _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
-                                          _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isThyroidProblem, _isHeartDisease, 
-                                          _isHeartMurmur, _isLiverDisease, _isRheumaticFever, _isHayFever, 
-                                          _isRespiratoryProblems, _isJaundice, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                          _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                          _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                          _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
                                           _isDiabetes, _isChestPain, _isStroke, _isCancer, 
                                           _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
                                           _isBloodDisease, _isHeadInjuries, _isArthritis
@@ -403,9 +473,9 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                       widget.onConditionsChanged(
                                         _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
                                         _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
-                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isThyroidProblem, _isHeartDisease, 
-                                        _isHeartMurmur, _isLiverDisease, _isRheumaticFever, _isHayFever, 
-                                        _isRespiratoryProblems, _isJaundice, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                        _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                        _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
                                         _isDiabetes, _isChestPain, _isStroke, _isCancer, 
                                         _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
                                         _isBloodDisease, _isHeadInjuries, _isArthritis
@@ -438,9 +508,9 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                       widget.onConditionsChanged(
                                         _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
                                         _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
-                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isThyroidProblem, _isHeartDisease, 
-                                        _isHeartMurmur, _isLiverDisease, _isRheumaticFever, _isHayFever, 
-                                        _isRespiratoryProblems, _isJaundice, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                        _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                        _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
                                         _isDiabetes, _isChestPain, _isStroke, _isCancer, 
                                         _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
                                         _isBloodDisease, _isHeadInjuries, _isArthritis
@@ -466,9 +536,9 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                       widget.onConditionsChanged(
                                         _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
                                         _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
-                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isThyroidProblem, _isHeartDisease, 
-                                        _isHeartMurmur, _isLiverDisease, _isRheumaticFever, _isHayFever, 
-                                        _isRespiratoryProblems, _isJaundice, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                        _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                        _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
                                         _isDiabetes, _isChestPain, _isStroke, _isCancer, 
                                         _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
                                         _isBloodDisease, _isHeadInjuries, _isArthritis
@@ -495,9 +565,9 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                       widget.onConditionsChanged(
                                         _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
                                         _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
-                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isThyroidProblem, _isHeartDisease, 
-                                        _isHeartMurmur, _isLiverDisease, _isRheumaticFever, _isHayFever, 
-                                        _isRespiratoryProblems, _isJaundice, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                        _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                        _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
                                         _isDiabetes, _isChestPain, _isStroke, _isCancer, 
                                         _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
                                         _isBloodDisease, _isHeadInjuries, _isArthritis
@@ -523,9 +593,9 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                       widget.onConditionsChanged(
                                         _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
                                         _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
-                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isThyroidProblem, _isHeartDisease, 
-                                        _isHeartMurmur, _isLiverDisease, _isRheumaticFever, _isHayFever, 
-                                        _isRespiratoryProblems, _isJaundice, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                        _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                        _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
                                         _isDiabetes, _isChestPain, _isStroke, _isCancer, 
                                         _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
                                         _isBloodDisease, _isHeadInjuries, _isArthritis
@@ -550,15 +620,15 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                           _isHeartDisease = value!;
                                         });
                                         widget.onConditionsChanged(
-                                          _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
-                                          _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
-                                          _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isThyroidProblem, _isHeartDisease, 
-                                          _isHeartMurmur, _isLiverDisease, _isRheumaticFever, _isHayFever, 
-                                          _isRespiratoryProblems, _isJaundice, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
-                                          _isDiabetes, _isChestPain, _isStroke, _isCancer, 
-                                          _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
-                                          _isBloodDisease, _isHeadInjuries, _isArthritis
-                                        );
+                                        _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
+                                        _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
+                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                        _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                        _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                        _isDiabetes, _isChestPain, _isStroke, _isCancer, 
+                                        _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
+                                        _isBloodDisease, _isHeadInjuries, _isArthritis
+                                      );
                                       },
                                     ),
                                     const Text("Heart Disease"),
@@ -580,9 +650,9 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                       widget.onConditionsChanged(
                                         _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
                                         _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
-                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isThyroidProblem, _isHeartDisease, 
-                                        _isHeartMurmur, _isLiverDisease, _isRheumaticFever, _isHayFever, 
-                                        _isRespiratoryProblems, _isJaundice, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                        _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                        _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
                                         _isDiabetes, _isChestPain, _isStroke, _isCancer, 
                                         _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
                                         _isBloodDisease, _isHeadInjuries, _isArthritis
@@ -608,9 +678,9 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                       widget.onConditionsChanged(
                                         _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
                                         _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
-                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isThyroidProblem, _isHeartDisease, 
-                                        _isHeartMurmur, _isLiverDisease, _isRheumaticFever, _isHayFever, 
-                                        _isRespiratoryProblems, _isJaundice, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                        _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                        _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
                                         _isDiabetes, _isChestPain, _isStroke, _isCancer, 
                                         _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
                                         _isBloodDisease, _isHeadInjuries, _isArthritis
@@ -634,16 +704,16 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                         setState(() {
                                           _isRheumaticFever = value!;
                                         });
-                                      widget.onConditionsChanged(
-                                        _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
-                                        _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
-                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isThyroidProblem, _isHeartDisease, 
-                                        _isHeartMurmur, _isLiverDisease, _isRheumaticFever, _isHayFever, 
-                                        _isRespiratoryProblems, _isJaundice, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
-                                        _isDiabetes, _isChestPain, _isStroke, _isCancer, 
-                                        _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
-                                        _isBloodDisease, _isHeadInjuries, _isArthritis
-                                      );
+                                        widget.onConditionsChanged(
+                                          _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
+                                          _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
+                                          _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                          _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                          _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                          _isDiabetes, _isChestPain, _isStroke, _isCancer, 
+                                          _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
+                                          _isBloodDisease, _isHeadInjuries, _isArthritis
+                                        );
                                       },
                                     ),
                                     const Text("Rheumatic Fever"),
@@ -665,9 +735,9 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                       widget.onConditionsChanged(
                                         _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
                                         _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
-                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isThyroidProblem, _isHeartDisease, 
-                                        _isHeartMurmur, _isLiverDisease, _isRheumaticFever, _isHayFever, 
-                                        _isRespiratoryProblems, _isJaundice, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                        _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                        _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
                                         _isDiabetes, _isChestPain, _isStroke, _isCancer, 
                                         _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
                                         _isBloodDisease, _isHeadInjuries, _isArthritis
@@ -700,9 +770,9 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                       widget.onConditionsChanged(
                                         _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
                                         _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
-                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isThyroidProblem, _isHeartDisease, 
-                                        _isHeartMurmur, _isLiverDisease, _isRheumaticFever, _isHayFever, 
-                                        _isRespiratoryProblems, _isJaundice, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                        _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                        _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
                                         _isDiabetes, _isChestPain, _isStroke, _isCancer, 
                                         _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
                                         _isBloodDisease, _isHeadInjuries, _isArthritis
@@ -728,9 +798,9 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                       widget.onConditionsChanged(
                                         _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
                                         _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
-                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isThyroidProblem, _isHeartDisease, 
-                                        _isHeartMurmur, _isLiverDisease, _isRheumaticFever, _isHayFever, 
-                                        _isRespiratoryProblems, _isJaundice, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                        _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                        _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
                                         _isDiabetes, _isChestPain, _isStroke, _isCancer, 
                                         _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
                                         _isBloodDisease, _isHeadInjuries, _isArthritis
@@ -757,9 +827,9 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                       widget.onConditionsChanged(
                                         _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
                                         _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
-                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isThyroidProblem, _isHeartDisease, 
-                                        _isHeartMurmur, _isLiverDisease, _isRheumaticFever, _isHayFever, 
-                                        _isRespiratoryProblems, _isJaundice, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                        _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                        _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
                                         _isDiabetes, _isChestPain, _isStroke, _isCancer, 
                                         _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
                                         _isBloodDisease, _isHeadInjuries, _isArthritis
@@ -785,9 +855,9 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                       widget.onConditionsChanged(
                                         _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
                                         _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
-                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isThyroidProblem, _isHeartDisease, 
-                                        _isHeartMurmur, _isLiverDisease, _isRheumaticFever, _isHayFever, 
-                                        _isRespiratoryProblems, _isJaundice, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                        _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                        _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
                                         _isDiabetes, _isChestPain, _isStroke, _isCancer, 
                                         _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
                                         _isBloodDisease, _isHeadInjuries, _isArthritis
@@ -811,16 +881,16 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                         setState(() {
                                           _isKidneyDisease = value!;
                                         });
-                                      widget.onConditionsChanged(
-                                        _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
-                                        _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
-                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isThyroidProblem, _isHeartDisease, 
-                                        _isHeartMurmur, _isLiverDisease, _isRheumaticFever, _isHayFever, 
-                                        _isRespiratoryProblems, _isJaundice, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
-                                        _isDiabetes, _isChestPain, _isStroke, _isCancer, 
-                                        _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
-                                        _isBloodDisease, _isHeadInjuries, _isArthritis
-                                      );
+                                        widget.onConditionsChanged(
+                                          _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
+                                          _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
+                                          _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                          _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                          _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                          _isDiabetes, _isChestPain, _isStroke, _isCancer, 
+                                          _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
+                                          _isBloodDisease, _isHeadInjuries, _isArthritis
+                                        );
                                       },
                                     ),
                                     const Text("Kidney Disease"),
@@ -842,9 +912,9 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                       widget.onConditionsChanged(
                                         _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
                                         _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
-                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isThyroidProblem, _isHeartDisease, 
-                                        _isHeartMurmur, _isLiverDisease, _isRheumaticFever, _isHayFever, 
-                                        _isRespiratoryProblems, _isJaundice, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                        _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                        _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
                                         _isDiabetes, _isChestPain, _isStroke, _isCancer, 
                                         _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
                                         _isBloodDisease, _isHeadInjuries, _isArthritis
@@ -870,9 +940,9 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                       widget.onConditionsChanged(
                                         _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
                                         _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
-                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isThyroidProblem, _isHeartDisease, 
-                                        _isHeartMurmur, _isLiverDisease, _isRheumaticFever, _isHayFever, 
-                                        _isRespiratoryProblems, _isJaundice, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                        _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                        _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
                                         _isDiabetes, _isChestPain, _isStroke, _isCancer, 
                                         _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
                                         _isBloodDisease, _isHeadInjuries, _isArthritis
@@ -897,15 +967,15 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                           _isStroke = value!;
                                         });
                                         widget.onConditionsChanged(
-                                          _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
-                                          _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
-                                          _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isThyroidProblem, _isHeartDisease, 
-                                          _isHeartMurmur, _isLiverDisease, _isRheumaticFever, _isHayFever, 
-                                          _isRespiratoryProblems, _isJaundice, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
-                                          _isDiabetes, _isChestPain, _isStroke, _isCancer, 
-                                          _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
-                                          _isBloodDisease, _isHeadInjuries, _isArthritis
-                                        );
+                                        _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
+                                        _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
+                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                        _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                        _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                        _isDiabetes, _isChestPain, _isStroke, _isCancer, 
+                                        _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
+                                        _isBloodDisease, _isHeadInjuries, _isArthritis
+                                      );
                                       },
                                     ),
                                     const Text("Stroke"),
@@ -927,9 +997,9 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                       widget.onConditionsChanged(
                                         _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
                                         _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
-                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isThyroidProblem, _isHeartDisease, 
-                                        _isHeartMurmur, _isLiverDisease, _isRheumaticFever, _isHayFever, 
-                                        _isRespiratoryProblems, _isJaundice, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                        _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                        _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
                                         _isDiabetes, _isChestPain, _isStroke, _isCancer, 
                                         _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
                                         _isBloodDisease, _isHeadInjuries, _isArthritis
@@ -962,9 +1032,9 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                       widget.onConditionsChanged(
                                         _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
                                         _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
-                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isThyroidProblem, _isHeartDisease, 
-                                        _isHeartMurmur, _isLiverDisease, _isRheumaticFever, _isHayFever, 
-                                        _isRespiratoryProblems, _isJaundice, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                        _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                        _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
                                         _isDiabetes, _isChestPain, _isStroke, _isCancer, 
                                         _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
                                         _isBloodDisease, _isHeadInjuries, _isArthritis
@@ -990,9 +1060,9 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                       widget.onConditionsChanged(
                                         _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
                                         _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
-                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isThyroidProblem, _isHeartDisease, 
-                                        _isHeartMurmur, _isLiverDisease, _isRheumaticFever, _isHayFever, 
-                                        _isRespiratoryProblems, _isJaundice, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                        _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                        _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
                                         _isDiabetes, _isChestPain, _isStroke, _isCancer, 
                                         _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
                                         _isBloodDisease, _isHeadInjuries, _isArthritis
@@ -1019,9 +1089,9 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                       widget.onConditionsChanged(
                                         _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
                                         _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
-                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isThyroidProblem, _isHeartDisease, 
-                                        _isHeartMurmur, _isLiverDisease, _isRheumaticFever, _isHayFever, 
-                                        _isRespiratoryProblems, _isJaundice, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                        _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                        _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
                                         _isDiabetes, _isChestPain, _isStroke, _isCancer, 
                                         _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
                                         _isBloodDisease, _isHeadInjuries, _isArthritis
@@ -1047,9 +1117,9 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                       widget.onConditionsChanged(
                                         _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
                                         _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
-                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isThyroidProblem, _isHeartDisease, 
-                                        _isHeartMurmur, _isLiverDisease, _isRheumaticFever, _isHayFever, 
-                                        _isRespiratoryProblems, _isJaundice, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                        _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                        _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
                                         _isDiabetes, _isChestPain, _isStroke, _isCancer, 
                                         _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
                                         _isBloodDisease, _isHeadInjuries, _isArthritis
@@ -1074,15 +1144,15 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                           _isBleedingProblem = value!;
                                         });
                                         widget.onConditionsChanged(
-                                          _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
-                                          _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
-                                          _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isThyroidProblem, _isHeartDisease, 
-                                          _isHeartMurmur, _isLiverDisease, _isRheumaticFever, _isHayFever, 
-                                          _isRespiratoryProblems, _isJaundice, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
-                                          _isDiabetes, _isChestPain, _isStroke, _isCancer, 
-                                          _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
-                                          _isBloodDisease, _isHeadInjuries, _isArthritis
-                                        );
+                                        _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
+                                        _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
+                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                        _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                        _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                        _isDiabetes, _isChestPain, _isStroke, _isCancer, 
+                                        _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
+                                        _isBloodDisease, _isHeadInjuries, _isArthritis
+                                      );
                                       },
                                     ),
                                     const Text("Bleeding Problems"),
@@ -1104,9 +1174,9 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                       widget.onConditionsChanged(
                                         _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
                                         _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
-                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isThyroidProblem, _isHeartDisease, 
-                                        _isHeartMurmur, _isLiverDisease, _isRheumaticFever, _isHayFever, 
-                                        _isRespiratoryProblems, _isJaundice, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                        _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                        _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
                                         _isDiabetes, _isChestPain, _isStroke, _isCancer, 
                                         _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
                                         _isBloodDisease, _isHeadInjuries, _isArthritis
@@ -1132,9 +1202,9 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                       widget.onConditionsChanged(
                                         _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
                                         _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
-                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isThyroidProblem, _isHeartDisease, 
-                                        _isHeartMurmur, _isLiverDisease, _isRheumaticFever, _isHayFever, 
-                                        _isRespiratoryProblems, _isJaundice, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                        _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                        _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
                                         _isDiabetes, _isChestPain, _isStroke, _isCancer, 
                                         _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
                                         _isBloodDisease, _isHeadInjuries, _isArthritis
@@ -1188,9 +1258,9 @@ class DiseasesFormsState extends State<DiseasesForms> {
                                       widget.onConditionsChanged(
                                         _isHighBlood, _isLowBlood, _isEpilepsy, _isAIDSorHIV, _isSTD, 
                                         _isUlcers, _isFaintingSeizure, _isRapidWeightLoss, _isRadiationTherapy,
-                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isThyroidProblem, _isHeartDisease, 
-                                        _isHeartMurmur, _isLiverDisease, _isRheumaticFever, _isHayFever, 
-                                        _isRespiratoryProblems, _isJaundice, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
+                                        _isJointReplacement, _isHeartSurgery, _isHeartAttack, _isHeartDisease, 
+                                        _isHeartMurmur, _isThyroidProblem, _isLiverDisease, _isJaundice, _isRheumaticFever, _isHayFever, 
+                                        _isRespiratoryProblems, _isTuberculosis, _isSwollenAnkle, _isKidneyDisease, 
                                         _isDiabetes, _isChestPain, _isStroke, _isCancer, 
                                         _isAnemia, _isAngina, _isAsthma, _isEmphysema, _isBleedingProblem, 
                                         _isBloodDisease, _isHeadInjuries, _isArthritis
