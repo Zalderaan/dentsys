@@ -51,7 +51,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     String password = _passwordController.text.trim();
 
     // create user instance
-    User user = User.registerCons(firstname: firstname, lastname: lastname, email: email, username: username, password: password);
+    User user = User.loginCons(username: username, password: password);
 
     // Call login method and display result
     String result = await userController.register(user);
