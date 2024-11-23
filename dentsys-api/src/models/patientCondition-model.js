@@ -62,7 +62,7 @@ export default class PatientCondition {
             await connection.commit();
             if (insertedConditions.length === 0) {
                 console.log('No conditions were added (either patient has no conditions or error');
-                throw new Error('No conditions were added (either patient has no conditions or error');
+                // throw new Error('No conditions were added (either patient has no conditions or error');
             } else if (insertedConditions.length >= 1) {
                 console.log('Patient conditions added successfully', insertedConditions);
             }

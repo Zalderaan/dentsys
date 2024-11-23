@@ -31,6 +31,10 @@ import 'package:dentsys_client/controllers/medical_controller.dart';
 import 'package:dentsys_client/models/allergies_model.dart';
 import 'package:dentsys_client/controllers/allergies_controller.dart';
 
+import 'package:dentsys_client/models/patient_conditions/patientConditions_model.dart';
+import 'package:dentsys_client/models/patient_conditions/conditions_model.dart';
+import 'package:dentsys_client/controllers/conditions_controller.dart';
+
 
 class ReportsScreen extends StatefulWidget {
   final int? patient_id;
@@ -573,6 +577,45 @@ class _ReportsScreenState extends State<ReportsScreen> {
   late bool dialogAllergiesLatexValue = details.allergies.allergies_latex;
   late bool dialogAllergiesOthersValue = details.allergies.allergies_others!.isNotEmpty;
   late AllergiesController allergiesController = AllergiesController(); // allergies controller
+
+  // conditions info
+  final TextEditingController dialogConditionsOthersController = TextEditingController();
+  late bool dialogHighBlood = details.conditions.any((condition) => condition.condition_id == 1 && condition.patientCondition_status);
+  late bool dialogLowBlood = details.conditions.any((condition) => condition.condition_id == 2 && condition.patientCondition_status);
+  late bool dialogEpilepsy = details.conditions.any((condition) => condition.condition_id == 3 && condition.patientCondition_status);
+  late bool dialogAids = details.conditions.any((condition) => condition.condition_id == 4 && condition.patientCondition_status);
+  late bool dialogSTD = details.conditions.any((condition) => condition.condition_id == 5 && condition.patientCondition_status);
+  late bool dialogStomachUlcer = details.conditions.any((condition) => condition.condition_id == 6 && condition.patientCondition_status);
+  late bool dialogFaintingSeizures = details.conditions.any((condition) => condition.condition_id == 7 && condition.patientCondition_status);
+  late bool dialogRapidWL = details.conditions.any((condition) => condition.condition_id == 8 && condition.patientCondition_status);
+  late bool dialogRadTherapy = details.conditions.any((condition) => condition.condition_id == 9 && condition.patientCondition_status);
+  late bool dialogJointReplacement = details.conditions.any((condition) => condition.condition_id == 10 && condition.patientCondition_status);
+  late bool dialogHeartSurg = details.conditions.any((condition) => condition.condition_id == 11 && condition.patientCondition_status);
+  late bool dialogHeartAttack = details.conditions.any((condition) => condition.condition_id == 12 && condition.patientCondition_status);
+  late bool dialogHeartDisease = details.conditions.any((condition) => condition.condition_id == 13 && condition.patientCondition_status);
+  late bool dialogHeartMurmur = details.conditions.any((condition) => condition.condition_id == 14 && condition.patientCondition_status);
+  late bool dialogThyroid = details.conditions.any((condition) => condition.condition_id == 15 && condition.patientCondition_status);
+  late bool dialogHepaLiver = details.conditions.any((condition) => condition.condition_id == 16 && condition.patientCondition_status);
+  late bool dialogJaundice = details.conditions.any((condition) => condition.condition_id == 17 && condition.patientCondition_status);
+  late bool dialogRheumaticFever = details.conditions.any((condition) => condition.condition_id == 18 && condition.patientCondition_status);
+  late bool dialogHayFever = details.conditions.any((condition) => condition.condition_id == 19 && condition.patientCondition_status);
+  late bool dialogRespiratory = details.conditions.any((condition) => condition.condition_id == 20 && condition.patientCondition_status);
+  late bool dialogTB = details.conditions.any((condition) => condition.condition_id == 21 && condition.patientCondition_status);
+  late bool dialogSwollenAnkles = details.conditions.any((condition) => condition.condition_id == 22 && condition.patientCondition_status);
+  late bool dialogKidneyDisease = details.conditions.any((condition) => condition.condition_id == 23 && condition.patientCondition_status);
+  late bool dialogDiabetes = details.conditions.any((condition) => condition.condition_id == 24 && condition.patientCondition_status);
+  late bool dialogChestPain = details.conditions.any((condition) => condition.condition_id == 25 && condition.patientCondition_status);
+  late bool dialogStroke = details.conditions.any((condition) => condition.condition_id == 26 && condition.patientCondition_status);
+  late bool dialogTumors = details.conditions.any((condition) => condition.condition_id == 27 && condition.patientCondition_status);
+  late bool dialogAnemia = details.conditions.any((condition) => condition.condition_id == 28 && condition.patientCondition_status);
+  late bool dialogAngina = details.conditions.any((condition) => condition.condition_id == 29 && condition.patientCondition_status);
+  late bool dialogAsthma = details.conditions.any((condition) => condition.condition_id == 30 && condition.patientCondition_status);
+  late bool dialogEmphysema = details.conditions.any((condition) => condition.condition_id == 31 && condition.patientCondition_status);
+  late bool dialogBleedingProb = details.conditions.any((condition) => condition.condition_id == 32 && condition.patientCondition_status); 
+  late bool dialogBloodDisease = details.conditions.any((condition) => condition.condition_id == 33 && condition.patientCondition_status);
+  late bool dialogHeadInjury = details.conditions.any((condition) => condition.condition_id == 34 && condition.patientCondition_status);
+  late bool dialogArthritis = details.conditions.any((condition) => condition.condition_id == 35 && condition.patientCondition_status);
+  late ConditionsController conditionsController = ConditionsController();
   
   Future<void> saveUpdatePatient() async {
     final updatedPatient = Patient(
@@ -683,7 +726,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
       dialogMedicationValue = medication;
       dialogTobaccoValue = tobacco;
       dialogDangerousSubstanceValue = dangerousSubstance;
-      print('dangerousSubstance: $dangerousSubstance');
       dialogPregnantValue = pregnant;
       dialogNursingValue = nursing;
       dialogBirthControlValue = birthControl;
@@ -762,6 +804,134 @@ class _ReportsScreenState extends State<ReportsScreen> {
       }
     }
 
+  dynamic retrieveConditionsStates(
+    bool highBlood,
+    bool lowBlood,
+    bool epilepsy,
+    bool aids,
+    bool std,
+    bool stomachUlcer,
+    bool faintingSeizures,
+    bool rapidWL,
+    bool radTherapy,
+    bool jointReplacement,
+    bool heartSurg,
+    bool heartAttack,
+    bool heartDisease,
+    bool heartMurmur,
+    bool thyroid,
+    bool hepaLiver,
+    bool jaundice,
+    bool rheumaticFever,
+    bool hayFever,
+    bool respiratory,
+    bool tb,
+    bool swollenAnkles,
+    bool kidneyDisease,
+    bool diabetes,
+    bool chestPain,
+    bool stroke,
+    bool tumors,
+    bool anemia,
+    bool angina,
+    bool asthma,
+    bool emphysema,
+    bool bleedingProb,
+    bool bloodDisease,
+    bool headInjury,
+    bool arthritis,
+  ) {
+    dialogHighBlood = highBlood;
+    dialogLowBlood = lowBlood;
+    dialogEpilepsy = epilepsy;
+    dialogAids = aids;
+    dialogSTD = std;
+    dialogStomachUlcer = stomachUlcer;
+    dialogFaintingSeizures = faintingSeizures;
+    dialogRapidWL = rapidWL;
+    dialogRadTherapy = radTherapy;
+    dialogJointReplacement = jointReplacement;
+    dialogHeartSurg = heartSurg;
+    dialogHeartAttack = heartAttack;
+    dialogHeartDisease = heartDisease;
+    dialogHeartMurmur = heartMurmur;
+    dialogThyroid = thyroid;
+    dialogHepaLiver = hepaLiver;
+    dialogJaundice = jaundice;
+    dialogRheumaticFever = rheumaticFever;
+    dialogHayFever = hayFever;
+    dialogRespiratory = respiratory;
+    dialogTB = tb;
+    dialogSwollenAnkles = swollenAnkles;
+    dialogKidneyDisease = kidneyDisease;
+    dialogDiabetes = diabetes;
+    dialogChestPain = chestPain;
+    dialogStroke = stroke;
+    dialogTumors = tumors;
+    dialogAnemia = anemia;
+    dialogAngina = angina;
+    dialogAsthma = asthma;
+    dialogEmphysema = emphysema;
+    dialogBleedingProb = bleedingProb;
+    dialogBloodDisease = bloodDisease;
+    dialogHeadInjury = headInjury;
+    dialogArthritis = arthritis;
+  }
+  
+  Future<void> saveUpdatedConditions() async {
+    List<Conditions> updatedConditions = [
+      Conditions(condition_id: 1, patientCondition_status: dialogHighBlood),
+      Conditions(condition_id: 2, patientCondition_status: dialogLowBlood),
+      Conditions(condition_id: 3, patientCondition_status: dialogEpilepsy),
+      Conditions(condition_id: 4, patientCondition_status: dialogAids),
+      Conditions(condition_id: 5, patientCondition_status: dialogSTD),
+      Conditions(condition_id: 6, patientCondition_status: dialogStomachUlcer),
+      Conditions(condition_id: 7, patientCondition_status: dialogFaintingSeizures),
+      Conditions(condition_id: 8, patientCondition_status: dialogRapidWL),
+      Conditions(condition_id: 9, patientCondition_status: dialogRadTherapy),
+      Conditions(condition_id: 10, patientCondition_status: dialogJointReplacement),
+      Conditions(condition_id: 11, patientCondition_status: dialogHeartSurg),
+      Conditions(condition_id: 12, patientCondition_status: dialogHeartAttack),
+      Conditions(condition_id: 13, patientCondition_status: dialogHeartDisease),
+      Conditions(condition_id: 14, patientCondition_status: dialogHeartMurmur),
+      Conditions(condition_id: 15, patientCondition_status: dialogThyroid),
+      Conditions(condition_id: 16, patientCondition_status: dialogHepaLiver),
+      Conditions(condition_id: 17, patientCondition_status: dialogJaundice),
+      Conditions(condition_id: 18, patientCondition_status: dialogRheumaticFever),
+      Conditions(condition_id: 19, patientCondition_status: dialogHayFever),
+      Conditions(condition_id: 20, patientCondition_status: dialogRespiratory),
+      Conditions(condition_id: 21, patientCondition_status: dialogTB),
+      Conditions(condition_id: 22, patientCondition_status: dialogSwollenAnkles),
+      Conditions(condition_id: 23, patientCondition_status: dialogKidneyDisease),
+      Conditions(condition_id: 24, patientCondition_status: dialogDiabetes),
+      Conditions(condition_id: 25, patientCondition_status: dialogChestPain),
+      Conditions(condition_id: 26, patientCondition_status: dialogStroke),
+      Conditions(condition_id: 27, patientCondition_status: dialogTumors),
+      Conditions(condition_id: 28, patientCondition_status: dialogAnemia),
+      Conditions(condition_id: 29, patientCondition_status: dialogAngina),
+      Conditions(condition_id: 30, patientCondition_status: dialogAsthma),
+      Conditions(condition_id: 31, patientCondition_status: dialogEmphysema),
+      Conditions(condition_id: 32, patientCondition_status: dialogBleedingProb),
+      Conditions(condition_id: 33, patientCondition_status: dialogBloodDisease),
+      Conditions(condition_id: 34, patientCondition_status: dialogHeadInjury),
+      Conditions(condition_id: 35, patientCondition_status: dialogArthritis),
+    ];
+
+    final filteredConditions = updatedConditions.where((condition) => condition.patientCondition_status == true).toList();
+    final updPatientConditions = PatientConditions(
+      patient_id: details.patient.id,
+      conditions: filteredConditions,
+    );
+
+    try {
+      await conditionsController.addPatientCondition(updPatientConditions);
+
+       // Trigger refresh
+       onUpdate();
+    } catch (error) {
+      print('Error updating conditions: $error');
+    }
+  }
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -772,101 +942,139 @@ class _ReportsScreenState extends State<ReportsScreen> {
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 36),
         ),
         content: SizedBox(
-            width: 1300,
-            height: 600,
-            child:  SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Divider(
-                    height: 10,
-                    color: Colors.grey[800],
-                    thickness: 0.5,
-                  ),
-                  const SizedBox(height: 15.0),
-                  PersonalInfoForms(
-                    firstNameController: _dialogFirstNameController,
-                    lastNameController: _dialogLastNameController,
-                    middleNameController: _dialogMiddleNameController,
-                    nicknameController: _dialogNicknameController, 
-                    sexController: _dialogSexController,
-                    ageController: _dialogAgeController,
-                    birthdateController: _dialogBirthdateController, 
-                    nationalityController: _dialogNationalityController,
-                    occupationController: _dialogOccupationController,
-                    religionController: _dialogReligionController,
-                    reasonController: _dialogReasonController,
-                    referrerController: _dialogReferrerController,
-                    parentNameController: _guardianNameController,
-                    parentOccupationController: _guardianOccupationController,
-                    formKey: dialogPersonalInfoFormKey, 
-                    patient: details.patient
-                  ),
-                  ContactInfoForms(
-                    emailController: _emailController,
-                    homeAddressController: _homeAddressController,
-                    homeNoController: _homeNoController,
-                    faxNoController: _faxNoController,
-                    workNoController: _workNoController,
-                    mobileNoController: _mobileNoController,
-                    formKey: dialogContactInfoFormKey, 
-                    contact: details.contact
-                  ),
-                  DentalInsuranceForms(
-                    insuranceNameController: dialogInsuranceNameController,
-                    effectivedateController: dialogEffectiveDateController, 
-                    formKey: dialogDentalInsuranceFormKey, 
-                    insurance: details.insurance
-                  ),
-                  DentalHistoryForms(
-                    formKey: dialogDentalHistoryFormKey, 
-                    previousDentistController: dialogPreviousDentistController,
-                    latestvisitController: dialogLatestVisitController, 
-                  ),
-                  MedicalHistoryForms(
-                    formKey: dialogMedicalHistoryFormKey,
-                    physicianNameController: dialogPhysicianController,
-                    physicianSpecialtyController: dialogPhysicianSpecController,
-                    officeAddressController: dialogOfficeAddressController,
-                    officeNumberController: dialogOfficeNoController,
-                    isInGoodHealth: dialogGoodHealthValue,
-                    isUnderTreatment: dialogUnderTreatmentValue,
-                    medicalTreatmentDetailsController: dialogUnderTreatmentDetailsController,
-                    isSeriousIllness: dialogSeriousOperationValue,
-                    seriousIllnessDetailsController: dialogSeriousOperationDetails,
-                    isHospitalized: dialogHospitalizedValue,
-                    hospitalizationDetailsController: dialogMedicalHospitalizedDetails,
-                    isTakingMedication: dialogMedicationValue,
-                    medicationDetailsController: dialogMedicationDetails,
-                    isUsingTobacco: dialogTobaccoValue,
-                    isUsingDangerousDrugs: dialogDangerousSubstanceValue,
-                    bloodTypeController: dialogBloodTypeController,
-                    bloodPressureController: dialogBloodPressureController,
-                    bleedingTimeController: dialogBleedingTimeController,
-                    isNursing: dialogNursingValue,
-                    isPregnant: dialogPregnantValue,
-                    isTakingBirthControl: dialogBirthControlValue,
-                    onUpdated: retrieveMedicalStates,
-                  ),
-                  AllergiesForms(
-                    formKey: dialogAllergiesFormKey, 
-                    isAllergicToAnesthetic: dialogAllergiesAnestheticValue,
-                    isAllergicToAntibiotics: dialogAllergiesAntibioticsValue,
-                    isAllergicToSulfa: dialogAllergiesSulfaValue,
-                    isAllergicToAspirin: dialogAllergiesAspirinValue,
-                    isAllergicToLatex: dialogAllergiesLatexValue,
-                    isAllergicToOthers: dialogAllergiesOthersValue,
-                    allergiesOthersController: dialogAllergiesOthersController,
-                    onAllergiesChanged: retrieveAllergyStates,
-                  ),
-                  DiseasesForms(formKey: dialogDiseasesFormKey, ),
-                  //const ContactInfoForms()
-                  
-                ],
-              ),
+          width: 1300,
+          height: 600,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Divider(
+                  height: 10,
+                  color: Colors.grey[800],
+                  thickness: 0.5,
+                ),
+                const SizedBox(height: 15.0),
+                PersonalInfoForms(
+                  firstNameController: _dialogFirstNameController,
+                  lastNameController: _dialogLastNameController,
+                  middleNameController: _dialogMiddleNameController,
+                  nicknameController: _dialogNicknameController, 
+                  sexController: _dialogSexController,
+                  ageController: _dialogAgeController,
+                  birthdateController: _dialogBirthdateController, 
+                  nationalityController: _dialogNationalityController,
+                  occupationController: _dialogOccupationController,
+                  religionController: _dialogReligionController,
+                  reasonController: _dialogReasonController,
+                  referrerController: _dialogReferrerController,
+                  parentNameController: _guardianNameController,
+                  parentOccupationController: _guardianOccupationController,
+                  formKey: dialogPersonalInfoFormKey, 
+                  patient: details.patient
+                ),
+                ContactInfoForms(
+                  emailController: _emailController,
+                  homeAddressController: _homeAddressController,
+                  homeNoController: _homeNoController,
+                  faxNoController: _faxNoController,
+                  workNoController: _workNoController,
+                  mobileNoController: _mobileNoController,
+                  formKey: dialogContactInfoFormKey, 
+                  contact: details.contact
+                ),
+                DentalInsuranceForms(
+                  insuranceNameController: dialogInsuranceNameController,
+                  effectivedateController: dialogEffectiveDateController, 
+                  formKey: dialogDentalInsuranceFormKey, 
+                  insurance: details.insurance
+                ),
+                DentalHistoryForms(
+                  formKey: dialogDentalHistoryFormKey, 
+                  previousDentistController: dialogPreviousDentistController,
+                  latestvisitController: dialogLatestVisitController, 
+                ),
+                MedicalHistoryForms(
+                  formKey: dialogMedicalHistoryFormKey,
+                  physicianNameController: dialogPhysicianController,
+                  physicianSpecialtyController: dialogPhysicianSpecController,
+                  officeAddressController: dialogOfficeAddressController,
+                  officeNumberController: dialogOfficeNoController,
+                  isInGoodHealth: dialogGoodHealthValue,
+                  isUnderTreatment: dialogUnderTreatmentValue,
+                  medicalTreatmentDetailsController: dialogUnderTreatmentDetailsController,
+                  isSeriousIllness: dialogSeriousOperationValue,
+                  seriousIllnessDetailsController: dialogSeriousOperationDetails,
+                  isHospitalized: dialogHospitalizedValue,
+                  hospitalizationDetailsController: dialogMedicalHospitalizedDetails,
+                  isTakingMedication: dialogMedicationValue,
+                  medicationDetailsController: dialogMedicationDetails,
+                  isUsingTobacco: dialogTobaccoValue,
+                  isUsingDangerousDrugs: dialogDangerousSubstanceValue,
+                  bloodTypeController: dialogBloodTypeController,
+                  bloodPressureController: dialogBloodPressureController,
+                  bleedingTimeController: dialogBleedingTimeController,
+                  isNursing: dialogNursingValue,
+                  isPregnant: dialogPregnantValue,
+                  isTakingBirthControl: dialogBirthControlValue,
+                  onUpdated: retrieveMedicalStates,
+                ),
+                AllergiesForms(
+                  formKey: dialogAllergiesFormKey, 
+                  isAllergicToAnesthetic: dialogAllergiesAnestheticValue,
+                  isAllergicToAntibiotics: dialogAllergiesAntibioticsValue,
+                  isAllergicToSulfa: dialogAllergiesSulfaValue,
+                  isAllergicToAspirin: dialogAllergiesAspirinValue,
+                  isAllergicToLatex: dialogAllergiesLatexValue,
+                  isAllergicToOthers: dialogAllergiesOthersValue,
+                  allergiesOthersController: dialogAllergiesOthersController,
+                  onAllergiesChanged: retrieveAllergyStates,
+                ),
+                DiseasesForms(
+                  formKey: dialogDiseasesFormKey, 
+                  isHighBlood: dialogHighBlood,
+                  isLowBlood: dialogLowBlood,
+                  isEpilepsy: dialogEpilepsy,
+                  isAIDSorHIV: dialogAids,
+                  isSTD: dialogSTD,
+                  isUlcers: dialogStomachUlcer,
+                  isFaintingSeizure: dialogFaintingSeizures,
+                  isRapidWeightLoss: dialogRapidWL,
+                  isRadiationTherapy: dialogRadTherapy,
+                  isJointReplacement: dialogJointReplacement,
+                  isHeartSurgery: dialogHeartSurg,
+                  isHeartAttack: dialogHeartAttack,
+                  isHeartDisease: dialogHeartDisease,
+                  isHeartMurmur: dialogHeartMurmur,
+                  isThyroidProblem: dialogThyroid,
+                  isLiverDisease: dialogHepaLiver,
+                  isRheumaticFever: dialogRheumaticFever,
+                  isJaundice: dialogJaundice,
+                  isHayFever: dialogHayFever,
+                  isRespiratoryProblems: dialogRespiratory,
+                  isSwollenAnkle: dialogSwollenAnkles,
+                  isTuberculosis: dialogTB,
+                  isKidneyDisease: dialogKidneyDisease,
+                  isDiabetes: dialogDiabetes,
+                  isChestPain: dialogChestPain,
+                  isStroke: dialogStroke,
+                  isCancer: dialogTumors,
+                  isAnemia: dialogAnemia,
+                  isAngina: dialogAngina,
+                  isAsthma: dialogAsthma,
+                  isEmphysema: dialogEmphysema,
+                  isBleedingProblem: dialogBleedingProb,
+                  isBloodDisease: dialogBloodDisease,
+                  isHeadInjuries: dialogHeadInjury,
+                  isArthritis: dialogArthritis,
+                  othersDisease: dialogConditionsOthersController.text.isNotEmpty,
+                  onConditionsChanged: retrieveConditionsStates,
+                ),
+                //const ContactInfoForms() 
+              ],
             ),
           ),
-          actions: <Widget>[
+        ),
+        actions: <Widget>[
             TextButton(
               child: const Text('Cancel'),
               onPressed: () {
@@ -890,6 +1098,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 await saveUpdateDental();
                 await saveUpdateMedical();
                 await saveUpdateAllergies();
+                await saveUpdatedConditions();
                 Navigator.of(context).pop();
               },
             ),
@@ -963,6 +1172,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
     ],
   );
 }
+
+  // initialize condition states
+
 
   // Funtion to Format the Names of Conditions
   String formatConditions(List<Conditions>? conditions) {
