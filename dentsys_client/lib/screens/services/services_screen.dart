@@ -127,9 +127,17 @@ class _ServicesScreenState extends State<ServicesScreen> {
                           child: Row(
                             children: [
                               for (var service in [
-                                "Consultation", "Oral Prophylaxis", "Oral Surgery", "Tooth Restoration", "Crown & Veneers",
-                                "Consultation", "Oral Prophylaxis", "Oral Surgery", "Tooth Restoration", "Crown & Veneers",
-                                "Consultation", "Oral Prophylaxis", "Oral Surgery", "Tooth Restoration", "Crown & Veneers",
+                                'Consultation',  
+                                'Oral Prophylaxis',  
+                                'Oral Surgery',  
+                                'Tooth Restoration',  
+                                'Crowns & Veneers',  
+                                'Dentures',  
+                                'Root Canal Treatment',  
+                                'Orthodontic Braces',  
+                                'TMJ Therapy',  
+                                'Whitening',  
+                                'Implant',
                               ])
                                 Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -361,142 +369,171 @@ class _ServicesScreenState extends State<ServicesScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text(
-            'Add Service',
-            textAlign: TextAlign.left,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 36),
-          ),
-          content: SizedBox(
-            width: 700,
-            height: 300,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Divider(
-                  height: 10,
-                  color: Colors.grey[800],
-                  thickness: 0.5,
-                ),
-                const SizedBox(height: 15.0),
-                Row(
+        String? selectedPaymentType; // Variable to track the selected payment type
+
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text(
+                'Add Procedures',
+                textAlign: TextAlign.left,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 36),
+              ),
+              content: SizedBox(
+                width: 500,
+                height: 400,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Expanded(
-                      child: Text(
-                        "Enter Procedure Details",
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.brown[800],
-                        ),
-                      ),
+                    Divider(
+                      height: 10,
+                      color: Colors.grey[800],
+                      thickness: 0.5,
                     ),
-                    const SizedBox(width: 20),
-                    Expanded(
-                      child: Text(
-                        "For Procedure with Downpayment:",
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.brown[800],
+                    const SizedBox(height: 15.0),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "Enter Procedure Details",
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.brown[800],
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Service Name
+                    const Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            decoration: InputDecoration(
+                              labelText: 'Procedure Name',
+                              border: UnderlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Procedure Category
+                    Row(
+                      children: [
+                        Expanded(
+                          child: DropdownButtonFormField<String>(
+                            decoration: const InputDecoration(
+                              labelText: 'Procedure Category',
+                              border: UnderlineInputBorder(),
+                            ),
+                            items: <String>[
+                              'Consultation',
+                              'Oral Prophylaxis',
+                              'Oral Surgery',
+                              'Tooth Restoration',
+                              'Crowns & Veneers',
+                              'Dentures',
+                              'Root Canal Treatment',
+                              'Orthodontic Braces',
+                              'TMJ Therapy',
+                              'Whitening',
+                              'Implant',
+                            ].map((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {},
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Payment Type
+                    Row(
+                      children: [
+                        Expanded(
+                          child: DropdownButtonFormField<String>(
+                            decoration: const InputDecoration(
+                              labelText: 'Payment Type',
+                              border: UnderlineInputBorder(),
+                            ),
+                            items: <String>['Cash', 'Down Payment']
+                                .map((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                selectedPaymentType = newValue;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Base Price
+                    const Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            decoration: InputDecoration(
+                              labelText: 'Base Price',
+                              border: UnderlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Minimum Down Payment
+                    Row(
+                      children: [
+                        Expanded(
+                          child: AbsorbPointer(
+                            absorbing: selectedPaymentType == 'Cash',
+                            child: TextField(
+                              decoration: InputDecoration(
+                                labelText: 'Minimum Downpayment',
+                                border: UnderlineInputBorder(),
+                                enabled: selectedPaymentType != 'Cash',
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
-                const Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          labelText: 'Service Name',
-                          border: UnderlineInputBorder(),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 20),
-                    Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          labelText: 'Minimum Downpayment',
-                          border: UnderlineInputBorder(),
-                        ),
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                  ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
                 ),
-                const SizedBox(height: 20),
-                Row(
-                  children: [
-                    Expanded(
-                      child: DropdownButtonFormField<String>(
-                        decoration: const InputDecoration(
-                          labelText: 'Payment Type',
-                          border: UnderlineInputBorder(),
-                        ),
-                        items: <String>['Cash', 'Down Payment'].map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {},
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    const Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          labelText: 'Full Price',
-                          border: UnderlineInputBorder(),
-                        ),
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                const Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          labelText: 'Base Price',
-                          border: UnderlineInputBorder(),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 20),
-                    Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          labelText: 'Default Price / Visit',
-                          border: UnderlineInputBorder(),
-                        ),
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                  ],
+                ElevatedButton(
+                  child: const Text('Add Service'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
                 ),
               ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            ElevatedButton(
-              child: const Text('Add Service'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+            );
+          },
         );
       },
     );
