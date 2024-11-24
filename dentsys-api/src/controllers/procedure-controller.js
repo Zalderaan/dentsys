@@ -48,11 +48,16 @@ export default class ProcedureController {
     }
 
     static async updateProcedure(req, res) {
+        console.log('updateProcedure controller accessed:', req.body);
         const data = req.body;
         try {
-            await Procedure.updProcedure(data);
-            console.log('Procedure updated successfully from controller:', data);
-            return res.status(200).json({ message: 'Procedure updated successfully from controller', data});
+            const updatedProcedure = await Procedure.updProcedure(data);
+            if(!updatedProcedure) {
+                throw new Error('Error updating procedure');
+            } else {
+                console.log('Procedure updated successfully from controller:', updatedProcedure);
+                return res.status(200).json({ message: 'Procedure updated successfully from controller', updatedProcedure});
+            }
         } catch (error) {
             res.status(500).json({ error: error.message });
         }

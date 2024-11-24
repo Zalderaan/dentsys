@@ -634,6 +634,36 @@ class _ServicesScreenState extends State<ServicesScreen> {
 
  //Edit Service Dialog
   void _showEditServiceDialog(BuildContext context, Procedure procedure) {
+
+    final TextEditingController _editProcedureNameController = TextEditingController(text: procedure.name);
+    final TextEditingController _editProcedureBasePriceController = TextEditingController(text: procedure.basePrice.toString());
+    final TextEditingController _editProcedureMinDPController = TextEditingController(text: procedure.minDP?.toString());
+    String? editSelectedService = procedure.category;
+    String? editSelectedPaymentType = procedure.priceType;
+
+    Future<void> saveUpdateService() async {
+      final Procedure updatedProcedure = Procedure(
+        id: procedure.id,
+        name: _editProcedureNameController.text,
+        category: editSelectedService!,
+        priceType: editSelectedPaymentType!,
+        basePrice: double.parse(_editProcedureBasePriceController.text),
+        minDP: double.tryParse(_editProcedureMinDPController.text),
+      );
+
+      try{
+        await _procedureController.updateProcedure(updatedProcedure);
+        print('Procedure updated successfully');
+
+        // Reload the procedures to refresh the table
+        setState(() {
+          procedures = _procedureController.getAllProcedures();
+        });
+      } catch (error) {
+        print('Error updating procedure: $error');
+      }
+    }
+    
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -681,7 +711,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       children: [
                         Expanded(
                           child: TextField(
-                            controller: _procedureNameController,
+                            controller: _editProcedureNameController,
                             decoration: const InputDecoration(
                               labelText: 'Procedure Name',
                               border: UnderlineInputBorder(),
@@ -697,6 +727,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       children: [
                         Expanded(
                           child: DropdownButtonFormField<String>(
+                            value: editSelectedService,
                             decoration: const InputDecoration(
                               labelText: 'Procedure Category',
                               border: UnderlineInputBorder(),
@@ -721,7 +752,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                             }).toList(),
                             onChanged: (String? newValue) {
                               setState(() {
-                                selectedService = newValue;
+                                editSelectedService = newValue;
                               });
                             },
                           ),
@@ -735,6 +766,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       children: [
                         Expanded(
                           child: DropdownButtonFormField<String>(
+                            value: editSelectedPaymentType,
                             decoration: const InputDecoration(
                               labelText: 'Payment Type',
                               border: UnderlineInputBorder(),
@@ -748,7 +780,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                             }).toList(),
                             onChanged: (String? newValue) {
                               setState(() {
-                                selectedPaymentType = newValue;
+                                editSelectedPaymentType = newValue;
                               });
                             },
                           ),
@@ -762,7 +794,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       children: [
                         Expanded(
                           child: TextField(
-                            controller: _procedureBasePriceController,
+                            controller: _editProcedureBasePriceController,
                             decoration: const InputDecoration(
                               labelText: 'Base Price',
                               border: UnderlineInputBorder(),
@@ -780,7 +812,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                           child: AbsorbPointer(
                             absorbing: selectedPaymentType == 'Down Payment',
                             child: TextField(
-                              controller: _procedureMinDPController,
+                              controller: _editProcedureMinDPController,
                               decoration: InputDecoration(
                                 labelText: 'Minimum Downpayment',
                                 border: const UnderlineInputBorder(),
@@ -805,7 +837,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                   child: const Text('Edit Procedure'),
                   onPressed: () async {
                     // Edit service to the database
-                    
+                    await saveUpdateService();
                     Navigator.of(context).pop();
                   },
                 ),

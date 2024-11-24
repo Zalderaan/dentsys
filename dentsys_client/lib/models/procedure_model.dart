@@ -31,6 +31,7 @@ class Procedure {
 
   Map<String, dynamic> toJson() {
     return {
+      "prcd_id": id,
       "prcd_name": name,
       "prcd_priceType": priceType,
       "prcd_category": category,
