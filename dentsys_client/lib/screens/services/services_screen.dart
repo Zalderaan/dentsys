@@ -16,7 +16,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
   final TextEditingController _procedureMinDPController = TextEditingController();
   final ProcedureController _procedureController = ProcedureController();
 
-  late Future<List<Procedure>> procedures = _procedureController.getAllProcedures();
+  Future<List<Procedure>>? procedures;
   
   // Track the selected service
   String? selectedService;
@@ -35,6 +35,11 @@ class _ServicesScreenState extends State<ServicesScreen> {
     try {
       await _procedureController.createProcedure(newProcedure);
       print('Procedure added successfully');
+
+      // Reload the procedures to refresh the table
+    setState(() {
+      procedures = _procedureController.getAllProcedures();
+    });
     } catch (error) {
       print('Error adding procedure: $error');
     }

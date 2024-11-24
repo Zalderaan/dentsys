@@ -221,11 +221,14 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         ),
                       ),
                     ),
-                    
-                    
-                    const SizedBox(width: 15.0),
+                  ],
+                ),
 
-                    // COLUMN FOR TREATMENT RECORD AND APPOINTMENTS
+                const SizedBox(height: 15.0),
+                 // COLUMN FOR TREATMENT RECORD AND APPOINTMENTS
+                Row(
+                   crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                     Expanded(
                       child: Column(
                         children: [
@@ -294,9 +297,14 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                 // Table Headers
                                 Table(
                                   columnWidths: const {
-                                    0: FlexColumnWidth(3),  // Date-Time
-                                    1: FlexColumnWidth(4),  // Procedure
-                                    2: FlexColumnWidth(2),  // Price
+                                    0: FlexColumnWidth(2),  // Date-Time
+                                    1: FlexColumnWidth(2),  // tooth no
+                                    2: FlexColumnWidth(4),  // Procedure
+                                    3: FlexColumnWidth(2),  // dentists
+
+                                    4: FlexColumnWidth(2),  // amount charged 
+                                    5: FlexColumnWidth(2),  // amount paid
+                                    6: FlexColumnWidth(2),  // Balance
                                   },
                                   border: TableBorder.all(
                                     color: Colors.black,
@@ -316,14 +324,42 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                         Padding(
                                           padding: EdgeInsets.all(8.0),
                                           child: Text(
-                                            "Procedure",
+                                            "Tooth/s No.",
                                             style: TextStyle(fontWeight: FontWeight.bold),
                                           ),
                                         ),
                                         Padding(
                                           padding: EdgeInsets.all(8.0),
                                           child: Text(
-                                            "Price",
+                                            "Procedure",
+                                            style: TextStyle(fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                         Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Text(
+                                            "Dentist/s",
+                                            style: TextStyle(fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Text(
+                                            "Amount Charged",
+                                            style: TextStyle(fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Text(
+                                            "Amount Paid",
+                                            style: TextStyle(fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Text(
+                                            "Balance",
                                             style: TextStyle(fontWeight: FontWeight.bold),
                                           ),
                                         ),
@@ -340,6 +376,22 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                         Padding(
                                           padding: EdgeInsets.all(8.0),
                                           child: Text("Cleaning"),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Text("₱500"),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Text("2024-11-10 14:30"),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Text("Cleaning"),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Text("₱500"),
                                         ),
                                         Padding(
                                           padding: EdgeInsets.all(8.0),
@@ -930,8 +982,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
       conditions: falseConditions,
     );
 
-    // print ('updPatientConditions: $updPatientConditions');
-    // print ('delPatientConditions: $delPatientConditions');
+    print ('updPatientConditions: $updPatientConditions');
+    print ('delPatientConditions: $delPatientConditions');
 
     try {
       await conditionsController.addPatientCondition(updPatientConditions);
@@ -1300,9 +1352,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
     if (allergies.allergies_sulfaDrugs) trueAllergies.add("Sulfa Drugs");
     if (allergies.allergies_aspirin) trueAllergies.add("Aspirin");
     if (allergies.allergies_latex) trueAllergies.add("Latex");
-    if (allergies.allergies_others != null && allergies.allergies_others!.isNotEmpty) {
-      trueAllergies.add(allergies.allergies_others!);
-    }
+    // if (allergies.allergies_others != null && allergies.allergies_others.isNotEmpty) {
+    //   trueAllergies.add(allergies.allergies_others);
+    // }
     return trueAllergies;
   }
   
