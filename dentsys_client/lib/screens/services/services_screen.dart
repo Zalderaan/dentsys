@@ -413,7 +413,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                         IconButton(
                                           icon: const Icon(Icons.edit, color: Colors.blue),
                                           onPressed: () {
-                                            _showEditServiceDialog(context);
+                                            _showEditServiceDialog(context, procedure);
                                           },
                                         ),
                                         IconButton(
@@ -628,7 +628,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
   }
 
  //Edit Service Dialog
- void _showEditServiceDialog(BuildContext context) {
+  void _showEditServiceDialog(BuildContext context, Procedure procedure) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
