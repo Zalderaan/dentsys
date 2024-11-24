@@ -11,9 +11,9 @@ export default class Procedure {
 
     // POST
     static async createProcedure(data){
-        const {prcd_name, prcd_priceType, prcd_category, prcd_basePrice} = data;
-        const queryStr = 'INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_basePrice) VALUES (?, ?, ?, ?)';
-        const values = [prcd_name, prcd_priceType, prcd_category, prcd_basePrice];
+        const {prcd_name, prcd_priceType, prcd_category, prcd_basePrice, prcd_minDP} = data;
+        const queryStr = 'INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_basePrice, prcd_minDP) VALUES (?, ?, ?, ?, ?)';
+        const values = [prcd_name, prcd_priceType, prcd_category, prcd_basePrice, prcd_minDP];
         const [result] = await pool.query(queryStr, values);
         return result.insertId;
     }

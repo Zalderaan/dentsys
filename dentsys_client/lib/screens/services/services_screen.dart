@@ -587,7 +587,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       children: [
                         Expanded(
                           child: AbsorbPointer(
-                            absorbing: selectedPaymentType == 'Down Payment',
+                            absorbing: selectedPaymentType != 'Down Payment',
                             child: TextField(
                               controller: _procedureMinDPController,
                               decoration: InputDecoration(
