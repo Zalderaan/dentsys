@@ -1120,68 +1120,114 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
 
   //Patient Details
-  Widget buildPatientDetails(PatientDetails details) {
-  return Row(
-    children: [
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          buildInfoSection("Name", [details.patient.firstName, details.patient.lastName]),
-          buildInfoSection("Age", [details.patient.age.toString()]),
-          buildInfoSection("Birthdate", [formatDate(details.patient.birthDate)]),
-          buildInfoSection("Gender", [details.patient.sex.toString()]),
-          buildInfoSection("Nationality", [details.patient.nationality]),
-          buildInfoSection("Occupation", [details.patient.occupation]),
-          buildInfoSection("Religion", [details.patient.religion]),
-          buildInfoSection("Email Address", [details.contact.email]),
-          buildInfoSection("Contact Number", [details.contact.mobile_number]),
-          buildInfoSection("Address", [details.contact.home_number, details.contact.home_address]),
-          buildInfoSection("Fax Number", [details.contact.fax_number]),
-          buildInfoSection("Office Number", [details.contact.work_number]),
-          buildInfoSection("Good Health", [details.medical.medical_goodHealth.toString()]),
-          buildInfoSection("Under Medical Treatment", [details.medical.medical_isMedication.toString()]),
-          buildInfoSection("Blood Type", [details.medical.medical_bloodType]),
-          buildInfoSection("Blood Pressure", [details.medical.medical_bloodPressure]),
-          buildInfoSection("Bleeding Time", [details.medical.medical_bleedingTime]),
+ Widget buildPatientDetails(PatientDetails details) {
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      // Use the screen width to adjust the layout
+      bool isWideScreen = constraints.maxWidth > 600;
 
-          // Add other patient fields as needed
-        ],
-      ),
-      const SizedBox(width: 100),
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          buildInfoSection("Dental Insurance", [details.insurance.insurance_name]),
-          buildInfoSection("Effective Date", [formatDate(details.insurance.effective_date)]),
-          buildInfoSection("Previous Dentist", [details.dental.previous_dentist]),
-          buildInfoSection("Latest Visit", [formatDate(details.dental.last_visit)]),
-          buildInfoSection("Physician", [details.medical.medical_physician]),
-          buildInfoSection("Speciality", [details.medical.medical_physicianSpec.toString()]),
-          buildInfoSection("Office Address", [details.medical.medical_officeAddress]),
-          buildInfoSection("Office Number", [details.medical.medical_officeNo]),
-          buildInfoSection("Usage of Tobacco", [details.medical.medical_isTobacco.toString()]),
-          buildInfoSection("Usage of Alcohol", [details.medical.medical_dangerousSubstance.toString()]),
-          buildInfoSection("Hospitalized", [details.medical.medical_hospitalized.toString()]),
-          buildInfoSection("Taking Prescriptions", [details.medical.medical_isMedication.toString()]),
-          buildInfoSection("Serious Illness", [details.medical.medical_seriousOperation.toString()]),
-          buildInfoSection("Pregnant", [details.medical.medical_isPregnant.toString()]),
-          buildInfoSection("Taking Birth Controls", [details.medical.medical_isBirthControl.toString()]),
-          buildInfoSection("Nursing", [details.medical.medical_isNursing.toString()]),
-
-          // Add Allergies section
-          buildInfoSection("Allergies", getTrueAllergies(details.allergies)),
-
-          // Add Conditions section
-          buildInfoSection(
-            "Conditions",
-            [formatConditions(details.conditions)],
-              
-          ),
-        ],
-      ),
-    ],
+      return isWideScreen
+          ? Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      buildInfoSection("Name", [details.patient.firstName, details.patient.lastName]),
+                      buildInfoSection("Age", [details.patient.age.toString()]),
+                      buildInfoSection("Birthdate", [formatDate(details.patient.birthDate)]),
+                      buildInfoSection("Gender", [details.patient.sex.toString()]),
+                      buildInfoSection("Nationality", [details.patient.nationality]),
+                      buildInfoSection("Occupation", [details.patient.occupation]),
+                      buildInfoSection("Religion", [details.patient.religion]),
+                      buildInfoSection("Email Address", [details.contact.email]),
+                      buildInfoSection("Contact Number", [details.contact.mobile_number]),
+                      buildInfoSection("Address", [details.contact.home_number, details.contact.home_address]),
+                      buildInfoSection("Fax Number", [details.contact.fax_number]),
+                      buildInfoSection("Office Number", [details.contact.work_number]),
+                      buildInfoSection("Good Health", [details.medical.medical_goodHealth.toString()]),
+                      buildInfoSection("Under Medical Treatment", [details.medical.medical_isMedication.toString()]),
+                      buildInfoSection("Blood Type", [details.medical.medical_bloodType]),
+                      buildInfoSection("Blood Pressure", [details.medical.medical_bloodPressure]),
+                      buildInfoSection("Bleeding Time", [details.medical.medical_bleedingTime]),
+                    ],
+                  ),
+                ),
+                //const SizedBox(width: 24),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      buildInfoSection("Dental Insurance", [details.insurance.insurance_name]),
+                      buildInfoSection("Effective Date", [formatDate(details.insurance.effective_date)]),
+                      buildInfoSection("Previous Dentist", [details.dental.previous_dentist]),
+                      buildInfoSection("Latest Visit", [formatDate(details.dental.last_visit)]),
+                      buildInfoSection("Physician", [details.medical.medical_physician]),
+                      buildInfoSection("Speciality", [details.medical.medical_physicianSpec.toString()]),
+                      buildInfoSection("Office Address", [details.medical.medical_officeAddress]),
+                      buildInfoSection("Office Number", [details.medical.medical_officeNo]),
+                      buildInfoSection("Usage of Tobacco", [details.medical.medical_isTobacco.toString()]),
+                      buildInfoSection("Usage of Alcohol", [details.medical.medical_dangerousSubstance.toString()]),
+                      buildInfoSection("Hospitalized", [details.medical.medical_hospitalized.toString()]),
+                      buildInfoSection("Taking Prescriptions", [details.medical.medical_isMedication.toString()]),
+                      buildInfoSection("Serious Illness", [details.medical.medical_seriousOperation.toString()]),
+                      buildInfoSection("Pregnant", [details.medical.medical_isPregnant.toString()]),
+                      buildInfoSection("Taking Birth Controls", [details.medical.medical_isBirthControl.toString()]),
+                      buildInfoSection("Nursing", [details.medical.medical_isNursing.toString()]),
+                      buildInfoSection("Allergies", getTrueAllergies(details.allergies)),
+                      buildInfoSection("Conditions", [formatConditions(details.conditions)]),
+                    ],
+                  ),
+                ),
+              ],
+            )
+          : SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  buildInfoSection("Name", [details.patient.firstName, details.patient.lastName]),
+                  buildInfoSection("Age", [details.patient.age.toString()]),
+                  buildInfoSection("Birthdate", [formatDate(details.patient.birthDate)]),
+                  buildInfoSection("Gender", [details.patient.sex.toString()]),
+                  buildInfoSection("Nationality", [details.patient.nationality]),
+                  buildInfoSection("Occupation", [details.patient.occupation]),
+                  buildInfoSection("Religion", [details.patient.religion]),
+                  buildInfoSection("Email Address", [details.contact.email]),
+                  buildInfoSection("Contact Number", [details.contact.mobile_number]),
+                  buildInfoSection("Address", [details.contact.home_number, details.contact.home_address]),
+                  buildInfoSection("Fax Number", [details.contact.fax_number]),
+                  buildInfoSection("Office Number", [details.contact.work_number]),
+                  buildInfoSection("Good Health", [details.medical.medical_goodHealth.toString()]),
+                  buildInfoSection("Under Medical Treatment", [details.medical.medical_isMedication.toString()]),
+                  buildInfoSection("Blood Type", [details.medical.medical_bloodType]),
+                  buildInfoSection("Blood Pressure", [details.medical.medical_bloodPressure]),
+                  buildInfoSection("Bleeding Time", [details.medical.medical_bleedingTime]),
+                  buildInfoSection("Dental Insurance", [details.insurance.insurance_name]),
+                  buildInfoSection("Effective Date", [formatDate(details.insurance.effective_date)]),
+                  buildInfoSection("Previous Dentist", [details.dental.previous_dentist]),
+                  buildInfoSection("Latest Visit", [formatDate(details.dental.last_visit)]),
+                  buildInfoSection("Physician", [details.medical.medical_physician]),
+                  buildInfoSection("Speciality", [details.medical.medical_physicianSpec.toString()]),
+                  buildInfoSection("Office Address", [details.medical.medical_officeAddress]),
+                  buildInfoSection("Office Number", [details.medical.medical_officeNo]),
+                  buildInfoSection("Usage of Tobacco", [details.medical.medical_isTobacco.toString()]),
+                  buildInfoSection("Usage of Alcohol", [details.medical.medical_dangerousSubstance.toString()]),
+                  buildInfoSection("Hospitalized", [details.medical.medical_hospitalized.toString()]),
+                  buildInfoSection("Taking Prescriptions", [details.medical.medical_isMedication.toString()]),
+                  buildInfoSection("Serious Illness", [details.medical.medical_seriousOperation.toString()]),
+                  buildInfoSection("Pregnant", [details.medical.medical_isPregnant.toString()]),
+                  buildInfoSection("Taking Birth Controls", [details.medical.medical_isBirthControl.toString()]),
+                  buildInfoSection("Nursing", [details.medical.medical_isNursing.toString()]),
+                  buildInfoSection("Allergies", getTrueAllergies(details.allergies)),
+                  buildInfoSection("Conditions", [formatConditions(details.conditions)]),
+                ],
+              ),
+            );
+    },
   );
 }
+
 
   // initialize condition states
 
@@ -1197,7 +1243,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
       1: "High blood pressure",
       2: "Low blood pressure",
       3: "Seizure disorder",
-      4: "Acquired Immunodeficiency Syndrome",
+      4: "Immunodeficiency Syndrome",
       5: "Sexually Transmitted Disease",
       6: "Peptic or stomach ulcer",
       7: "History of fainting or seizures",

@@ -70,7 +70,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                 color: Colors.white,
                               ),
                               label: const Text(
-                                "Add Services",
+                                "Add Procedure",
                                 style: TextStyle(color: Colors.white),
                               ),
                               style: ElevatedButton.styleFrom(
@@ -179,6 +179,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
                 ),
               
                 const SizedBox(height: 15.0),
+
+                
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -369,7 +371,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        String? selectedPaymentType; // Variable to track the selected payment type
+        String? selectedPaymentType = 'Cash'; // Variable to track the selected payment type
 
         return StatefulBuilder(
           builder: (context, setState) {
@@ -539,3 +541,4 @@ class _ServicesScreenState extends State<ServicesScreen> {
     );
   }
 }
+
