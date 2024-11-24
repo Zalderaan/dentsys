@@ -15,7 +15,7 @@ class ProcedureService {
         headers: headers,
         body: jsonEncode(procedure.toJson()),
       );
-
+      print ('response: ${response.body}');
       if (response.statusCode == 201) {
         return Procedure.fromJson(jsonDecode(response.body));
       } else {
@@ -38,7 +38,7 @@ class ProcedureService {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        final procedures = (data['procedures'] as List)
+        final procedures = (data['allProcedures'] as List)
             .map((procedure) => Procedure.fromJson(procedure))
             .toList();
         return procedures;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dentsys_client/models/procedure_model.dart';
 import 'package:dentsys_client/controllers/procedure_controller.dart';
 
 class ServicesScreen extends StatefulWidget {
@@ -10,9 +11,69 @@ class ServicesScreen extends StatefulWidget {
 
 class _ServicesScreenState extends State<ServicesScreen> {
   final ScrollController scrollController = ScrollController();
-  
+  final TextEditingController _procedureNameController = TextEditingController();
+  // final TextEditingController _procedureCategoryController = TextEditingController();
+  // final TextEditingController _procedurePriceTypeController = TextEditingController();
+  final TextEditingController _procedureBasePriceController = TextEditingController();
+  final TextEditingController _procedureMinDPController = TextEditingController();
+  final ProcedureController _procedureController = ProcedureController();
+
+  // List of procedures
+  late Future<List<Procedure>> procedures = _procedureController.getAllProcedures();
+
   // Track the selected service
   String? selectedService;
+  String? selectedPaymentType;
+  String? selectedProcedureCategory;
+
+  // Function to handle adding a service
+  Future<void> handleAddService() async {
+    final Procedure newProcedure = Procedure(
+      name: _procedureNameController.text,
+      category: selectedService!,
+      priceType: selectedPaymentType!,
+      basePrice: double.parse(_procedureBasePriceController.text),
+      minDP: double.tryParse(_procedureMinDPController.text),
+    );
+
+    try {
+      await _procedureController.createProcedure(newProcedure);
+      print('Procedure added successfully');
+    } catch (error) {
+      // Handle error
+      print('Error adding procedure: $error');
+    }
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    loadProcedures();
+  }
+
+  Future<void> loadProcedures() async {
+    try{
+      final proceduresList = await _procedureController.getAllProcedures();
+      print('Procedures: $proceduresList'); // debug line
+      if(proceduresList.isNotEmpty){
+        setState(() {
+          procedures = Future.value(proceduresList);
+        });
+      } else {
+        throw Exception('No procedures found');
+      }
+    } catch (error) {
+      print('Error loading procedures: $error');
+    }
+  }
+
+  @override
+  void dispose() {
+    _procedureNameController.dispose();
+    _procedureBasePriceController.dispose();
+    _procedureMinDPController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -369,7 +430,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        String? selectedPaymentType; // Variable to track the selected payment type
+        // String? selectedPaymentType; // Variable to track the selected payment type
 
         return StatefulBuilder(
           builder: (context, setState) {
@@ -408,11 +469,12 @@ class _ServicesScreenState extends State<ServicesScreen> {
                     const SizedBox(height: 20),
 
                     // Service Name
-                    const Row(
+                    Row(
                       children: [
                         Expanded(
                           child: TextField(
-                            decoration: InputDecoration(
+                            controller: _procedureNameController,
+                            decoration: const InputDecoration(
                               labelText: 'Procedure Name',
                               border: UnderlineInputBorder(),
                             ),
@@ -449,7 +511,11 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                 child: Text(value),
                               );
                             }).toList(),
-                            onChanged: (String? newValue) {},
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                selectedService = newValue;
+                              });
+                            },
                           ),
                         ),
                       ],
@@ -465,7 +531,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                               labelText: 'Payment Type',
                               border: UnderlineInputBorder(),
                             ),
-                            items: <String>['Cash', 'Down Payment']
+                            items: <String>['Fixed', 'Variable', 'Down Payment', 'Unit']
                                 .map((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
@@ -484,11 +550,12 @@ class _ServicesScreenState extends State<ServicesScreen> {
                     const SizedBox(height: 20),
 
                     // Base Price
-                    const Row(
+                    Row(
                       children: [
                         Expanded(
                           child: TextField(
-                            decoration: InputDecoration(
+                            controller: _procedureBasePriceController,
+                            decoration: const InputDecoration(
                               labelText: 'Base Price',
                               border: UnderlineInputBorder(),
                             ),
@@ -503,12 +570,13 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       children: [
                         Expanded(
                           child: AbsorbPointer(
-                            absorbing: selectedPaymentType == 'Cash',
+                            absorbing: selectedPaymentType == 'Down Payment',
                             child: TextField(
+                              controller: _procedureMinDPController,
                               decoration: InputDecoration(
                                 labelText: 'Minimum Downpayment',
-                                border: UnderlineInputBorder(),
-                                enabled: selectedPaymentType != 'Cash',
+                                border: const UnderlineInputBorder(),
+                                enabled: selectedPaymentType == 'Down Payment',
                               ),
                             ),
                           ),
@@ -527,7 +595,9 @@ class _ServicesScreenState extends State<ServicesScreen> {
                 ),
                 ElevatedButton(
                   child: const Text('Add Service'),
-                  onPressed: () {
+                  onPressed: () async {
+                    // Add service to the database
+                    await handleAddService();
                     Navigator.of(context).pop();
                   },
                 ),

@@ -97,7 +97,7 @@ CREATE TABLE IF NOT EXISTS procedures (
     prcd_name VARCHAR(50) NOT NULL,
     prcd_priceType ENUM('fixed', 'variable', 'downpayment', 'unit') NOT NULL,
     prcd_category VARCHAR(50) NOT NULL,
-    prcd_minPrice DECIMAL(10, 2) NOT NULL,
+    prcd_minDP DECIMAL(10, 2),
     prcd_basePrice DECIMAL(10, 2) NOT NULL
 );
 

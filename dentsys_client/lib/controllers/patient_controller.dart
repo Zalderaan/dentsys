@@ -26,6 +26,7 @@ class PatientController {
     }
   }
 
+  // TODO: this is unused, lol
   Future<List<Patient>> getPatients() async {
     try {
       final fetchedPatients = await _patientService.getAllPatientsService();

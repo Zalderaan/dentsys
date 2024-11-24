@@ -6,11 +6,12 @@ export default class ProcedureController {
         const data = req.body;
         try {
             const newProcedureId = await Procedure.createProcedure(data);
-            if(!newProcedureId) {
+            const newProcedure = await Procedure.getProcedureById(newProcedureId);
+            if(!newProcedure) {
                 throw new Error('Error creating procedure');
             } else if (newProcedureId) {
-                console.log('Procedure created successfully from controller:', newProcedureId);
-                return res.status(201).json({ message: 'Procedure created successfully from controller', newProcedureId});
+                console.log('Procedure created successfully from controller:', newProcedure);
+                return res.status(201).json({ message: 'Procedure created successfully from controller', newProcedure});
             }
         } catch (error) {
             res.status(500).json({ error: error.message });
