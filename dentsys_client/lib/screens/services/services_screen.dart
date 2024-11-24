@@ -16,7 +16,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
   final TextEditingController _procedureMinDPController = TextEditingController();
   final ProcedureController _procedureController = ProcedureController();
 
-  Future<List<Procedure>>? procedures;
+  Future<List<Procedure>>? procedures; // = _procedureController.getAllProcedures();
   
   // Track the selected service
   String? selectedService;
@@ -48,6 +48,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
   @override
   void initState() {
     super.initState();
+    // print('procedures: $procedures');
     // Initially load procedures when the screen is displayed
     loadProcedures();
   }

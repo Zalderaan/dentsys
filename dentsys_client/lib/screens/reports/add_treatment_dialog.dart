@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:dentsys_client/controllers/procedure_controller.dart';
+import 'package:dentsys_client/models/procedure_model.dart';
 
 class AddTreatmentDialog extends StatefulWidget {
   const AddTreatmentDialog({super.key});
@@ -8,12 +10,30 @@ class AddTreatmentDialog extends StatefulWidget {
 }
 
 class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
+
+
   List<String> proceduresDone = [];
   final Map<String, List<String>> servicesOffered = {
     "Consultations": ["General Consultation", "Specialized Consultation"],
     "Oral Surgery": ["Tooth Extraction", "Impacted Tooth Surgery"],
     "Dentures": ["Standard Complete", "Flexible Complete", "Flexible Partial"],
   };
+  List<Procedure> proceduresDone1 = [];
+
+  @override
+  void initState() {
+    super.initState();
+    loadProcedures();
+  }
+
+  Future<void> loadProcedures() async {
+    final List<Procedure> procedures = await ProcedureController().getAllProcedures();
+    setState(() {
+      proceduresDone1 = procedures;
+    });
+
+    print(proceduresDone1);
+  }
 
   @override
   Widget build(BuildContext context) {

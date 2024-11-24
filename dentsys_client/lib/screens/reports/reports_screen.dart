@@ -1,7 +1,8 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-import 'package:dentsys_client/models/patientDetails_model.dart';
-import 'package:dentsys_client/models/patient_conditions/conditions_model.dart';
+import 'package:dentsys_client/screens/reports/forms/personal_info_forms.dart';
 import 'package:dentsys_client/screens/reports/add_treatment_dialog.dart';
 import 'package:dentsys_client/screens/reports/forms/allergies_forms.dart';
 import 'package:dentsys_client/screens/reports/forms/contact_info_forms.dart';
@@ -9,9 +10,8 @@ import 'package:dentsys_client/screens/reports/forms/dental_history_forms.dart';
 import 'package:dentsys_client/screens/reports/forms/dental_insurance_forms.dart';
 import 'package:dentsys_client/screens/reports/forms/diseases_forms.dart';
 import 'package:dentsys_client/screens/reports/forms/medical_history_forms.dart';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:dentsys_client/screens/reports/forms/personal_info_forms.dart';
+
+import 'package:dentsys_client/models/patientDetails_model.dart';
 
 import 'package:dentsys_client/models/patient_model.dart';
 import 'package:dentsys_client/controllers/patient_controller.dart';
@@ -35,6 +35,8 @@ import 'package:dentsys_client/models/patient_conditions/patientConditions_model
 import 'package:dentsys_client/models/patient_conditions/conditions_model.dart';
 import 'package:dentsys_client/controllers/conditions_controller.dart';
 
+import 'package:dentsys_client/models/procedure_model.dart';
+import 'package:dentsys_client/controllers/procedure_controller.dart';
 
 class ReportsScreen extends StatefulWidget {
   final int? patient_id;
@@ -46,6 +48,7 @@ class ReportsScreen extends StatefulWidget {
 
 class _ReportsScreenState extends State<ReportsScreen> {
   final PatientController patientController = PatientController();
+  final ProcedureController procedureController = ProcedureController();
   PatientDetails? patientDetails;
   bool isLoading = true;
 
@@ -1172,7 +1175,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
 
   //Patient Details
- Widget buildPatientDetails(PatientDetails details) {
+  Widget buildPatientDetails(PatientDetails details) {
   return LayoutBuilder(
     builder: (context, constraints) {
       // Use the screen width to adjust the layout
