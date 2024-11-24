@@ -14,7 +14,7 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
   List<String> proceduresDone = [];
 
   // List of all available procedures fetched from the backend
-  List<Procedure> servicesOffered1 = [];
+  List<Procedure> servicesOffered = [];
 
   // A map to group procedures by their categories
   Map<String, List<Procedure>> categorizedProcedures = {};
@@ -37,11 +37,11 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
   Future<void> loadProcedures() async {
     final List<Procedure> procedures = await ProcedureController().getAllProcedures();
     setState(() {
-      servicesOffered1 = procedures;
+      servicesOffered = procedures;
       categorizedProcedures = groupProceduresByCategory(procedures); // Group procedures by category.
     });
 
-    print(servicesOffered1);
+    print(servicesOffered);
   }
 
   // Groups procedures by their `category` field. 
