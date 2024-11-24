@@ -18,6 +18,13 @@ export default class Procedure {
         return result.insertId;
     }
 
+    static async getProcedureById(prcd_id){
+        const queryStr = 'SELECT * FROM procedures WHERE prcd_id = ?';
+        const values = [prcd_id];
+        const [procedure] = await pool.query(queryStr, values);
+        return procedure;
+    }
+
     static async getAllProcedures(){
         const queryStr = 'SELECT * FROM procedures';
         const [procedures] = await pool.query(queryStr);

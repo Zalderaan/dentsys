@@ -6,11 +6,27 @@ export default class ProcedureController {
         const data = req.body;
         try {
             const newProcedureId = await Procedure.createProcedure(data);
-            if(!newProcedureId) {
+            const newProcedure = await Procedure.getProcedureById(newProcedureId);
+            if(!newProcedure) {
                 throw new Error('Error creating procedure');
             } else if (newProcedureId) {
-                console.log('Procedure created successfully from controller:', newProcedureId);
-                return res.status(201).json({ message: 'Procedure created successfully from controller', newProcedureId});
+                console.log('Procedure created successfully from controller:', newProcedure);
+                return res.status(201).json({ message: 'Procedure created successfully from controller', newProcedure});
+            }
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+
+    static async getOneProcedure(req, res) {
+        try {
+            const prcd_id = req.params.id;
+            const procedure = await Procedure.getProcedureById(prcd_id);
+            if(!procedure) {
+                throw new Error('Error fetching procedure');
+            } else if (procedure) {
+                console.log('Procedure fetched successfully from controller:', procedure);
+                return res.status(200).json({ message: 'Procedure fetched successfully from controller', procedure});
             }
         } catch (error) {
             res.status(500).json({ error: error.message });

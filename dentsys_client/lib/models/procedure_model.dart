@@ -4,6 +4,7 @@ class Procedure {
   final String priceType;
   final String category;
   final double basePrice;
+  final double? minDP;
 
   Procedure({
     this.id,
@@ -11,7 +12,22 @@ class Procedure {
     required this.priceType,
     required this.category,
     required this.basePrice,
+    this.minDP
   });
+
+  @override
+  String toString() {
+  return '''
+    Procedure {
+      id: $id,
+      name: $name,
+      priceType: $priceType,
+      category: $category,
+      basePrice: $basePrice,
+      minDP: $minDP
+    }
+  ''';  
+  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -19,16 +35,20 @@ class Procedure {
       "prcd_priceType": priceType,
       "prcd_category": category,
       "prcd_basePrice": basePrice,
+      "prcd_minDP": minDP
     };
   }
 
   factory Procedure.fromJson(Map<String, dynamic> json) {
+    final procedureData = json['newProcedure'] != null ? json['newProcedure'][0] : json;
+    // print('Procedure.fromJson: $procedureData');
     return Procedure(
-      id: json['prcd_id'],
-      name: json['prcd_name'],
-      priceType: json['prcd_priceType'],
-      category: json['prcd_category'],
-      basePrice: double.parse(json['prcd_basePrice'].toString()),
+      id: procedureData['prcd_id'],
+      name: procedureData['prcd_name'],
+      priceType: procedureData['prcd_priceType'],
+      category: procedureData['prcd_category'],
+      basePrice: double.parse(procedureData['prcd_basePrice'].toString()),
+      minDP: double.tryParse(procedureData['prcd_minDP'].toString())
     );
   }
 }
