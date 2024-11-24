@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:dentsys_client/services/procedure_service.dart';
+import 'package:dentsys_client/controllers/procedure_controller.dart';
 
 class ServicesScreen extends StatefulWidget {
   const ServicesScreen({super.key});

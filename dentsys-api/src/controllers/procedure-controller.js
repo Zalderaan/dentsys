@@ -17,6 +17,21 @@ export default class ProcedureController {
         }
     }
 
+    static async getOneProcedure(req, res) {
+        try {
+            const prcd_id = req.params.id;
+            const procedure = await Procedure.getProcedureById(prcd_id);
+            if(!procedure) {
+                throw new Error('Error fetching procedure');
+            } else if (procedure) {
+                console.log('Procedure fetched successfully from controller:', procedure);
+                return res.status(200).json({ message: 'Procedure fetched successfully from controller', procedure});
+            }
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+
     static async getAllProcedures(req, res) {
         try {
             const allProcedures = await Procedure.getAllProcedures();
