@@ -35,6 +35,11 @@ class _ServicesScreenState extends State<ServicesScreen> {
     try {
       await _procedureController.createProcedure(newProcedure);
       print('Procedure added successfully');
+
+      // Reload the procedures to refresh the table
+    setState(() {
+      procedures = _procedureController.getAllProcedures();
+    });
     } catch (error) {
       print('Error adding procedure: $error');
     }
