@@ -8,7 +8,7 @@ export default class UserController {
         const data = req.body;
         try {
             const newUser = await User.createUser(data);
-            return res.status(201).json({ message: 'User created successfully from controller', newUser});
+            return res.status(201).json({ message: 'User created successfully from controller', user: newUser});
         } 
         catch (error) {
             res.status(500).json({ error: error.message });

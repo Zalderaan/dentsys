@@ -1,7 +1,8 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-import 'package:dentsys_client/models/patientDetails_model.dart';
-import 'package:dentsys_client/models/patient_conditions/conditions_model.dart';
+import 'package:dentsys_client/screens/reports/forms/personal_info_forms.dart';
 import 'package:dentsys_client/screens/reports/add_treatment_dialog.dart';
 import 'package:dentsys_client/screens/reports/forms/allergies_forms.dart';
 import 'package:dentsys_client/screens/reports/forms/contact_info_forms.dart';
@@ -9,9 +10,8 @@ import 'package:dentsys_client/screens/reports/forms/dental_history_forms.dart';
 import 'package:dentsys_client/screens/reports/forms/dental_insurance_forms.dart';
 import 'package:dentsys_client/screens/reports/forms/diseases_forms.dart';
 import 'package:dentsys_client/screens/reports/forms/medical_history_forms.dart';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:dentsys_client/screens/reports/forms/personal_info_forms.dart';
+
+import 'package:dentsys_client/models/patientDetails_model.dart';
 
 import 'package:dentsys_client/models/patient_model.dart';
 import 'package:dentsys_client/controllers/patient_controller.dart';
@@ -31,6 +31,12 @@ import 'package:dentsys_client/controllers/medical_controller.dart';
 import 'package:dentsys_client/models/allergies_model.dart';
 import 'package:dentsys_client/controllers/allergies_controller.dart';
 
+import 'package:dentsys_client/models/patient_conditions/patientConditions_model.dart';
+import 'package:dentsys_client/models/patient_conditions/conditions_model.dart';
+import 'package:dentsys_client/controllers/conditions_controller.dart';
+
+import 'package:dentsys_client/models/procedure_model.dart';
+import 'package:dentsys_client/controllers/procedure_controller.dart';
 
 class ReportsScreen extends StatefulWidget {
   final int? patient_id;
@@ -42,6 +48,7 @@ class ReportsScreen extends StatefulWidget {
 
 class _ReportsScreenState extends State<ReportsScreen> {
   final PatientController patientController = PatientController();
+  final ProcedureController procedureController = ProcedureController();
   PatientDetails? patientDetails;
   bool isLoading = true;
 
@@ -170,7 +177,14 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                   ),
                                   child: ElevatedButton.icon(
                                     onPressed: () {
-                                      _showEditPatientFormsDialog(context, patientDetails!);
+                                      _showEditPatientFormsDialog(
+                                        context,
+                                        patientDetails!,
+                                        () {
+                                          // Refresh patient details after update
+                                          loadPatientDetails();
+                                        },
+                                      );
                                     },
                                     icon: const Icon(
                                       Icons.edit,
@@ -210,11 +224,14 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         ),
                       ),
                     ),
-                    
-                    
-                    const SizedBox(width: 15.0),
+                  ],
+                ),
 
-                    // COLUMN FOR TREATMENT RECORD AND APPOINTMENTS
+                const SizedBox(height: 15.0),
+                 // COLUMN FOR TREATMENT RECORD AND APPOINTMENTS
+                Row(
+                   crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                     Expanded(
                       child: Column(
                         children: [
@@ -283,9 +300,14 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                 // Table Headers
                                 Table(
                                   columnWidths: const {
-                                    0: FlexColumnWidth(3),  // Date-Time
-                                    1: FlexColumnWidth(4),  // Procedure
-                                    2: FlexColumnWidth(2),  // Price
+                                    0: FlexColumnWidth(2),  // Date-Time
+                                    1: FlexColumnWidth(2),  // tooth no
+                                    2: FlexColumnWidth(4),  // Procedure
+                                    3: FlexColumnWidth(2),  // dentists
+
+                                    4: FlexColumnWidth(2),  // amount charged 
+                                    5: FlexColumnWidth(2),  // amount paid
+                                    6: FlexColumnWidth(2),  // Balance
                                   },
                                   border: TableBorder.all(
                                     color: Colors.black,
@@ -305,14 +327,42 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                         Padding(
                                           padding: EdgeInsets.all(8.0),
                                           child: Text(
-                                            "Procedure",
+                                            "Tooth/s No.",
                                             style: TextStyle(fontWeight: FontWeight.bold),
                                           ),
                                         ),
                                         Padding(
                                           padding: EdgeInsets.all(8.0),
                                           child: Text(
-                                            "Price",
+                                            "Procedure",
+                                            style: TextStyle(fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                         Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Text(
+                                            "Dentist/s",
+                                            style: TextStyle(fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Text(
+                                            "Amount Charged",
+                                            style: TextStyle(fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Text(
+                                            "Amount Paid",
+                                            style: TextStyle(fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Text(
+                                            "Balance",
                                             style: TextStyle(fontWeight: FontWeight.bold),
                                           ),
                                         ),
@@ -329,6 +379,22 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                         Padding(
                                           padding: EdgeInsets.all(8.0),
                                           child: Text("Cleaning"),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Text("₱500"),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Text("2024-11-10 14:30"),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Text("Cleaning"),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Text("₱500"),
                                         ),
                                         Padding(
                                           padding: EdgeInsets.all(8.0),
@@ -488,7 +554,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
 }
 
 // Edit Patient Forms
-  void _showEditPatientFormsDialog(BuildContext context, PatientDetails details) {
+  void _showEditPatientFormsDialog(BuildContext context, PatientDetails details, VoidCallback onUpdate) {
     final GlobalKey<FormState> dialogPersonalInfoFormKey = GlobalKey<FormState>();
     final GlobalKey<FormState> dialogContactInfoFormKey = GlobalKey<FormState>();
     final GlobalKey<FormState> dialogDentalInsuranceFormKey = GlobalKey<FormState>();
@@ -566,6 +632,45 @@ class _ReportsScreenState extends State<ReportsScreen> {
   late bool dialogAllergiesLatexValue = details.allergies.allergies_latex;
   late bool dialogAllergiesOthersValue = details.allergies.allergies_others!.isNotEmpty;
   late AllergiesController allergiesController = AllergiesController(); // allergies controller
+
+  // conditions info
+  final TextEditingController dialogConditionsOthersController = TextEditingController();
+  late bool dialogHighBlood = details.conditions.any((condition) => condition.condition_id == 1 && condition.patientCondition_status);
+  late bool dialogLowBlood = details.conditions.any((condition) => condition.condition_id == 2 && condition.patientCondition_status);
+  late bool dialogEpilepsy = details.conditions.any((condition) => condition.condition_id == 3 && condition.patientCondition_status);
+  late bool dialogAids = details.conditions.any((condition) => condition.condition_id == 4 && condition.patientCondition_status);
+  late bool dialogSTD = details.conditions.any((condition) => condition.condition_id == 5 && condition.patientCondition_status);
+  late bool dialogStomachUlcer = details.conditions.any((condition) => condition.condition_id == 6 && condition.patientCondition_status);
+  late bool dialogFaintingSeizures = details.conditions.any((condition) => condition.condition_id == 7 && condition.patientCondition_status);
+  late bool dialogRapidWL = details.conditions.any((condition) => condition.condition_id == 8 && condition.patientCondition_status);
+  late bool dialogRadTherapy = details.conditions.any((condition) => condition.condition_id == 9 && condition.patientCondition_status);
+  late bool dialogJointReplacement = details.conditions.any((condition) => condition.condition_id == 10 && condition.patientCondition_status);
+  late bool dialogHeartSurg = details.conditions.any((condition) => condition.condition_id == 11 && condition.patientCondition_status);
+  late bool dialogHeartAttack = details.conditions.any((condition) => condition.condition_id == 12 && condition.patientCondition_status);
+  late bool dialogHeartDisease = details.conditions.any((condition) => condition.condition_id == 13 && condition.patientCondition_status);
+  late bool dialogHeartMurmur = details.conditions.any((condition) => condition.condition_id == 14 && condition.patientCondition_status);
+  late bool dialogThyroid = details.conditions.any((condition) => condition.condition_id == 15 && condition.patientCondition_status);
+  late bool dialogHepaLiver = details.conditions.any((condition) => condition.condition_id == 16 && condition.patientCondition_status);
+  late bool dialogJaundice = details.conditions.any((condition) => condition.condition_id == 17 && condition.patientCondition_status);
+  late bool dialogRheumaticFever = details.conditions.any((condition) => condition.condition_id == 18 && condition.patientCondition_status);
+  late bool dialogHayFever = details.conditions.any((condition) => condition.condition_id == 19 && condition.patientCondition_status);
+  late bool dialogRespiratory = details.conditions.any((condition) => condition.condition_id == 20 && condition.patientCondition_status);
+  late bool dialogTB = details.conditions.any((condition) => condition.condition_id == 21 && condition.patientCondition_status);
+  late bool dialogSwollenAnkles = details.conditions.any((condition) => condition.condition_id == 22 && condition.patientCondition_status);
+  late bool dialogKidneyDisease = details.conditions.any((condition) => condition.condition_id == 23 && condition.patientCondition_status);
+  late bool dialogDiabetes = details.conditions.any((condition) => condition.condition_id == 24 && condition.patientCondition_status);
+  late bool dialogChestPain = details.conditions.any((condition) => condition.condition_id == 25 && condition.patientCondition_status);
+  late bool dialogStroke = details.conditions.any((condition) => condition.condition_id == 26 && condition.patientCondition_status);
+  late bool dialogTumors = details.conditions.any((condition) => condition.condition_id == 27 && condition.patientCondition_status);
+  late bool dialogAnemia = details.conditions.any((condition) => condition.condition_id == 28 && condition.patientCondition_status);
+  late bool dialogAngina = details.conditions.any((condition) => condition.condition_id == 29 && condition.patientCondition_status);
+  late bool dialogAsthma = details.conditions.any((condition) => condition.condition_id == 30 && condition.patientCondition_status);
+  late bool dialogEmphysema = details.conditions.any((condition) => condition.condition_id == 31 && condition.patientCondition_status);
+  late bool dialogBleedingProb = details.conditions.any((condition) => condition.condition_id == 32 && condition.patientCondition_status); 
+  late bool dialogBloodDisease = details.conditions.any((condition) => condition.condition_id == 33 && condition.patientCondition_status);
+  late bool dialogHeadInjury = details.conditions.any((condition) => condition.condition_id == 34 && condition.patientCondition_status);
+  late bool dialogArthritis = details.conditions.any((condition) => condition.condition_id == 35 && condition.patientCondition_status);
+  late ConditionsController conditionsController = ConditionsController();
   
   Future<void> saveUpdatePatient() async {
     final updatedPatient = Patient(
@@ -589,7 +694,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
       try {
         await patientController.updatePatient(updatedPatient);
-        print('Patient updated successfully');
+        // print('Patient updated successfully');
+
+        // Trigger refresh
+        onUpdate();
       } catch (error) {
         print('Error updating patient: $error');
       }
@@ -608,7 +716,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
       try {
         await contactController.updateContact(updatedContact);
-        print('Contact updated successfully');
+        // print('Contact updated successfully');
+
+         // Trigger refresh
+        onUpdate();
       } catch (error) {
         print('Error updating contact: $error');
       }
@@ -621,10 +732,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
         effective_date: dialogEffectiveDateController.text,
       );
 
-      print('Insurance in saveUpdateInsurance: $updatedInsurance');
       try {
         await insuranceController.updateInsurance(updatedInsurance);
-        print('Insurance updated successfully');
+        // print('Insurance updated successfully');
+
+         // Trigger refresh
+        onUpdate();
       } catch (error) {
         print('Error updating insurance: $error');
       }
@@ -639,7 +752,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
       try {
         await dentalController.updateDentalHistory(updatedDental);
-        print('Dental updated successfully');
+        // print('Dental updated successfully');
+
+         // Trigger refresh
+        onUpdate();
       } catch (error) {
         print('Error updating dental: $error');
       }
@@ -664,45 +780,47 @@ class _ReportsScreenState extends State<ReportsScreen> {
       dialogMedicationValue = medication;
       dialogTobaccoValue = tobacco;
       dialogDangerousSubstanceValue = dangerousSubstance;
-      print('dangerousSubstance: $dangerousSubstance');
       dialogPregnantValue = pregnant;
       dialogNursingValue = nursing;
       dialogBirthControlValue = birthControl;
   }
 
-  Future<void> saveUpdateMedical() async {
-    final updatedMedical = Medical(
-      patient_id: details.medical.patient_id,
-      medical_physician: dialogPhysicianController.text,
-      medical_physicianSpec: dialogPhysicianSpecController.text,
-      medical_officeAddress: dialogOfficeAddressController.text,
-      medical_officeNo: dialogOfficeNoController.text,
-      medical_goodHealth: dialogGoodHealthValue,
-      medical_isUnderTreatment: dialogUnderTreatmentValue,
-      medical_treatmentDetails: dialogUnderTreatmentDetailsController.text,
-      medical_seriousOperation: dialogSeriousOperationValue,
-      medical_seriousOperationDetails: dialogSeriousOperationDetails.text,
-      medical_hospitalized: dialogHospitalizedValue,
-      medical_hospitalizedDetails: dialogMedicalHospitalizedDetails.text,
-      medical_isMedication: dialogMedicationValue,
-      medical_medicationDetails: dialogMedicationDetails.text,
-      medical_bloodType: dialogBloodTypeController.text,
-      medical_bloodPressure: dialogBloodPressureController.text,
-      medical_bleedingTime: dialogBleedingTimeController.text,
-      medical_isTobacco: dialogTobaccoValue,
-      medical_dangerousSubstance: dialogDangerousSubstanceValue,
-      medical_isPregnant: dialogPregnantValue,
-      medical_isNursing: dialogNursingValue,
-      medical_isBirthControl: dialogBirthControlValue,
-    );
-    // print('updatedMedical in saveUpdateMedical: $updatedMedical');
-    try {
-      await medicalController.updateMedicalHistory(updatedMedical);
-      print('Medical updated successfully');
-    } catch (error) {
-      print('Error updating medical: $error');
-    } 
-  }
+    Future<void> saveUpdateMedical() async {
+      final updatedMedical = Medical(
+        patient_id: details.medical.patient_id,
+        medical_physician: dialogPhysicianController.text,
+        medical_physicianSpec: dialogPhysicianSpecController.text,
+        medical_officeAddress: dialogOfficeAddressController.text,
+        medical_officeNo: dialogOfficeNoController.text,
+        medical_goodHealth: dialogGoodHealthValue,
+        medical_isUnderTreatment: dialogUnderTreatmentValue,
+        medical_treatmentDetails: dialogUnderTreatmentDetailsController.text,
+        medical_seriousOperation: dialogSeriousOperationValue,
+        medical_seriousOperationDetails: dialogSeriousOperationDetails.text,
+        medical_hospitalized: dialogHospitalizedValue,
+        medical_hospitalizedDetails: dialogMedicalHospitalizedDetails.text,
+        medical_isMedication: dialogMedicationValue,
+        medical_medicationDetails: dialogMedicationDetails.text,
+        medical_bloodType: dialogBloodTypeController.text,
+        medical_bloodPressure: dialogBloodPressureController.text,
+        medical_bleedingTime: dialogBleedingTimeController.text,
+        medical_isTobacco: dialogTobaccoValue,
+        medical_dangerousSubstance: dialogDangerousSubstanceValue,
+        medical_isPregnant: dialogPregnantValue,
+        medical_isNursing: dialogNursingValue,
+        medical_isBirthControl: dialogBirthControlValue,
+      );
+      // print('updatedMedical in saveUpdateMedical: $updatedMedical');
+      try {
+        await medicalController.updateMedicalHistory(updatedMedical);
+        // print('Medical updated successfully');
+
+         // Trigger refresh
+        onUpdate();
+      } catch (error) {
+        print('Error updating medical: $error');
+      } 
+    }
 
     dynamic retrieveAllergyStates(
       bool anesthetic,
@@ -731,12 +849,154 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
       try {
         await allergiesController.updateAllergy(updatedAllergies);
-        print('Allergies updated successfully');
+        // print('Allergies updated successfully');
+
+         // Trigger refresh
+        onUpdate();
       } catch(error){
         print('Error updating allergies: $error');
       }
     }
 
+  dynamic retrieveConditionsStates(
+    bool highBlood,
+    bool lowBlood,
+    bool epilepsy,
+    bool aids,
+    bool std,
+    bool stomachUlcer,
+    bool faintingSeizures,
+    bool rapidWL,
+    bool radTherapy,
+    bool jointReplacement,
+    bool heartSurg,
+    bool heartAttack,
+    bool heartDisease,
+    bool heartMurmur,
+    bool thyroid,
+    bool hepaLiver,
+    bool jaundice,
+    bool rheumaticFever,
+    bool hayFever,
+    bool respiratory,
+    bool tb,
+    bool swollenAnkles,
+    bool kidneyDisease,
+    bool diabetes,
+    bool chestPain,
+    bool stroke,
+    bool tumors,
+    bool anemia,
+    bool angina,
+    bool asthma,
+    bool emphysema,
+    bool bleedingProb,
+    bool bloodDisease,
+    bool headInjury,
+    bool arthritis,
+  ) {
+    dialogHighBlood = highBlood;
+    dialogLowBlood = lowBlood;
+    dialogEpilepsy = epilepsy;
+    dialogAids = aids;
+    dialogSTD = std;
+    dialogStomachUlcer = stomachUlcer;
+    dialogFaintingSeizures = faintingSeizures;
+    dialogRapidWL = rapidWL;
+    dialogRadTherapy = radTherapy;
+    dialogJointReplacement = jointReplacement;
+    dialogHeartSurg = heartSurg;
+    dialogHeartAttack = heartAttack;
+    dialogHeartDisease = heartDisease;
+    dialogHeartMurmur = heartMurmur;
+    dialogThyroid = thyroid;
+    dialogHepaLiver = hepaLiver;
+    dialogJaundice = jaundice;
+    dialogRheumaticFever = rheumaticFever;
+    dialogHayFever = hayFever;
+    dialogRespiratory = respiratory;
+    dialogTB = tb;
+    dialogSwollenAnkles = swollenAnkles;
+    dialogKidneyDisease = kidneyDisease;
+    dialogDiabetes = diabetes;
+    dialogChestPain = chestPain;
+    dialogStroke = stroke;
+    dialogTumors = tumors;
+    dialogAnemia = anemia;
+    dialogAngina = angina;
+    dialogAsthma = asthma;
+    dialogEmphysema = emphysema;
+    dialogBleedingProb = bleedingProb;
+    dialogBloodDisease = bloodDisease;
+    dialogHeadInjury = headInjury;
+    dialogArthritis = arthritis;
+  }
+  
+  Future<void> saveUpdatedConditions() async {
+    List<Conditions> updatedConditions = [
+      Conditions(condition_id: 1, patientCondition_status: dialogHighBlood),
+      Conditions(condition_id: 2, patientCondition_status: dialogLowBlood),
+      Conditions(condition_id: 3, patientCondition_status: dialogEpilepsy),
+      Conditions(condition_id: 4, patientCondition_status: dialogAids),
+      Conditions(condition_id: 5, patientCondition_status: dialogSTD),
+      Conditions(condition_id: 6, patientCondition_status: dialogStomachUlcer),
+      Conditions(condition_id: 7, patientCondition_status: dialogFaintingSeizures),
+      Conditions(condition_id: 8, patientCondition_status: dialogRapidWL),
+      Conditions(condition_id: 9, patientCondition_status: dialogRadTherapy),
+      Conditions(condition_id: 10, patientCondition_status: dialogJointReplacement),
+      Conditions(condition_id: 11, patientCondition_status: dialogHeartSurg),
+      Conditions(condition_id: 12, patientCondition_status: dialogHeartAttack),
+      Conditions(condition_id: 13, patientCondition_status: dialogHeartDisease),
+      Conditions(condition_id: 14, patientCondition_status: dialogHeartMurmur),
+      Conditions(condition_id: 15, patientCondition_status: dialogThyroid),
+      Conditions(condition_id: 16, patientCondition_status: dialogHepaLiver),
+      Conditions(condition_id: 17, patientCondition_status: dialogJaundice),
+      Conditions(condition_id: 18, patientCondition_status: dialogRheumaticFever),
+      Conditions(condition_id: 19, patientCondition_status: dialogHayFever),
+      Conditions(condition_id: 20, patientCondition_status: dialogRespiratory),
+      Conditions(condition_id: 21, patientCondition_status: dialogTB),
+      Conditions(condition_id: 22, patientCondition_status: dialogSwollenAnkles),
+      Conditions(condition_id: 23, patientCondition_status: dialogKidneyDisease),
+      Conditions(condition_id: 24, patientCondition_status: dialogDiabetes),
+      Conditions(condition_id: 25, patientCondition_status: dialogChestPain),
+      Conditions(condition_id: 26, patientCondition_status: dialogStroke),
+      Conditions(condition_id: 27, patientCondition_status: dialogTumors),
+      Conditions(condition_id: 28, patientCondition_status: dialogAnemia),
+      Conditions(condition_id: 29, patientCondition_status: dialogAngina),
+      Conditions(condition_id: 30, patientCondition_status: dialogAsthma),
+      Conditions(condition_id: 31, patientCondition_status: dialogEmphysema),
+      Conditions(condition_id: 32, patientCondition_status: dialogBleedingProb),
+      Conditions(condition_id: 33, patientCondition_status: dialogBloodDisease),
+      Conditions(condition_id: 34, patientCondition_status: dialogHeadInjury),
+      Conditions(condition_id: 35, patientCondition_status: dialogArthritis),
+    ];
+    
+
+    final trueConditions = updatedConditions.where((condition) => condition.patientCondition_status == true).toList();
+    final falseConditions = updatedConditions.where((condition) => condition.patientCondition_status == false).toList();
+    
+    final updPatientConditions = PatientConditions(
+      patient_id: details.patient.id,
+      conditions: trueConditions,
+    );
+
+    final delPatientConditions = PatientConditions(
+      patient_id: details.patient.id,
+      conditions: falseConditions,
+    );
+
+    print ('updPatientConditions: $updPatientConditions');
+    print ('delPatientConditions: $delPatientConditions');
+
+    try {
+      await conditionsController.addPatientCondition(updPatientConditions);
+      await conditionsController.deletePatientCondition(delPatientConditions);
+       // Trigger refresh
+      onUpdate();
+    } catch (error) {
+      print('Error updating conditions: $error');
+    }
+  }
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -749,7 +1009,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
         content: SizedBox(
           width: 1300,
           height: 600,
-          child:  SingleChildScrollView(
+          child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -834,14 +1094,52 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   allergiesOthersController: dialogAllergiesOthersController,
                   onAllergiesChanged: retrieveAllergyStates,
                 ),
-                DiseasesForms(formKey: dialogDiseasesFormKey, ),
-                //const ContactInfoForms()
-                
+                DiseasesForms(
+                  formKey: dialogDiseasesFormKey, 
+                  isHighBlood: dialogHighBlood,
+                  isLowBlood: dialogLowBlood,
+                  isEpilepsy: dialogEpilepsy,
+                  isAIDSorHIV: dialogAids,
+                  isSTD: dialogSTD,
+                  isUlcers: dialogStomachUlcer,
+                  isFaintingSeizure: dialogFaintingSeizures,
+                  isRapidWeightLoss: dialogRapidWL,
+                  isRadiationTherapy: dialogRadTherapy,
+                  isJointReplacement: dialogJointReplacement,
+                  isHeartSurgery: dialogHeartSurg,
+                  isHeartAttack: dialogHeartAttack,
+                  isHeartDisease: dialogHeartDisease,
+                  isHeartMurmur: dialogHeartMurmur,
+                  isThyroidProblem: dialogThyroid,
+                  isLiverDisease: dialogHepaLiver,
+                  isRheumaticFever: dialogRheumaticFever,
+                  isJaundice: dialogJaundice,
+                  isHayFever: dialogHayFever,
+                  isRespiratoryProblems: dialogRespiratory,
+                  isSwollenAnkle: dialogSwollenAnkles,
+                  isTuberculosis: dialogTB,
+                  isKidneyDisease: dialogKidneyDisease,
+                  isDiabetes: dialogDiabetes,
+                  isChestPain: dialogChestPain,
+                  isStroke: dialogStroke,
+                  isCancer: dialogTumors,
+                  isAnemia: dialogAnemia,
+                  isAngina: dialogAngina,
+                  isAsthma: dialogAsthma,
+                  isEmphysema: dialogEmphysema,
+                  isBleedingProblem: dialogBleedingProb,
+                  isBloodDisease: dialogBloodDisease,
+                  isHeadInjuries: dialogHeadInjury,
+                  isArthritis: dialogArthritis,
+                  othersDisease: dialogConditionsOthersController.text.isNotEmpty,
+                  onConditionsChanged: retrieveConditionsStates,
+                ),
+                //const ContactInfoForms() 
               ],
             ),
           ),
         ),
-          actions: <Widget>[
+        actions: <Widget>[
             TextButton(
               child: const Text('Cancel'),
               onPressed: () {
@@ -865,6 +1163,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 await saveUpdateDental();
                 await saveUpdateMedical();
                 await saveUpdateAllergies();
+                await saveUpdatedConditions();
+                Navigator.of(context).pop();
               },
             ),
           ],
@@ -876,67 +1176,116 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
   //Patient Details
   Widget buildPatientDetails(PatientDetails details) {
-  return Row(
-    children: [
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          buildInfoSection("Name", [details.patient.firstName, details.patient.lastName]),
-          buildInfoSection("Age", [details.patient.age.toString()]),
-          buildInfoSection("Birthdate", [formatDate(details.patient.birthDate)]),
-          buildInfoSection("Gender", [details.patient.sex.toString()]),
-          buildInfoSection("Nationality", [details.patient.nationality]),
-          buildInfoSection("Occupation", [details.patient.occupation]),
-          buildInfoSection("Religion", [details.patient.religion]),
-          buildInfoSection("Email Address", [details.contact.email]),
-          buildInfoSection("Contact Number", [details.contact.mobile_number]),
-          buildInfoSection("Address", [details.contact.home_number, details.contact.home_address]),
-          buildInfoSection("Fax Number", [details.contact.fax_number]),
-          buildInfoSection("Office Number", [details.contact.work_number]),
-          buildInfoSection("Good Health", [details.medical.medical_goodHealth.toString()]),
-          buildInfoSection("Under Medical Treatment", [details.medical.medical_isMedication.toString()]),
-          buildInfoSection("Blood Type", [details.medical.medical_bloodType]),
-          buildInfoSection("Blood Pressure", [details.medical.medical_bloodPressure]),
-          buildInfoSection("Bleeding Time", [details.medical.medical_bleedingTime]),
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      // Use the screen width to adjust the layout
+      bool isWideScreen = constraints.maxWidth > 600;
 
-          // Add other patient fields as needed
-        ],
-      ),
-      const SizedBox(width: 100),
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          buildInfoSection("Dental Insurance", [details.insurance.insurance_name]),
-          buildInfoSection("Effective Date", [formatDate(details.insurance.effective_date)]),
-          buildInfoSection("Previous Dentist", [details.dental.previous_dentist]),
-          buildInfoSection("Latest Visit", [formatDate(details.dental.last_visit)]),
-          buildInfoSection("Physician", [details.medical.medical_physician]),
-          buildInfoSection("Speciality", [details.medical.medical_physicianSpec.toString()]),
-          buildInfoSection("Office Address", [details.medical.medical_officeAddress]),
-          buildInfoSection("Office Number", [details.medical.medical_officeNo]),
-          buildInfoSection("Usage of Tobacco", [details.medical.medical_isTobacco.toString()]),
-          buildInfoSection("Usage of Alcohol", [details.medical.medical_dangerousSubstance.toString()]),
-          buildInfoSection("Hospitalized", [details.medical.medical_hospitalized.toString()]),
-          buildInfoSection("Taking Prescriptions", [details.medical.medical_isMedication.toString()]),
-          buildInfoSection("Serious Illness", [details.medical.medical_seriousOperation.toString()]),
-          buildInfoSection("Pregnant", [details.medical.medical_isPregnant.toString()]),
-          buildInfoSection("Taking Birth Controls", [details.medical.medical_isBirthControl.toString()]),
-          buildInfoSection("Nursing", [details.medical.medical_isNursing.toString()]),
-
-          // Add Allergies section
-          buildInfoSection("Allergies", getTrueAllergies(details.allergies)),
-
-          // Add Conditions section
-          buildInfoSection(
-            "Conditions",
-            [formatConditions(details.conditions)],
-              
-          ),
-        ],
-      ),
-    ],
+      return isWideScreen
+          ? Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      buildInfoSection("Name", [details.patient.firstName, details.patient.lastName]),
+                      buildInfoSection("Age", [details.patient.age.toString()]),
+                      buildInfoSection("Birthdate", [formatDate(details.patient.birthDate)]),
+                      buildInfoSection("Gender", [details.patient.sex.toString()]),
+                      buildInfoSection("Nationality", [details.patient.nationality]),
+                      buildInfoSection("Occupation", [details.patient.occupation]),
+                      buildInfoSection("Religion", [details.patient.religion]),
+                      buildInfoSection("Email Address", [details.contact.email]),
+                      buildInfoSection("Contact Number", [details.contact.mobile_number]),
+                      buildInfoSection("Address", [details.contact.home_number, details.contact.home_address]),
+                      buildInfoSection("Fax Number", [details.contact.fax_number]),
+                      buildInfoSection("Office Number", [details.contact.work_number]),
+                      buildInfoSection("Good Health", [details.medical.medical_goodHealth.toString()]),
+                      buildInfoSection("Under Medical Treatment", [details.medical.medical_isMedication.toString()]),
+                      buildInfoSection("Blood Type", [details.medical.medical_bloodType]),
+                      buildInfoSection("Blood Pressure", [details.medical.medical_bloodPressure]),
+                      buildInfoSection("Bleeding Time", [details.medical.medical_bleedingTime]),
+                    ],
+                  ),
+                ),
+                //const SizedBox(width: 24),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      buildInfoSection("Dental Insurance", [details.insurance.insurance_name]),
+                      buildInfoSection("Effective Date", [formatDate(details.insurance.effective_date)]),
+                      buildInfoSection("Previous Dentist", [details.dental.previous_dentist]),
+                      buildInfoSection("Latest Visit", [formatDate(details.dental.last_visit)]),
+                      buildInfoSection("Physician", [details.medical.medical_physician]),
+                      buildInfoSection("Speciality", [details.medical.medical_physicianSpec.toString()]),
+                      buildInfoSection("Office Address", [details.medical.medical_officeAddress]),
+                      buildInfoSection("Office Number", [details.medical.medical_officeNo]),
+                      buildInfoSection("Usage of Tobacco", [details.medical.medical_isTobacco.toString()]),
+                      buildInfoSection("Usage of Alcohol", [details.medical.medical_dangerousSubstance.toString()]),
+                      buildInfoSection("Hospitalized", [details.medical.medical_hospitalized.toString()]),
+                      buildInfoSection("Taking Prescriptions", [details.medical.medical_isMedication.toString()]),
+                      buildInfoSection("Serious Illness", [details.medical.medical_seriousOperation.toString()]),
+                      buildInfoSection("Pregnant", [details.medical.medical_isPregnant.toString()]),
+                      buildInfoSection("Taking Birth Controls", [details.medical.medical_isBirthControl.toString()]),
+                      buildInfoSection("Nursing", [details.medical.medical_isNursing.toString()]),
+                      buildInfoSection("Allergies", getTrueAllergies(details.allergies)),
+                      buildInfoSection("Conditions", [formatConditions(details.conditions)]),
+                    ],
+                  ),
+                ),
+              ],
+            )
+          : SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  buildInfoSection("Name", [details.patient.firstName, details.patient.lastName]),
+                  buildInfoSection("Age", [details.patient.age.toString()]),
+                  buildInfoSection("Birthdate", [formatDate(details.patient.birthDate)]),
+                  buildInfoSection("Gender", [details.patient.sex.toString()]),
+                  buildInfoSection("Nationality", [details.patient.nationality]),
+                  buildInfoSection("Occupation", [details.patient.occupation]),
+                  buildInfoSection("Religion", [details.patient.religion]),
+                  buildInfoSection("Email Address", [details.contact.email]),
+                  buildInfoSection("Contact Number", [details.contact.mobile_number]),
+                  buildInfoSection("Address", [details.contact.home_number, details.contact.home_address]),
+                  buildInfoSection("Fax Number", [details.contact.fax_number]),
+                  buildInfoSection("Office Number", [details.contact.work_number]),
+                  buildInfoSection("Good Health", [details.medical.medical_goodHealth.toString()]),
+                  buildInfoSection("Under Medical Treatment", [details.medical.medical_isMedication.toString()]),
+                  buildInfoSection("Blood Type", [details.medical.medical_bloodType]),
+                  buildInfoSection("Blood Pressure", [details.medical.medical_bloodPressure]),
+                  buildInfoSection("Bleeding Time", [details.medical.medical_bleedingTime]),
+                  buildInfoSection("Dental Insurance", [details.insurance.insurance_name]),
+                  buildInfoSection("Effective Date", [formatDate(details.insurance.effective_date)]),
+                  buildInfoSection("Previous Dentist", [details.dental.previous_dentist]),
+                  buildInfoSection("Latest Visit", [formatDate(details.dental.last_visit)]),
+                  buildInfoSection("Physician", [details.medical.medical_physician]),
+                  buildInfoSection("Speciality", [details.medical.medical_physicianSpec.toString()]),
+                  buildInfoSection("Office Address", [details.medical.medical_officeAddress]),
+                  buildInfoSection("Office Number", [details.medical.medical_officeNo]),
+                  buildInfoSection("Usage of Tobacco", [details.medical.medical_isTobacco.toString()]),
+                  buildInfoSection("Usage of Alcohol", [details.medical.medical_dangerousSubstance.toString()]),
+                  buildInfoSection("Hospitalized", [details.medical.medical_hospitalized.toString()]),
+                  buildInfoSection("Taking Prescriptions", [details.medical.medical_isMedication.toString()]),
+                  buildInfoSection("Serious Illness", [details.medical.medical_seriousOperation.toString()]),
+                  buildInfoSection("Pregnant", [details.medical.medical_isPregnant.toString()]),
+                  buildInfoSection("Taking Birth Controls", [details.medical.medical_isBirthControl.toString()]),
+                  buildInfoSection("Nursing", [details.medical.medical_isNursing.toString()]),
+                  buildInfoSection("Allergies", getTrueAllergies(details.allergies)),
+                  buildInfoSection("Conditions", [formatConditions(details.conditions)]),
+                ],
+              ),
+            );
+    },
   );
 }
+
+
+  // initialize condition states
+
 
   // Funtion to Format the Names of Conditions
   String formatConditions(List<Conditions>? conditions) {
@@ -949,7 +1298,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
       1: "High blood pressure",
       2: "Low blood pressure",
       3: "Seizure disorder",
-      4: "Acquired Immunodeficiency Syndrome",
+      4: "Immunodeficiency Syndrome",
       5: "Sexually Transmitted Disease",
       6: "Peptic or stomach ulcer",
       7: "History of fainting or seizures",

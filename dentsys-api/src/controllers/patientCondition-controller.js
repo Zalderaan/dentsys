@@ -39,7 +39,7 @@ export default class PatientConditionController{
 
     // DELETE
     static async removePatientCondition(req, res) {
-        const data = req.params.id;
+        const data = req.body;
         try {
             const delPatientCondition = await PatientCondition.removePatientCondition(data);
             return res.status(200).json({ message: 'Patient Condition deleted successfully from controller', delPatientCondition});
@@ -47,4 +47,14 @@ export default class PatientConditionController{
             res.status(500).json({ error: error.message });
         }
     }
+
+    // static async removePatientCondition(req, res) {
+    //     const data = req.params.id;
+    //     try {
+    //         const delPatientCondition = await PatientCondition.removePatientCondition(data);
+    //         return res.status(200).json({ message: 'Patient Condition deleted successfully from controller', delPatientCondition});
+    //     } catch (error) {
+    //         res.status(500).json({ error: error.message });
+    //     }
+    // }
 }

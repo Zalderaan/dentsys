@@ -54,7 +54,8 @@ export default class User {
         // execute
         try {
             const [result] = await pool.query(queryStr, values);
-            const newUser = result.insertId;
+            const newUserId = result.insertId;
+            const newUser = await this.getById(newUserId);
             if(newUser) {
                 console.log('User created successfully from model', newUser);
                 return newUser;
@@ -116,7 +117,7 @@ export default class User {
         console.log('Received data:', data); // log data for debugging
         
         // extract data
-        const id = data.id;
+        const id = data;
 
         // validate
         if (!id) {

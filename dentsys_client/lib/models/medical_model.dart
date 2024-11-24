@@ -53,38 +53,38 @@ class Medical{
 
 @override
 String toString() {
-  print (
-    'Medical {\n'
-    '  medical_id: $medical_id,\n'
-    '  patient_id: $patient_id,\n'
-    '  medical_physician: $medical_physician,\n'
-    '  medical_physicianSpec: $medical_physicianSpec,\n'
-    '  medical_officeAddress: $medical_officeAddress,\n'
-    '  medical_officeNo: $medical_officeNo,\n'
-    '  medical_goodHealth: $medical_goodHealth,\n'
-    '  medical_isUnderTreatment: $medical_isUnderTreatment,\n'
-    '  medical_treatmentDetails: $medical_treatmentDetails,\n'
-    '  medical_seriousOperation: $medical_seriousOperation,\n'
-    '  medical_seriousOperationDetails: $medical_seriousOperationDetails,\n'
-    '  medical_hospitalized: $medical_hospitalized,\n'
-    '  medical_hospitalizedDetails: $medical_hospitalizedDetails,\n'
-    '  medical_isMedication: $medical_isMedication,\n'
-    '  medical_medicationDetails: $medical_medicationDetails,\n'
-    '  medical_isTobacco: $medical_isTobacco,\n'
-    '  medical_dangerousSubstance: $medical_dangerousSubstance,\n'
-    '  medical_bleedingTime: $medical_bleedingTime,\n'
-    '  medical_bloodPressure: $medical_bloodPressure,\n'
-    '  medical_bloodType: $medical_bloodType,\n'
-    '  medical_isPregnant: $medical_isPregnant,\n'
-    '  medical_isNursing: $medical_isNursing,\n'
-    '  medical_isBirthControl: $medical_isBirthControl\n'
-    '}'
-  );
+  // print (
+  //   'Medical {\n'
+  //   '  medical_id: $medical_id,\n'
+  //   '  patient_id: $patient_id,\n'
+  //   '  medical_physician: $medical_physician,\n'
+  //   '  medical_physicianSpec: $medical_physicianSpec,\n'
+  //   '  medical_officeAddress: $medical_officeAddress,\n'
+  //   '  medical_officeNo: $medical_officeNo,\n'
+  //   '  medical_goodHealth: $medical_goodHealth,\n'
+  //   '  medical_isUnderTreatment: $medical_isUnderTreatment,\n'
+  //   '  medical_treatmentDetails: $medical_treatmentDetails,\n'
+  //   '  medical_seriousOperation: $medical_seriousOperation,\n'
+  //   '  medical_seriousOperationDetails: $medical_seriousOperationDetails,\n'
+  //   '  medical_hospitalized: $medical_hospitalized,\n'
+  //   '  medical_hospitalizedDetails: $medical_hospitalizedDetails,\n'
+  //   '  medical_isMedication: $medical_isMedication,\n'
+  //   '  medical_medicationDetails: $medical_medicationDetails,\n'
+  //   '  medical_isTobacco: $medical_isTobacco,\n'
+  //   '  medical_dangerousSubstance: $medical_dangerousSubstance,\n'
+  //   '  medical_bleedingTime: $medical_bleedingTime,\n'
+  //   '  medical_bloodPressure: $medical_bloodPressure,\n'
+  //   '  medical_bloodType: $medical_bloodType,\n'
+  //   '  medical_isPregnant: $medical_isPregnant,\n'
+  //   '  medical_isNursing: $medical_isNursing,\n'
+  //   '  medical_isBirthControl: $medical_isBirthControl\n'
+  //   '}'
+  // );
   return 'id: $medical_id';
 }
 
   factory Medical.fromJson(Map<String, dynamic> json){
-    print('Medical.fromJson: $json');
+    // print('Medical.fromJson: $json');
     final medical = json['newMedicalHistory'] != null ? json['newMedicalHistory'][0] : json;
     return Medical(
       medical_id: medical['medical_id'],

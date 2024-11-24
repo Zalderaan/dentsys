@@ -25,7 +25,7 @@ String toString() {
   }
 
   factory Contact.fromJson(Map<String, dynamic> json){
-    print ('data received in contact fromJson: $json');
+    // print ('data received in contact fromJson: $json');
     final contact = json['newContact'] != null ? json['newContact'][0] : json; // if 'newPatient' exists in json response, use it, else use json 
     return Contact(
       id: contact["contact_id"],

@@ -19,7 +19,7 @@ class Dental {
   }
 
   factory Dental.fromJson(Map<String, dynamic> json) {
-    print('data received in dental fromJson: $json');
+    // print('data received in dental fromJson: $json');
     final dental = json['newDentalHistory'] != null ? json['newDentalHistory'][0] : json; // 
     return Dental(
       id: dental['dental_id'],
