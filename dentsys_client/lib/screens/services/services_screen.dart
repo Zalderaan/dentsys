@@ -69,6 +69,38 @@ class _ServicesScreenState extends State<ServicesScreen> {
     }
   }
 
+ 
+
+ void _showDeleteConfirmationDialog(BuildContext context, Function onDeleteConfirmed) {
+   showDialog(
+     context: context,
+     builder: (BuildContext context) {
+       return AlertDialog(
+         title: const Text('Confirm Deletion'),
+         content: const Text('Are you sure you want to delete this procedure?'),
+         actions: [
+           TextButton(
+             onPressed: () {
+               Navigator.of(context).pop();
+             },
+             child: const Text('Cancel'),
+           ),
+           TextButton(
+             onPressed: () {
+               onDeleteConfirmed(); 
+               Navigator.of(context).pop(); 
+             },
+             child: const Text(
+               'Delete',
+               style: TextStyle(color: Colors.red),
+             ),
+           ),
+         ],
+       );
+     },
+   );
+ }
+
   @override
   void dispose() {
     _procedureNameController.dispose();
@@ -424,7 +456,10 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                         IconButton(
                                           icon: const Icon(Icons.delete, color: Colors.red),
                                           onPressed: () {
-                                            //
+                                            _showDeleteConfirmationDialog(context, (){
+                                              _deleteService(procedure);
+
+                                            });
                                           },
                                         ),
                                       ],
@@ -630,6 +665,18 @@ class _ServicesScreenState extends State<ServicesScreen> {
         );
       },
     );
+  }
+
+
+  void _deleteService(Procedure procedure) async {
+    try {
+      await _procedureController.deleteProcedure(procedure.id.toString());
+      setState(() {
+        procedures = _procedureController.getAllProcedures();
+      });
+    } catch (error) {
+      print('Error deleting procedure: $error');
+    }
   }
 
  //Edit Service Dialog
