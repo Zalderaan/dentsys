@@ -20,13 +20,6 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
   // A map to group procedures by their categories
   Map<String, List<Procedure>> categorizedProcedures = {};
 
-
-  // final Map<String, List<String>> servicesOffered = {
-  //   "Consultations": ["General Consultation", "Specialized Consultation"],
-  //   "Oral Surgery": ["Tooth Extraction", "Impacted Tooth Surgery"],
-  //   "Dentures": ["Standard Complete", "Flexible Complete", "Flexible Partial"],
-  // };
-
   @override
   void initState() {
     super.initState();
@@ -62,8 +55,8 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 36),
       ),
       content: SizedBox(
-        width: 700,
-        height: 400,
+        width: 900,
+        height: 500,
         child: Row(
           children: [
             // Left Side: Procedure/s Done
@@ -105,7 +98,7 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
                   TextFormField(
                     decoration: const InputDecoration(
                       labelText: 'Amount Charged',
-                      border: UnderlineInputBorder(),
+                      border: UnderlineInputBorder(), 
                     ),
                     keyboardType: TextInputType.number,
                     inputFormatters: [
@@ -176,13 +169,36 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
                                     child: Text(procedure.name),
                                   ))
                               .toList(),
-                          onChanged: (Procedure? selectedProcedure) {
-                            // Add the selected procedure to the list if it's not already selected.
-                            if (selectedProcedure != null &&
-                                !proceduresDone.contains(selectedProcedure.name)) {
-                              setState(() {
-                                proceduresDone.add(selectedProcedure.name);
-                              });
+                          onChanged: (Procedure? selectedProcedure) async {
+                            if (selectedProcedure != null) {
+                              final existingProcedure = proceduresDone.firstWhere(
+                                (proc) => proc.startsWith(selectedProcedure.name),
+                                orElse: () => '',
+                              );
+
+                              if (existingProcedure.isEmpty) {
+                                // If the procedure is not already in the list, proceed to show the pricing dialog
+                                if (selectedProcedure.priceType == 'fixed') {
+                                  await showPricingDialogFixed(context, selectedProcedure, (selectedPrice) {
+                                    setState(() {
+                                      proceduresDone.add('${selectedProcedure.name} (₱${selectedPrice.toStringAsFixed(2)})');
+                                    });
+                                  });
+                                } else {
+                                  await showPricingDialog(context, selectedProcedure, (selectedPrice) {
+                                    setState(() {
+                                      proceduresDone.add('${selectedProcedure.name} (₱${selectedPrice.toStringAsFixed(2)})');
+                                    });
+                                  });
+                                }
+                              } else {
+                                // If the procedure is already in the list, show a message
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('${selectedProcedure.name} is already added.'),
+                                  ),
+                                );
+                              }
                             }
                           },
                         );
@@ -212,6 +228,218 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
       ],
     );
   }
+}
+
+Future<void> showPricingDialog(BuildContext context, Procedure procedure, Function(double) onPriceSelected) async {
+  double basePrice = procedure.basePrice; // Assume `Procedure` has a `basePrice` field.
+  double? customPrice;
+  bool isCustomPriceSelected = false;
+
+  await showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return AlertDialog(
+            title: const Text(
+              'Pricing',
+              textAlign: TextAlign.left,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Divider(),
+                // Base Price Field
+                const TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Number of Units',
+                    border: UnderlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.number,
+                ),
+                const SizedBox(height: 15),
+                TextField(
+                  decoration: const InputDecoration(
+                    labelText: 'Base Price',
+                    border: UnderlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.number,
+                  controller: TextEditingController(
+                    text: basePrice.toStringAsFixed(2),
+                  ),
+                  readOnly: true, // Base price is always read-only.
+                ),
+                const SizedBox(height: 15),
+                const Center(
+                  child: Text(
+                    'or',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(height: 15),
+                // Custom Price Field with Radio Button
+                Row(
+                  children: [
+                    Radio<bool>(
+                      value: true,
+                      groupValue: isCustomPriceSelected,
+                      onChanged: (value) {
+                        setState(() {
+                          isCustomPriceSelected = value!;
+                        });
+                      },
+                    ),
+                    Expanded(
+                      child: AbsorbPointer(
+                        absorbing: !isCustomPriceSelected,
+                        child: TextField(
+                          decoration: InputDecoration(
+                            labelText: 'Custom Price',
+                            border: const OutlineInputBorder(),
+                            enabled: isCustomPriceSelected,
+                          ),
+                          
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          onChanged: (value) {
+                            customPrice = double.tryParse(value);
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              ElevatedButton(
+                child: const Text('Confirm'),
+                onPressed: () {
+                  double selectedPrice = isCustomPriceSelected && customPrice != null
+                      ? customPrice!
+                      : basePrice;
+                  onPriceSelected(selectedPrice);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+}
+
+Future<void> showPricingDialogFixed(BuildContext context, Procedure procedure, Function(double) onPriceSelected) async {
+  double basePrice = procedure.basePrice; // Assume `Procedure` has a `basePrice` field.
+  double? customPrice;
+  bool isCustomPriceSelected = false;
+
+  await showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return AlertDialog(
+            title: const Text(
+              'Pricing',
+              textAlign: TextAlign.left,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Divider(),
+                // Base Price Field
+                TextField(
+                  decoration: const InputDecoration(
+                    labelText: 'Base Price',
+                    border: UnderlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.number,
+                  controller: TextEditingController(
+                    text: basePrice.toStringAsFixed(2),
+                  ),
+                  readOnly: true, // Base price is always read-only.
+                ),
+                const SizedBox(height: 15),
+                const Center(
+                  child: Text(
+                    'or',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(height: 15),
+                // Custom Price Field with Radio Button
+                Row(
+                  children: [
+                    Radio<bool>(
+                      value: true,
+                      groupValue: isCustomPriceSelected,
+                      onChanged: (value) {
+                        setState(() {
+                          isCustomPriceSelected = value!;
+                        });
+                      },
+                    ),
+                    Expanded(
+                      child: AbsorbPointer(
+                        absorbing: !isCustomPriceSelected,
+                        child: TextField(
+                          decoration: InputDecoration(
+                            labelText: 'Custom Price',
+                            border: const OutlineInputBorder(),
+                            enabled: isCustomPriceSelected,
+                          ),
+                          
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          onChanged: (value) {
+                            customPrice = double.tryParse(value);
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              ElevatedButton(
+                child: const Text('Confirm'),
+                onPressed: () {
+                  double selectedPrice = isCustomPriceSelected && customPrice != null
+                      ? customPrice!
+                      : basePrice;
+                  onPriceSelected(selectedPrice);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
 }
 
 
