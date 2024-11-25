@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:dentsys_client/screens/patient_records/patient_records.dart';
 import 'package:dentsys_client/screens/patient_records/add_patient_record_screen.dart';
 import 'package:dentsys_client/screens/add_appointment/add_appointment_screen.dart';
+import 'package:dentsys_client/screens/add_appointment/appointment_screen.dart';
 //import 'package:dentsys_client/screens/reports/reports_screen.dart';
 //import 'package:dentsys_client/screens/services/services_screen.dart';
 // Uncomment and import your other screens as needed
@@ -31,8 +32,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
     _screens = [
-      const AddApppointmentScreen(),
-      const AddApppointmentScreen(),
+      const AppointmentScreen(),
+      const AddAppointmentScreen(),
       PatientRecords(
         onAddPatient: _handleAddPatient, 
         onReports: _handlePatientReports,
@@ -60,6 +61,39 @@ void _handlePatientReports(int? id) {
   } else {
     print('No patient ID provided.');
   }
+}
+
+Future<void> _showLogoutDialog() async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Logout'),
+        content: const Text('Are you sure you want to logout?'),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: const Text('Logout'),
+            onPressed: () {
+              Navigator.of(context).pop();
+              _performLogout();
+              // Perform logout action here
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void _performLogout() {
+  Navigator.of(context).pushReplacementNamed('/login');
 }
 
   @override
@@ -134,6 +168,14 @@ void _handlePatientReports(int? id) {
                   label: Text("Services"),
                 ),
               ],
+              trailing: Padding(
+                padding: const EdgeInsets.only(bottom: 20.0),
+                child: IconButton(
+                  icon: const Icon(Icons.logout, color: Color.fromARGB(255, 255, 87, 75)),
+                  onPressed: _showLogoutDialog,
+                  tooltip: 'Logout',
+                )
+              )
             ),
           ),
           Expanded(

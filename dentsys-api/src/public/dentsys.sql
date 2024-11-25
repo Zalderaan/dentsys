@@ -95,26 +95,23 @@ CREATE TABLE IF NOT EXISTS allergies (
 CREATE TABLE IF NOT EXISTS procedures (
     prcd_id INT AUTO_INCREMENT PRIMARY KEY,
     prcd_name VARCHAR(50) NOT NULL,
-    prcd_priceType ENUM('fixed', 'variable', 'downpayment', 'unit') NOT NULL,
+    prcd_priceType ENUM('Fixed', 'Variable', 'Downpayment', 'Unit') NOT NULL,
     prcd_category VARCHAR(50) NOT NULL,
     prcd_minDP DECIMAL(10, 2),
     prcd_basePrice DECIMAL(10, 2) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS treatment_record (
+CREATE TABLE IF NOT EXISTS patient_treatments (
     treatment_id INT AUTO_INCREMENT PRIMARY KEY,
-    patient_id INT NOT NULL UNIQUE,
-    user_id INT NOT NULL,
-    prcd_id INT NOT NULL,
+    patient_id INT NOT NULL,
     treatment_date DATE NOT NULL,
+    treatment_prcdName VARCHAR(50) NOT NULL,
     treatment_toothNo VARCHAR(50) NOT NULL,
-    treatment_amountCharged FLOAT NOT NULL,
-    treatment_amountPaid FLOAT NOT NULL,
+    treatment_dentist VARCHAR(50) NOT NULL,
+    treatment_charged DECIMAL NOT NULL,
+    treatment_paid DECIMAL NOT NULL,
     treatment_balance FLOAT NOT NULL,
-    treatment_discount FLOAT NOT NULL,
-    FOREIGN KEY (patient_id) REFERENCES patients(patient_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (prcd_id) REFERENCES procedures(prcd_id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (patient_id) REFERENCES patients(patient_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS insurance (
