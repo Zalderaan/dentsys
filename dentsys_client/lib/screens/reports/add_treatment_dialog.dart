@@ -2,24 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:dentsys_client/controllers/procedure_controller.dart';
 import 'package:dentsys_client/models/procedure_model.dart';
 import 'package:flutter/services.dart';
+import 'package:dentsys_client/models/patientTreatments-model.dart';
+import 'package:dentsys_client/controllers/treatment_controller.dart';
 
 class AddTreatmentDialog extends StatefulWidget {
-  const AddTreatmentDialog({super.key});
+  final int patient_id;
+  const AddTreatmentDialog({super.key, required this.patient_id});
 
   @override
   _AddTreatmentDialogState createState() => _AddTreatmentDialogState();
 }
 
 class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
-  // List of procedures that have been selected by the user.
-  List<String> proceduresDone = [];
+  List<String> proceduresDone = []; // List of procedures that have been selected by the user.
+  List<Procedure> servicesOffered = []; // List of all available procedures fetched from the backend
+  Map<String, List<Procedure>> categorizedProcedures = {}; // A map to group procedures by their categories
 
-  // List of all available procedures fetched from the backend
-  List<Procedure> servicesOffered = [];
+  // to be used for separation of procedures done
+  List<String> procedureNames = [];
+  double totalPrice = 0.0;
 
-  // A map to group procedures by their categories
-  Map<String, List<Procedure>> categorizedProcedures = {};
-
+  TextEditingController amountPaidController = TextEditingController();
+  TextEditingController toothNoController = TextEditingController();
+  TextEditingController dentistNameController = TextEditingController();
+  TreatmentController treatmentController = TreatmentController(); // treatment controller
   @override
   void initState() {
     super.initState();
@@ -33,7 +39,54 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
       categorizedProcedures = groupProceduresByCategory(procedures); // Group procedures by category.
     });
 
-    print(servicesOffered);
+    // print(servicesOffered);
+  }
+
+  Future<void> handleAddTreatment() async {
+    final treatment = PatientTreatment(
+      patient_id: widget.patient_id, // Assume the patient ID is 1
+      treatment_prcdName: takeProcedureNames().toString(),
+      treatment_dentist: dentistNameController.text,
+      treatment_charged: calculateTotalPrice(),
+      treatment_paid: double.parse(amountPaidController.text), 
+      treatment_balance: 0.0,
+      treatment_date: DateTime.now().toString(),
+      treatment_toothNo: toothNoController.text,
+    );
+    try {
+      final createdTreatment = await treatmentController.createTreatment(treatment);
+      print('Treatment added: $createdTreatment');  
+    } catch (error) {
+      print('Error adding treatment: $error');
+    }
+  }
+
+  dynamic calculateTotalPrice() {
+    try {
+      totalPrice = 0.0;
+      for (var procedure in proceduresDone) {
+        final priceString = procedure.split('(₱')[1].split(')')[0];
+        final price = double.tryParse(priceString) ?? 0.0; // Provide a default value of 0.0 if parsing fails
+        totalPrice += price;
+      }
+      print('total price: $totalPrice');
+      return totalPrice;
+    } catch (error) {
+      print('Error calculating total price: $error');
+    }
+  }
+
+  dynamic takeProcedureNames() {
+    for (var procedure in proceduresDone) {
+      final name = procedure.split(' (₱')[0];
+      procedureNames.add(name);
+    }
+    print('procedure names: $procedureNames');
+    return procedureNames;
+  }
+
+  dynamic calculateBalance() {
+    // if past treatments contain a balance, add it to the current balance
   }
 
   // Groups procedures by their `category` field. 
@@ -109,6 +162,7 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
                   const SizedBox(height: 15),
 
                   TextFormField(
+                    controller: amountPaidController,
                     decoration: const InputDecoration(
                       labelText: 'Amount Paid',
                       border: UnderlineInputBorder(),
@@ -122,6 +176,7 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
                   const SizedBox(height: 15),
                   
                   TextFormField(
+                    controller: toothNoController,
                     decoration: const InputDecoration(
                       labelText: 'Tooth No.',
                       border: UnderlineInputBorder(),
@@ -130,6 +185,17 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
                     inputFormatters: [
                       FilteringTextInputFormatter.digitsOnly,
                     ],
+                  ),
+
+                  const SizedBox(height: 15),
+                  
+                  TextFormField(
+                    controller: dentistNameController,
+                    decoration: const InputDecoration(
+                      labelText: 'Dentist Name',
+                      border: UnderlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.text
                   )
                 ],
               ),
@@ -178,10 +244,11 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
 
                               if (existingProcedure.isEmpty) {
                                 // If the procedure is not already in the list, proceed to show the pricing dialog
-                                if (selectedProcedure.priceType == 'fixed') {
+                                if (selectedProcedure.priceType == 'Fixed') {
                                   await showPricingDialogFixed(context, selectedProcedure, (selectedPrice) {
                                     setState(() {
                                       proceduresDone.add('${selectedProcedure.name} (₱${selectedPrice.toStringAsFixed(2)})');
+                                      print(proceduresDone);
                                     });
                                   });
                                 } else {
@@ -220,8 +287,8 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
         ),
         ElevatedButton(
           child: const Text('Add Treatment'),
-          onPressed: () {
-            // Logic to save the data
+          onPressed: () async {
+            await handleAddTreatment();
             Navigator.of(context).pop();
           },
         ),
@@ -443,11 +510,11 @@ Future<void> showPricingDialogFixed(BuildContext context, Procedure procedure, F
 }
 
 
-void showAddTreatmentDialog(BuildContext context) {
+void showAddTreatmentDialog(BuildContext context, int patientId) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      return const AddTreatmentDialog();
+      return AddTreatmentDialog(patient_id: patientId);
     },
   );
 }

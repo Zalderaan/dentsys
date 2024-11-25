@@ -268,7 +268,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                     ElevatedButton.icon(
                                       onPressed: () {
                                        //
-                                        showAddTreatmentDialog(context);
+                                        if (patientDetails?.patient.id != null) {
+                                          showAddTreatmentDialog(context, patientDetails!.patient.id!);
+                                        }
                                       },
                                       label: const Text(
                                         "",
@@ -338,7 +340,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                             style: TextStyle(fontWeight: FontWeight.bold),
                                           ),
                                         ),
-                                         Padding(
+                                        Padding(
                                           padding: EdgeInsets.all(8.0),
                                           child: Text(
                                             "Dentist/s",

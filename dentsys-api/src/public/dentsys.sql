@@ -103,7 +103,7 @@ CREATE TABLE IF NOT EXISTS procedures (
 
 CREATE TABLE IF NOT EXISTS patient_treatments (
     treatment_id INT AUTO_INCREMENT PRIMARY KEY,
-    patient_id INT NOT NULL UNIQUE,
+    patient_id INT NOT NULL,
     treatment_date DATE NOT NULL,
     treatment_prcdName VARCHAR(50) NOT NULL,
     treatment_toothNo VARCHAR(50) NOT NULL,
