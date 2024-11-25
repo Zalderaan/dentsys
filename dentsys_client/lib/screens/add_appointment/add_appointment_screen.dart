@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class AddApppointmentScreen extends StatelessWidget {
-  const AddApppointmentScreen({super.key});
+class AddAppointmentScreen extends StatelessWidget {
+  const AddAppointmentScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
