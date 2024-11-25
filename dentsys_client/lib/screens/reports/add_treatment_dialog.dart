@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dentsys_client/controllers/procedure_controller.dart';
 import 'package:dentsys_client/models/procedure_model.dart';
+import 'package:flutter/services.dart';
 
 class AddTreatmentDialog extends StatefulWidget {
   const AddTreatmentDialog({super.key});
@@ -25,8 +26,6 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
   //   "Oral Surgery": ["Tooth Extraction", "Impacted Tooth Surgery"],
   //   "Dentures": ["Standard Complete", "Flexible Complete", "Flexible Partial"],
   // };
-  
- 
 
   @override
   void initState() {
@@ -99,6 +98,46 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
                       },
                     ),
                   ),
+
+                  // display amount charged
+                  const SizedBox(height: 15),
+                  
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Amount Charged',
+                      border: UnderlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                  ),
+
+                  const SizedBox(height: 15),
+
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Amount Paid',
+                      border: UnderlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                  ),
+
+                  const SizedBox(height: 15),
+                  
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Tooth No.',
+                      border: UnderlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                  )
                 ],
               ),
             ),

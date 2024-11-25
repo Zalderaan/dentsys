@@ -8,6 +8,7 @@ import MedicalHistoryController from '../controllers/medicalHistory-controller.j
 import PatientConditionController from '../controllers/patientCondition-controller.js';
 import AllergiesController from '../controllers/allergies-controller.js';
 import ProcedureController from '../controllers/procedure-controller.js';
+import PatientTreatmentController from '../controllers/patientTreatment-controller.js';
 import TestController from '../controllers/test-controller.js';
 
 const router = express.Router();
@@ -66,6 +67,9 @@ router.post('/add-procedure', ProcedureController.addProcedure);
 router.get('/get-procedures', ProcedureController.getAllProcedures);
 router.put('/update-procedure/:id', ProcedureController.updateProcedure);
 router.delete('/delete-procedure/:id', ProcedureController.deleteProcedure);
+
+// treatment routes
+router.post('/add-treatment', PatientTreatmentController.addTreatment);
 
 // test routes
 router.post('/test/add-contact', TestController.createContact);

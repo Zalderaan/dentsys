@@ -1355,9 +1355,11 @@ class _ReportsScreenState extends State<ReportsScreen> {
     if (allergies.allergies_sulfaDrugs) trueAllergies.add("Sulfa Drugs");
     if (allergies.allergies_aspirin) trueAllergies.add("Aspirin");
     if (allergies.allergies_latex) trueAllergies.add("Latex");
-    // if (allergies.allergies_others != null && allergies.allergies_others.isNotEmpty) {
-    //   trueAllergies.add(allergies.allergies_others);
-    // }
+    if (allergies.allergies_others != null && allergies.allergies_others!.isNotEmpty) {
+      if (allergies.allergies_others != null) {
+        trueAllergies.add(allergies.allergies_others!);
+      }
+    }
     return trueAllergies;
   }
   
