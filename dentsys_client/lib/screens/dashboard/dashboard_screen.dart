@@ -171,7 +171,7 @@ void _performLogout() {
               trailing: Padding(
                 padding: const EdgeInsets.only(bottom: 20.0),
                 child: IconButton(
-                  icon: const Icon(Icons.logout, color: Colors.white),
+                  icon: const Icon(Icons.logout, color: Color.fromARGB(255, 255, 87, 75)),
                   onPressed: _showLogoutDialog,
                   tooltip: 'Logout',
                 )
