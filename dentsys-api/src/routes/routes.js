@@ -70,6 +70,7 @@ router.delete('/delete-procedure/:id', ProcedureController.deleteProcedure);
 
 // treatment routes
 router.post('/add-treatment', PatientTreatmentController.addTreatment);
+router.get('/get-treatments/:id', PatientTreatmentController.getTreatmentsByPatientID);
 
 // test routes
 router.post('/test/add-contact', TestController.createContact);

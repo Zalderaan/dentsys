@@ -21,6 +21,22 @@ class PatientTreatment {
     this.treatment_date
   });
 
+  @override
+  String toString(){
+    return '''PatientTreatment {
+        id: $id,
+        patient_id: $patient_id,
+        treatment_prcdName: $treatment_prcdName,
+        treatment_dentist: $treatment_dentist,
+        treatment_charged: $treatment_charged,
+        treatment_paid: $treatment_paid,
+        treatment_balance: $treatment_balance,
+        treatment_date: $treatment_date,
+        treatment_toothNo: $treatment_toothNo
+      }
+    ''';
+  }
+
   Map<String, dynamic> toJson() {
     return{
       "treatment_id": id,
@@ -36,7 +52,7 @@ class PatientTreatment {
   }
 
   factory PatientTreatment.fromJson(Map<String, dynamic> json){
-    print('patientTreatment.fromJson: $json');
+    // print('patientTreatment.fromJson: $json');
     final treatmentData = json['newTreatment'] != null ? json['newTreatment'] : json;
     
     return PatientTreatment(

@@ -32,6 +32,7 @@ export default class PatientTreatment {
     }
 
     static async getTrByPatientID(patient_id) {
+        // console.log('patient_id:', patient_id);
         try {
             const queryStr = 'SELECT * FROM patient_treatments WHERE patient_id = ?';
             const [result] = await pool.query(queryStr, patient_id);

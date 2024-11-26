@@ -17,8 +17,7 @@ class Procedure {
 
   @override
   String toString() {
-  return '''
-    Procedure {
+  return '''Procedure {
       id: $id,
       name: $name,
       priceType: $priceType,

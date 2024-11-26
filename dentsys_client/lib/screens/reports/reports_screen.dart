@@ -38,6 +38,9 @@ import 'package:dentsys_client/controllers/conditions_controller.dart';
 import 'package:dentsys_client/models/procedure_model.dart';
 import 'package:dentsys_client/controllers/procedure_controller.dart';
 
+import 'package:dentsys_client/models/treatments_model.dart';
+import 'package:dentsys_client/controllers/treatment_controller.dart';
+
 class ReportsScreen extends StatefulWidget {
   final int? patient_id;
   const ReportsScreen({super.key , this.patient_id});
@@ -49,7 +52,9 @@ class ReportsScreen extends StatefulWidget {
 class _ReportsScreenState extends State<ReportsScreen> {
   final PatientController patientController = PatientController();
   final ProcedureController procedureController = ProcedureController();
+  final TreatmentController treatmentController = TreatmentController();
   PatientDetails? patientDetails;
+  List<PatientTreatment>? patientTreatments;
   bool isLoading = true;
 
 
@@ -57,6 +62,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
   void initState() {
     super.initState();
     loadPatientDetails();
+    loadPatientTreatments();
   }
 
   // get patient details
@@ -69,6 +75,22 @@ class _ReportsScreenState extends State<ReportsScreen> {
       });
     } catch (error) {
       print('Error getting patient details: $error');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  void loadPatientTreatments() async {
+    try {
+      final treatments = await treatmentController.getPatientTreatments(widget.patient_id.toString());
+      setState(() {
+        patientTreatments = treatments;
+        isLoading = false;
+      });
+      print('patient treatments: $patientTreatments');
+    } catch (error) {
+      print('Error getting patient treatments: $error');
       setState(() {
         isLoading = false;
       });
@@ -230,7 +252,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 const SizedBox(height: 15.0),
                  // COLUMN FOR TREATMENT RECORD AND APPOINTMENTS
                 Row(
-                   crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                     Expanded(
                       child: Column(
