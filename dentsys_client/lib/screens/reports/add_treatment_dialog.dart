@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dentsys_client/controllers/procedure_controller.dart';
 import 'package:dentsys_client/models/procedure_model.dart';
 import 'package:flutter/services.dart';
-import 'package:dentsys_client/models/patientTreatments-model.dart';
+import 'package:dentsys_client/models/treatments_model.dart';
 import 'package:dentsys_client/controllers/treatment_controller.dart';
 
 class AddTreatmentDialog extends StatefulWidget {
