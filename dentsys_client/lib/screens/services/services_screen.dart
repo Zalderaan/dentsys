@@ -14,10 +14,13 @@ class _ServicesScreenState extends State<ServicesScreen> {
   final TextEditingController _procedureNameController = TextEditingController();
   final TextEditingController _procedureBasePriceController = TextEditingController();
   final TextEditingController _procedureMinDPController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   final ProcedureController _procedureController = ProcedureController();
 
   Future<List<Procedure>>? procedures; // = _procedureController.getAllProcedures();
-  
+  List<Procedure> allProcedures = []; // For storing all procedures
+  List<Procedure> filteredProcedures = []; // For displaying filtered procedures
+
   // Track the selected service
   String? selectedService;
   String? selectedPaymentType;
@@ -56,17 +59,25 @@ class _ServicesScreenState extends State<ServicesScreen> {
   Future<void> loadProcedures() async {
     try {
       final proceduresList = await _procedureController.getAllProcedures();
-      print('Procedures: $proceduresList');
-      if (proceduresList.isNotEmpty) {
-        setState(() {
-          procedures = Future.value(proceduresList);
-        });
-      } else {
-        throw Exception('No procedures found');
-      }
+      setState(() {
+        allProcedures = proceduresList; // Store all procedures
+        filteredProcedures = List.from(allProcedures); // Initialize with all procedures
+      });
     } catch (error) {
       print('Error loading procedures: $error');
     }
+  }
+
+  void searchProcedures(String query) {
+    setState(() {
+      filteredProcedures = allProcedures.where((procedure) {
+        final matchesService = selectedService == null ||
+            selectedService == 'All Procedures' ||
+            procedure.category == selectedService;
+        final matchesQuery = procedure.name.toLowerCase().contains(query.toLowerCase());
+        return matchesService && matchesQuery;
+      }).toList();
+    });
   }
 
  
@@ -185,11 +196,102 @@ class _ServicesScreenState extends State<ServicesScreen> {
 
                 const SizedBox(height: 15.0),
 
-                // Scrollable Selection List with Arrows
-                Container(
+                // Dropdown Selection for Services
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
+                        child: DropdownButton<String>(
+                          isExpanded: true,
+                          value: selectedService,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedService = newValue!;
+                              searchProcedures(_searchController.text); // Update filtered list
+                            });
+                          },
+                          items: [
+                            'All Procedures',
+                            'Consultation',
+                            'Oral Prophylaxis',
+                            'Oral Surgery',
+                            'Tooth Restoration',
+                            'Crowns & Veneers',
+                            'Dentures',
+                            'Root Canal Treatment',
+                            'Orthodontic Braces',
+                            'TMJ Therapy',
+                            'Whitening',
+                            'Implant',
+                          ].map<DropdownMenuItem<String>>((String service) {
+                            return DropdownMenuItem<String>(
+                              value: service,
+                              child: Text(service),
+                            );
+                          }).toList(),
+                          underline: Container(),
+                          dropdownColor: Colors.white,
+                          icon: const Icon(Icons.arrow_drop_down, color: Color(0xFF422B15)),
+                        ),
+                      ),
+                    ),
+                    
+                    const SizedBox(width: 10),
+
+                    // Search Bar
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
+                        child: TextField(
+                          controller: _searchController,
+                          onChanged: (query) => searchProcedures(query),
+                          decoration: const InputDecoration(
+                            hintText: 'Search Procedures...',
+                            border: InputBorder.none,
+                            prefixIcon: Icon(Icons.search, color: Color(0xFF422B15)),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 15.0),
+
+               
+                // Table for Procedures (filtered by selected service)
+                // Procedure Table
+              if (filteredProcedures.isEmpty)
+                const Center(child: Text('No matching procedures found.'))
+              else Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(20.0),
+                    borderRadius: BorderRadius.circular(10.0),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.2),
@@ -199,281 +301,171 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       ),
                     ],
                   ),
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
                     children: [
-                      // Left Arrow Button
-                      IconButton(
-                        icon: const Icon(Icons.arrow_back_ios),
-                        onPressed: () {
-                          scrollController.animateTo(
-                            scrollController.offset - 200,
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          );
+                      const SizedBox(height: 10),
+                      
+                      Table(
+                        columnWidths: const {
+                          0: FlexColumnWidth(2),  // Procedure
+                          1: FlexColumnWidth(1),  // Price
+                          2: FlexColumnWidth(1),  // Price Type
+                          3: FlexColumnWidth(1),  // Downpayment
+                          4: FlexColumnWidth(1), // Action
                         },
-                      ),
-                  
-                      // Scrollable List of Services
-                      Expanded(
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          controller: scrollController,
-                          child: Row(
-                            children: [
-                              for (var service in [
-                                'Consultation',
-                                'Oral Prophylaxis',
-                                'Oral Surgery',
-                                'Tooth Restoration',
-                                'Crowns & Veneers',
-                                'Dentures',
-                                'Root Canal Treatment',
-                                'Orthodontic Braces',
-                                'TMJ Therapy',
-                                'Whitening',
-                                'Implant',
-                              ])
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        selectedService = service;
-                                      });
-                                    },
-                                    child: Chip(
-                                      label: Text(
-                                        service,
-                                        style: const TextStyle(color: Colors.white),
-                                      ),
-                                      backgroundColor: selectedService == service
-                                          ? const Color.fromARGB(255, 151, 115, 61)
-                                          : const Color(0xFF422B15),
+                        children: [
+                          TableRow(
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            children: const [
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "PROCEDURE",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
                                     ),
+                                    textAlign: TextAlign.left,
                                   ),
                                 ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "PRICE",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                    textAlign: TextAlign.left,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "PRICE TYPE",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                    textAlign: TextAlign.left,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "DOWN PAYMENT",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                    textAlign: TextAlign.left,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "ACTION",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                    textAlign: TextAlign.left,
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
-                        ),
-                      ),
 
-                      // Right Arrow Button
-                      IconButton(
-                        icon: const Icon(Icons.arrow_forward_ios),
-                        onPressed: () {
-                          scrollController.animateTo(
-                            scrollController.offset + 200,
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          );
-                        },
+
+                          for (var procedure in filteredProcedures)
+                          TableRow(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    procedure.name,
+                                    style: TextStyle(fontSize: 14, color: Colors.grey[800]),
+                                    ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text('₱ ${procedure.basePrice.toStringAsFixed(2)}',
+                                  style: TextStyle(fontSize: 14, color: Colors.grey[800]),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text(procedure.priceType,
+                                  style: TextStyle(fontSize: 14, color: Colors.grey[800]),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text('\₱ ${procedure.minDP?.toStringAsFixed(2) ?? '0.00'}',
+                                  style: TextStyle(fontSize: 14, color: Colors.grey[800]),
+                                  ),
+                                ),
+                              ),
+                              
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.edit, color: Colors.blue),
+                                      onPressed: () {
+                                        _showEditServiceDialog(context, procedure);
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.delete, color: Colors.red),
+                                      onPressed: () {
+                                        _showDeleteConfirmationDialog(context, (){
+                                          _deleteService(procedure);
+
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ),
-
-                const SizedBox(height: 15.0),
-
-                // Table for Procedures (filtered by selected service)
-                FutureBuilder<List<Procedure>>(
-                  future: procedures,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(child: Text('No procedures available.'));
-                    }
-
-                    final proceduresList = snapshot.data!;
-
-                    // Filter procedures based on the selected service
-                    final filteredProcedures = selectedService != null
-                        ? proceduresList.where((procedure) => procedure.category == selectedService).toList()
-                        : proceduresList;
-
-                    return Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            spreadRadius: 2,
-                            blurRadius: 5,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 10),
-                          
-                          Table(
-                            columnWidths: const {
-                              0: FlexColumnWidth(2),  // Procedure
-                              1: FlexColumnWidth(1),  // Price
-                              2: FlexColumnWidth(1),  // Price Type
-                              3: FlexColumnWidth(1),  // Downpayment
-                              4: FlexColumnWidth(1), // Action
-                            },
-                            children: [
-                              TableRow(
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[200],
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                children: const [
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        "PROCEDURE",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                        ),
-                                        textAlign: TextAlign.left,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        "PRICE",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                        ),
-                                        textAlign: TextAlign.left,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        "PRICE TYPE",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                        ),
-                                        textAlign: TextAlign.left,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        "DOWN PAYMENT",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                        ),
-                                        textAlign: TextAlign.left,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        "ACTION",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                        ),
-                                        textAlign: TextAlign.left,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-
-
-                              for (var procedure in filteredProcedures)
-                              TableRow(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        procedure.name,
-                                        style: TextStyle(fontSize: 14, color: Colors.grey[800]),
-                                        ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: Text('₱ ${procedure.basePrice.toStringAsFixed(2)}',
-                                      style: TextStyle(fontSize: 14, color: Colors.grey[800]),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: Text(procedure.priceType,
-                                      style: TextStyle(fontSize: 14, color: Colors.grey[800]),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: Text('\₱ ${procedure.minDP?.toStringAsFixed(2) ?? '0.00'}',
-                                      style: TextStyle(fontSize: 14, color: Colors.grey[800]),
-                                      ),
-                                    ),
-                                  ),
-                                  
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        IconButton(
-                                          icon: const Icon(Icons.edit, color: Colors.blue),
-                                          onPressed: () {
-                                            _showEditServiceDialog(context, procedure);
-                                          },
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(Icons.delete, color: Colors.red),
-                                          onPressed: () {
-                                            _showDeleteConfirmationDialog(context, (){
-                                              _deleteService(procedure);
-
-                                            });
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
+                )
               ],
             ),
           ),
