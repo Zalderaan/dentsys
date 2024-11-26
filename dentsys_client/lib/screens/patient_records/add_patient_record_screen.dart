@@ -105,6 +105,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
   // patient conditions info
   final ConditionsController conditionsController = ConditionsController(); // conditions controller
   final TextEditingController _otherConditionsController = TextEditingController();
+  
 
   Future<void> _handleAddPatient() async {
     final patient = Patient(
@@ -276,6 +277,16 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
           )
       );
     }
+  }
+
+  int _calculateAge(DateTime birthDate) {
+    final today = DateTime.now();
+    int age = today.year - birthDate.year;
+    if (today.month < birthDate.month || 
+    (today.month == birthDate.month && today.day < birthDate.day)) {
+      age--;
+    }
+    return age;
   }
 
   Future<void> _handleAddAllergies() async {
@@ -622,12 +633,15 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                             context: context,
                                             initialDate: DateTime.now(),
                                             firstDate: DateTime(1900), // Set a range if needed
-                                            lastDate: DateTime(2100),
+                                            lastDate: DateTime.now(), 
                                           );
                         
                                           if (pickedDate != null) {
                                             String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-                                            _dateController.text = formattedDate; // Set the selected date
+                                            _dateController.text = formattedDate;
+                                            
+                                            int calculatedAge = _calculateAge(pickedDate);
+                                            _ageController.text = calculatedAge.toString(); // Set the selected date
                                           }
                                         },
                                         validator: (value) {
