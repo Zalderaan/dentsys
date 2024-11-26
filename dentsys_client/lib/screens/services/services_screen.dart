@@ -39,9 +39,12 @@ class _ServicesScreenState extends State<ServicesScreen> {
       await _procedureController.createProcedure(newProcedure);
       print('Procedure added successfully');
 
-      // Reload the procedures to refresh the table
+    // Reload the procedures to refresh the table
+    final updatedProcedures = await _procedureController.getAllProcedures();
+
     setState(() {
-      procedures = _procedureController.getAllProcedures();
+      allProcedures = updatedProcedures; // Update the list of all procedures
+      filteredProcedures = List.from(allProcedures); // Refresh the filtered list
     });
     } catch (error) {
       print('Error adding procedure: $error');
@@ -196,7 +199,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
 
                 const SizedBox(height: 15.0),
 
-                // Dropdown Selection for Services
+                // Dropdown Selection for Services and Search Bar
                 Row(
                   children: [
                     Expanded(
@@ -887,8 +890,6 @@ class _ServicesScreenState extends State<ServicesScreen> {
       },
     );
   }
-
-
 
 }
 
