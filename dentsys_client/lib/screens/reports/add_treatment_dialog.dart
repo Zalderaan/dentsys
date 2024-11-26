@@ -51,7 +51,7 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
       treatment_dentist: dentistNameController.text,
       treatment_charged: calculateTotalPrice(),
       treatment_paid: double.parse(amountPaidController.text), 
-      treatment_balance: 0.0,
+      treatment_balance: await calculateBalance(),
       treatment_date: DateTime.now().toString(),
       treatment_toothNo: toothNoController.text,
     );
@@ -89,8 +89,19 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
     return procedureNames;
   }
 
-  dynamic calculateBalance() {
-    // if past treatments contain a balance, add it to the current balance
+  Future<double> calculateBalance() async {
+    
+    try {
+      final last_balance = await treatmentController.getPatientLastBalance(widget.patient_id.toString());
+      final total_price = calculateTotalPrice();
+      final amount_paid = double.parse(amountPaidController.text);
+      final balance = (total_price - amount_paid) + last_balance;
+      print('balance: $balance');
+      return balance;
+    } catch (error) {
+      print('Error calculating balance: $error');
+      throw Exception('Error calculating balance: $error');// Return a default value in case of an error
+    }    
   }
 
   // Groups procedures by their `category` field. 
@@ -153,6 +164,8 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
                   const SizedBox(height: 15),
                   
                   TextFormField(
+                    controller: TextEditingController(text: '₱${calculateTotalPrice().toStringAsFixed(2)}'),
+                    readOnly: true,
                     decoration: const InputDecoration(
                       labelText: 'Amount Charged',
                       border: UnderlineInputBorder(), 
@@ -248,15 +261,15 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
 
                               if (existingProcedure.isEmpty) {
                                 // If the procedure is not already in the list, proceed to show the pricing dialog
-                                if (selectedProcedure.priceType == 'Fixed') {
-                                  await showPricingDialogFixed(context, selectedProcedure, (selectedPrice) {
+                                if (selectedProcedure.priceType == 'Unit') {
+                                  await showPricingDialog(context, selectedProcedure, (selectedPrice) {
                                     setState(() {
                                       proceduresDone.add('${selectedProcedure.name} (₱${selectedPrice.toStringAsFixed(2)})');
                                       print(proceduresDone);
                                     });
                                   });
                                 } else {
-                                  await showPricingDialog(context, selectedProcedure, (selectedPrice) {
+                                  await showPricingDialogFixed(context, selectedProcedure, (selectedPrice) {
                                     setState(() {
                                       proceduresDone.add('${selectedProcedure.name} (₱${selectedPrice.toStringAsFixed(2)})');
                                     });
@@ -325,7 +338,7 @@ Future<void> showPricingDialog(BuildContext context, Procedure procedure, Functi
                 // Base Price Field
                 const TextField(
                   decoration: InputDecoration(
-                    labelText: 'Number of Units',
+                    labelText: 'Unit/Teeth/Quadrant Amount',
                     border: UnderlineInputBorder(),
                   ),
                   keyboardType: TextInputType.number,

@@ -23,4 +23,22 @@ class TreatmentController {
       throw Exception('Error getting treatments in frontend controller: $error');
     }
   }
+
+  Future<double> getPatientLastBalance(String patient_id) async {
+    try {
+      final lastTreatment = await _treatmentService.getPatientLastBalance(patient_id);
+      return lastTreatment;
+    } catch (error) {
+      throw Exception('Error getting last treatment in frontend controller: $error');
+    }
+  }
+
+  // DELETE
+  Future<void> deleteTreatment(String treatment_id) async {
+    try {
+      final deletedTreatment = await _treatmentService.deleteTreatmentService(treatment_id);
+    } catch (error) {
+      throw Exception('Error deleting treatment in frontend controller: $error');
+    }
+  }
 }

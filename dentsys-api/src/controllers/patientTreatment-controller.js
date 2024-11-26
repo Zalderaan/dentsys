@@ -24,4 +24,27 @@ export default class PatientTreatmentController {
             throw error;
         }
     }
+
+    static async getPatientLastBalance(req, res) {
+        try {
+            const patient_id = req.params.id;
+            const lastBalance = await PatientTreatment.getPatientLastBalance(patient_id);
+            return res.status(200).json({ lastBalance });
+        } catch (error) {
+            console.error('Error in getPatientLastTreatment controller:', error);
+            throw error;
+        }
+    }
+
+    static async deleteTreatment(req, res) {
+        try {
+            const treatment_id = req.params.id;
+            console.log('treatment_id in controller:', treatment_id);
+            const deletedTreatment = await PatientTreatment.deletePatientTreatment(treatment_id);
+            return res.status(200).json({ message: 'Treatment deleted successfully', deletedTreatment });
+        } catch (error) {
+            console.error('Error in deleteTreatment controller:', error);
+            throw error;
+        }
+    }
 }

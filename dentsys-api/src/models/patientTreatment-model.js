@@ -43,6 +43,21 @@ export default class PatientTreatment {
         }
     }
 
+    static async getPatientLastBalance(patient_id) {
+        try {
+            const queryStr = 'SELECT treatment_balance FROM patient_treatments WHERE patient_id = ? ORDER BY treatment_id DESC LIMIT 1';
+            const [result] = await pool.query(queryStr, patient_id);
+            if(result.length === 0) {
+                return 0.0;
+            } else {
+                return result[0].treatment_balance;
+            }
+        } catch (error) {
+            console.error('Error in getPatientLastTreatmentBalance model:', error);
+            throw error;
+        }
+    }
+
     static async updatePatientTreatment(data) {
         try {
             const {treatment_id, treatment_prcdName, treatment_date, treatment_toothNo, treatment_charged, treatment_paid, treatment_balance} = data;
@@ -73,9 +88,21 @@ export default class PatientTreatment {
         }
     }
 
-    static async deletePatientCondition(data) {
+    static async deletePatientTreatment(data) {
         try {
-
+            const treatment_id = data;
+            console.log ('treatment_id:', treatment_id);
+            const queryStr = 'DELETE FROM patient_treatments WHERE treatment_id = ?';
+            const [result] = await pool.query(queryStr, treatment_id);
+            if (result.affectedRows > 0) {
+                console.log('Patient treatment deleted:', treatment_id);
+                return {
+                    message: 'Patient treatment deleted',
+                    treatment_id: treatment_id
+                };
+            } else {
+                throw new Error('Failed to delete patient treatment');
+            }
         } catch (error) {
             console.error('Error in delete patientTr model:', error);
             throw error;

@@ -420,13 +420,13 @@ class _PatientRecordsState extends State<PatientRecords> {
                       ),
                       textAlign: TextAlign.left,
                     ),
-                    Text(
-                      "ID: $id",
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.brown[600],
-                      ),
-                    ),
+                    // Text(
+                    //   "ID: $id",
+                    //   style: TextStyle(
+                    //     fontSize: 16.0,
+                    //     color: Colors.brown[600],
+                    //   ),
+                    // ),
                   ],
                 ) 
               ),

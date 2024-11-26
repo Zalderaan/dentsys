@@ -71,6 +71,8 @@ router.delete('/delete-procedure/:id', ProcedureController.deleteProcedure);
 // treatment routes
 router.post('/add-treatment', PatientTreatmentController.addTreatment);
 router.get('/get-treatments/:id', PatientTreatmentController.getTreatmentsByPatientID);
+router.get('/get-last-balance/:id', PatientTreatmentController.getPatientLastBalance);
+router.delete('/delete-treatment/:id', PatientTreatmentController.deleteTreatment);
 
 // test routes
 router.post('/test/add-contact', TestController.createContact);
