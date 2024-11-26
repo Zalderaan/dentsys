@@ -1,4 +1,5 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
+import 'package:dentsys_client/screens/reports/edit_treatment_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -289,19 +290,23 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                     ),
                                     ElevatedButton.icon(
                                       onPressed: () {
-                                       //
                                         if (patientDetails?.patient.id != null) {
-                                          showAddTreatmentDialog(context, patientDetails!.patient.id!);
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AddTreatmentDialog(
+                                                patient_id: patientDetails!.patient.id!,
+                                                onTreatmentAdded: loadPatientTreatments, // Pass the refresh function
+                                              );
+                                            },
+                                          );
                                         }
                                       },
-                                      label: const Text(
-                                        "",
-                                      ),
+                                      label: const Text(""),
                                       icon: Icon(
                                         Icons.add,
                                         color: Colors.brown[800],
                                       ),
-                                      
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Colors.transparent,
                                         shadowColor: Colors.transparent,
@@ -310,7 +315,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                         ),
                                       ),
                                     ),
-                                
                                   ],
                                 ),
                                 const SizedBox(height: 5.0),
@@ -320,115 +324,166 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                   thickness: 0.5,
                                 ),
                                 const SizedBox(height: 5),
-                                
-                                // Table Headers
-                                Table(
-                                  columnWidths: const {
-                                    0: FlexColumnWidth(2),  // Date-Time
-                                    1: FlexColumnWidth(2),  // tooth no
-                                    2: FlexColumnWidth(4),  // Procedure
-                                    3: FlexColumnWidth(2),  // dentists
 
-                                    4: FlexColumnWidth(2),  // amount charged 
-                                    5: FlexColumnWidth(2),  // amount paid
-                                    6: FlexColumnWidth(2),  // Balance
-                                  },
-                                  border: TableBorder.all(
-                                    color: Colors.black,
-                                    width: 1.0,
-                                  ),
-                                  children: const [
-                                    TableRow(
-                                      
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "Date-Time",
-                                            style: TextStyle(fontWeight: FontWeight.bold),
+                                // Table with Dynamic Data
+                                isLoading
+                                    ? const Center(child: CircularProgressIndicator())
+                                    : Table(
+                                        columnWidths: const {
+                                          0: FlexColumnWidth(2), // Date-Time
+                                          1: FlexColumnWidth(2), // Tooth No
+                                          2: FlexColumnWidth(4), // Procedure
+                                          3: FlexColumnWidth(2), // Dentist
+                                          4: FlexColumnWidth(2), // Amount Charged
+                                          5: FlexColumnWidth(2), // Amount Paid
+                                          6: FlexColumnWidth(2), // Balance
+                                          7: FlexColumnWidth(2), // Actions
+                                        },
+                                        border: TableBorder.all(
+                                          color: Colors.black,
+                                          width: 1.0,
+                                        ),
+                                        children: [
+                                          // Table Headers
+                                          const TableRow(
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  "Date-Time",
+                                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  "Tooth/s No.",
+                                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  "Procedure",
+                                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  "Dentist/s",
+                                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  "Amount Charged",
+                                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  "Amount Paid",
+                                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  "Balance",
+                                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  "Actions",
+                                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "Tooth/s No.",
-                                            style: TextStyle(fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "Procedure",
-                                            style: TextStyle(fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "Dentist/s",
-                                            style: TextStyle(fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "Amount Charged",
-                                            style: TextStyle(fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "Amount Paid",
-                                            style: TextStyle(fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "Balance",
-                                            style: TextStyle(fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    
-                                    // Example Row (Replace with dynamic data rows as needed)
-                                    TableRow(
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text("2024-11-10 14:30"),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text("Cleaning"),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text("₱500"),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text("2024-11-10 14:30"),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text("Cleaning"),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text("₱500"),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text("₱500"),
-                                        ),
-                                      ],
-                                    ),
-                                    // Additional rows can go here
-                                  ],
-                                ),
+                                          // Dynamic Data Rows
+                                          ...patientTreatments!.map((treatment) {
+                                            return TableRow(
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Text(DateTime.parse(treatment.treatment_date.toString())
+                                                      .toLocal()
+                                                      .toString()),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Text(treatment.treatment_toothNo.toString()),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                    (treatment.treatment_prcdName),                                                      
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Text(treatment.treatment_dentist),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                    "₱${treatment.treatment_charged.toStringAsFixed(2)}",
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                    "₱${treatment.treatment_paid.toStringAsFixed(2)}",
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                    "₱${treatment.treatment_balance.toStringAsFixed(2)}",
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.symmetric(
+                                                    vertical: 10.0,
+                                                    horizontal: 8.0,
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      IconButton(
+                                                        icon: const Icon(Icons.edit, color: Colors.blue),
+                                                        onPressed: () {
+                                                          // Handle edit action
+                                                          showDialog(
+                                                            context: context,
+                                                            builder: (context) {
+                                                              return EditTreatmentDialog(
+                                                                patient_id: patientDetails!.patient.id!,
+                                                                onTreatmentAdded: loadPatientTreatments, // Pass the refresh function
+                                                              );
+                                                            },
+                                                          );
+                                                        },
+                                                      ),
+                                                      IconButton(
+                                                        icon: const Icon(Icons.delete, color: Colors.red),
+                                                        onPressed: () {
+                                                          // Handle delete action
+                                                        },
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          }).toList(),
+                                        ],
+                                      ),
 
                                 const SizedBox(height: 10.0),
 

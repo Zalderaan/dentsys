@@ -5,17 +5,17 @@ import 'package:flutter/services.dart';
 import 'package:dentsys_client/models/treatments_model.dart';
 import 'package:dentsys_client/controllers/treatment_controller.dart';
 
-class AddTreatmentDialog extends StatefulWidget {
+class EditTreatmentDialog extends StatefulWidget {
   final int patient_id;
   final VoidCallback onTreatmentAdded;
-  const AddTreatmentDialog({super.key, required this.patient_id, required this.onTreatmentAdded});
+  const EditTreatmentDialog({super.key, required this.patient_id, required this.onTreatmentAdded});
   
 
   @override
-  _AddTreatmentDialogState createState() => _AddTreatmentDialogState();
+  _EditTreatmentDialogState createState() => _EditTreatmentDialogState();
 }
 
-class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
+class _EditTreatmentDialogState extends State<EditTreatmentDialog> {
   List<String> proceduresDone = []; // List of procedures that have been selected by the user.
   List<Procedure> servicesOffered = []; // List of all available procedures fetched from the backend
   Map<String, List<Procedure>> categorizedProcedures = {}; // A map to group procedures by their categories
@@ -107,7 +107,7 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text(
-        'Add Patient Treatment',
+        'Edit Patient Treatment',
         textAlign: TextAlign.left,
         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 36),
       ),
@@ -512,17 +512,3 @@ Future<void> showPricingDialogFixed(BuildContext context, Procedure procedure, F
     },
   );
 }
-
-
-// void showAddTreatmentDialog(BuildContext context, int patientId) {
-//   showDialog(
-//     context: context,
-//     builder: (BuildContext context) {
-//       return AddTreatmentDialog(patient_id: patientId, onTreatmentAdded: () {  },);
-//     },
-//   );
-// }
-
-
-
-
