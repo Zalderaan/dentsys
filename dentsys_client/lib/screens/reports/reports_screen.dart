@@ -125,7 +125,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(20.0),
+                    borderRadius: BorderRadius.circular(10.0),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.2),
@@ -142,7 +142,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         child: Text(
                           "Patient Record",
                           style: TextStyle(
-                            fontSize: 24.0,
+                            fontSize: 32.0,
                             fontWeight: FontWeight.bold,
                             color: Color.fromARGB(255, 66, 43, 21),
                           ),
@@ -1268,18 +1268,28 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      const Text(
+                              "Personal Details",
+                              style: TextStyle(
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 66, 43, 21),
+                              ),
+                            ),
+                      const SizedBox(height: 10),
+                      Divider(
+                                        height: 10,
+                                        color: Colors.grey[600],
+                                        thickness: 0.5,
+                                      ),
+                      const SizedBox(height: 10),
                       buildInfoSection("Name", [details.patient.firstName, details.patient.lastName]),
                       buildInfoSection("Age", [details.patient.age.toString()]),
                       buildInfoSection("Birthdate", [formatDate(details.patient.birthDate)]),
                       buildInfoSection("Gender", [details.patient.sex.toString()]),
                       buildInfoSection("Nationality", [details.patient.nationality]),
                       buildInfoSection("Occupation", [details.patient.occupation]),
-                      buildInfoSection("Religion", [details.patient.religion]),
-                      buildInfoSection("Email Address", [details.contact.email]),
-                      buildInfoSection("Contact Number", [details.contact.mobile_number]),
-                      buildInfoSection("Address", [details.contact.home_number, details.contact.home_address]),
-                      buildInfoSection("Fax Number", [details.contact.fax_number]),
-                      buildInfoSection("Office Number", [details.contact.work_number]),
+                      buildInfoSection("Religion", [details.patient.religion]),                    
                       buildInfoSection("Good Health", [details.medical.medical_goodHealth.toString()]),
                       buildInfoSection("Under Medical Treatment", [details.medical.medical_isMedication.toString()]),
                       buildInfoSection("Blood Type", [details.medical.medical_bloodType]),
@@ -1288,15 +1298,62 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     ],
                   ),
                 ),
-                //const SizedBox(width: 24),
+                const SizedBox(width: 20),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      const Text(
+                              "Contact Details",
+                              style: TextStyle(
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 66, 43, 21),
+                              ),
+                            ),
+                      const SizedBox(height: 10),
+                      Divider(
+                                        height: 10,
+                                        color: Colors.grey[600],
+                                        thickness: 0.5,
+                                      ),
+                      const SizedBox(height: 10),
+                      buildInfoSection("Email Address", [details.contact.email]),
+                      buildInfoSection("Contact Number", [details.contact.mobile_number]),
+                      buildInfoSection("Address", [details.contact.home_number, details.contact.home_address]),
+                      buildInfoSection("Fax Number", [details.contact.fax_number]),
+                      buildInfoSection("Office Number", [details.contact.work_number]),
                       buildInfoSection("Dental Insurance", [details.insurance.insurance_name]),
                       buildInfoSection("Effective Date", [formatDate(details.insurance.effective_date)]),
                       buildInfoSection("Previous Dentist", [details.dental.previous_dentist]),
                       buildInfoSection("Latest Visit", [formatDate(details.dental.last_visit)]),
+                     
+
+                      
+                     
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 20),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                              "Medical History",
+                              style: TextStyle(
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 66, 43, 21),
+                              ),
+                            ),
+                      const SizedBox(height: 10),
+                      Divider(
+                                        height: 10,
+                                        color: Colors.grey[600],
+                                        thickness: 0.5,
+                                      ),
+                      const SizedBox(height: 10),
                       buildInfoSection("Physician", [details.medical.medical_physician]),
                       buildInfoSection("Speciality", [details.medical.medical_physicianSpec.toString()]),
                       buildInfoSection("Office Address", [details.medical.medical_officeAddress]),
@@ -1358,9 +1415,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 ],
               ),
             );
-    },
-  );
-}
+          },
+        );
+      }
 
 
   // initialize condition states

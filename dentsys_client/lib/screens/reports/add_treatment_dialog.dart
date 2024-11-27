@@ -1,3 +1,4 @@
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:dentsys_client/controllers/procedure_controller.dart';
 import 'package:dentsys_client/models/procedure_model.dart';
@@ -264,11 +265,17 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
                                 }
                               } else {
                                 // If the procedure is already in the list, show a message
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text('${selectedProcedure.name} is already added.'),
-                                  ),
-                                );
+                                
+                                AnimatedSnackBar.material(
+                                  '${selectedProcedure.name} is already added.',
+                                  type: AnimatedSnackBarType.warning,
+                                  duration: const Duration(seconds: 3),
+                                ).show(context);
+                                // ScaffoldMessenger.of(context).showSnackBar(
+                                //   SnackBar(
+                                //     content: Text('${selectedProcedure.name} is already added.'),
+                                //   ),
+                                // );
                               }
                             }
                           },
