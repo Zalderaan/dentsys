@@ -638,7 +638,9 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                             _dateController.text = formattedDate;
                                             
                                             int calculatedAge = _calculateAge(pickedDate);
-                                            _ageController.text = calculatedAge.toString(); // Set the selected date
+                                            _ageController.text = calculatedAge.toString();
+                                            userAge = calculatedAge;
+                                            setState(() {}); // Set the selected date
                                           }
                                         },
                                         validator: (value) {
