@@ -671,8 +671,12 @@ class _ServicesScreenState extends State<ServicesScreen> {
   void _deleteService(Procedure procedure) async {
     try {
       await _procedureController.deleteProcedure(procedure.id.toString());
+      print('Procedure deleted successfully');
+
+      final updatedProcedures = await _procedureController.getAllProcedures();
       setState(() {
-        procedures = _procedureController.getAllProcedures();
+        allProcedures = updatedProcedures;
+        filteredProcedures = List.from(allProcedures);
       });
     } catch (error) {
       print('Error deleting procedure: $error');
@@ -703,8 +707,10 @@ class _ServicesScreenState extends State<ServicesScreen> {
         print('Procedure updated successfully');
 
         // Reload the procedures to refresh the table
+        final updatedProcedures = await _procedureController.getAllProcedures();
         setState(() {
-          procedures = _procedureController.getAllProcedures();
+          allProcedures = updatedProcedures;
+          filteredProcedures = List.from(allProcedures);
         });
       } catch (error) {
         print('Error updating procedure: $error');
