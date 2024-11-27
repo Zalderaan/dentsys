@@ -196,21 +196,21 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
 
     try {
       final createdInsurance = await insuranceController.createInsurance(insurance);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Insurance added successfuly: $createdInsurance'),
-          duration: const Duration(seconds: 2)
-        )
-      );
+      
+      AnimatedSnackBar.material(
+        'Insurance added successfuly: $createdInsurance',
+        type: AnimatedSnackBarType.success,
+        duration: const Duration(seconds: 3),
+      ).show(context);
     } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error creating insurance: $error'),
-          duration: const Duration(seconds: 2)  
-        )
-      );
+      AnimatedSnackBar.material(
+        'Error creating contact: $error',
+        type: AnimatedSnackBarType.error,
+        duration: const Duration(seconds: 5),
+      ).show(context);
     }
   }
+  
 
   Future<void> _handleAddDental() async {
     final dental = Dental(
@@ -221,19 +221,18 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
 
     try {
       final createdDental = await dentalController.createDentalHistory(dental);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Dental history added successfuly: $createdDental'),
-          duration: const Duration(seconds: 2)
-        )
-      );
+      
+      AnimatedSnackBar.material(
+        'Dental history added successfuly: $createdDental',
+        type: AnimatedSnackBarType.success,
+        duration: const Duration(seconds: 3),
+      ).show(context);
     } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error creating dental history: $error'),
-          duration: const Duration(seconds: 2),
-        )
-      );
+      AnimatedSnackBar.material(
+        'Error creating dental history: $error',
+        type: AnimatedSnackBarType.error,
+        duration: const Duration(seconds: 5),
+      ).show(context);
     }
   }
 
@@ -264,18 +263,18 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
     );
     try {
       final createdMedical = await medicalController.createMedicalHistory(medical);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Medical history added successfuly: $createdMedical'),
-          duration: const Duration(seconds: 2)
-        )
-      );
+      
+      AnimatedSnackBar.material(
+        'Medical history added successfuly: $createdMedical',
+        type: AnimatedSnackBarType.success,
+        duration: const Duration(seconds: 3),
+      ).show(context);
     } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error creating medical history: $error'),
-          duration: const Duration(seconds: 2),
-          )
-      );
+      AnimatedSnackBar.material(
+        'Error creating medical history: $error',
+        type: AnimatedSnackBarType.error,
+        duration: const Duration(seconds: 5),
+      ).show(context);
     }
   }
 
@@ -301,19 +300,18 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
     );
     try {
       final createdAllergies = await allergiesController.createAllergy(allergies);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Allergies added successfuly: $createdAllergies'),
-          duration: const Duration(seconds: 2)
-        )
-      );
+
+      AnimatedSnackBar.material(
+        'Allergies added successfuly: $createdAllergies',
+        type: AnimatedSnackBarType.success,
+        duration: const Duration(seconds: 3),
+      ).show(context);
     } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error creating allergies: $error'),
-          duration: const Duration(seconds: 2)
-        )
-      );
+      AnimatedSnackBar.material(
+        'Error creating allergies: $error',
+        type: AnimatedSnackBarType.error,
+        duration: const Duration(seconds: 5),
+      ).show(context);
     }
   }
 
@@ -365,20 +363,19 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
 
     try {
       final createdPatientConditions = await conditionsController.addPatientCondition(patientConditions);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Patient conditions added successfuly: $createdPatientConditions'),
-          duration: const Duration(seconds: 2)
-        )
-      );
+
+      AnimatedSnackBar.material(
+        'Patient conditions added successfuly: $createdPatientConditions',
+        type: AnimatedSnackBarType.success,
+        duration: const Duration(seconds: 3),
+      ).show(context);
     } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error creating patient conditions: $error'),
-          duration: const Duration(seconds: 2)
-        )
-      );
-    }
+      AnimatedSnackBar.material(
+        'Error creating patient conditions: $error',
+        type: AnimatedSnackBarType.error,
+        duration: const Duration(seconds: 5),
+      ).show(context);
+    }     
   }
 
   String? selectedSex;
@@ -473,7 +470,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(20.0),
+                    borderRadius: BorderRadius.circular(10.0),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.2), // Shadow color
@@ -512,7 +509,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                       Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(20.0),
+                          borderRadius: BorderRadius.circular(10.0),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withOpacity(0.2),
@@ -552,22 +549,6 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                   children: [
                                     Expanded(
                                       child: TextFormField(
-                                        controller: _lastNameController,
-                                        decoration: const InputDecoration(
-                                          labelText: "Lastname",
-                                          border: OutlineInputBorder(),
-                                        ),
-                                        validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return 'This item is required';
-                                          }
-                                          return null;
-                                        },
-                                      ),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Expanded(
-                                      child: TextFormField(
                                         controller: _firstNameController,
                                         decoration: const InputDecoration(
                                           labelText: "Firstname",
@@ -598,6 +579,22 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                       ),
                                     ),
                                     const SizedBox(width: 10),
+                                    Expanded(
+                                      child: TextFormField(
+                                        controller: _lastNameController,
+                                        decoration: const InputDecoration(
+                                          labelText: "Lastname",
+                                          border: OutlineInputBorder(),
+                                        ),
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return 'This item is required';
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),                  
                                     Expanded(
                                       child: TextFormField(
                                         controller: _nicknameController,
@@ -901,7 +898,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                 Container(
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius: BorderRadius.circular(20.0),
+                                    borderRadius: BorderRadius.circular(10.0),
                                     boxShadow: [
                                       BoxShadow(
                                         color: Colors.black.withOpacity(0.2),
@@ -1093,7 +1090,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                 Container(
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius: BorderRadius.circular(20.0),
+                                    borderRadius: BorderRadius.circular(10.0),
                                     boxShadow: [
                                       BoxShadow(
                                         color: Colors.black.withOpacity(0.2),
@@ -1234,7 +1231,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                 Container(
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius: BorderRadius.circular(20.0),
+                                    borderRadius: BorderRadius.circular(10.0),
                                     boxShadow: [
                                       BoxShadow(
                                         color: Colors.black.withOpacity(0.2),
@@ -1355,7 +1352,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                           child: Container(
                             decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius: BorderRadius.circular(20.0),
+                              borderRadius: BorderRadius.circular(10.0),
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.black.withOpacity(0.2),
@@ -2104,7 +2101,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                 Container(
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius: BorderRadius.circular(20.0),
+                                    borderRadius: BorderRadius.circular(10.0),
                                     boxShadow: [
                                       BoxShadow(
                                         color: Colors.black.withOpacity(0.2),
@@ -2311,7 +2308,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                 Container(
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius: BorderRadius.circular(20.0),
+                                    borderRadius: BorderRadius.circular(10.0),
                                     boxShadow: [
                                       BoxShadow(
                                         color: Colors.black.withOpacity(0.2),

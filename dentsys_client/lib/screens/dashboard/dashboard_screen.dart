@@ -104,7 +104,7 @@ void _performLogout() {
           Container(
             decoration: const BoxDecoration(
               color: Color.fromARGB(255, 134, 103, 74),
-              borderRadius: BorderRadius.horizontal(right: Radius.circular(20)),
+              borderRadius: BorderRadius.horizontal(right: Radius.circular(10)),
             ),
             child: NavigationRail(
               extended: isExpanded,
@@ -171,7 +171,7 @@ void _performLogout() {
               trailing: Padding(
                 padding: const EdgeInsets.only(bottom: 20.0),
                 child: IconButton(
-                  icon: const Icon(Icons.logout, color: Colors.white),
+                  icon: const Icon(Icons.logout, color: Color.fromARGB(255, 255, 87, 75)),
                   onPressed: _showLogoutDialog,
                   tooltip: 'Logout',
                 )
@@ -211,7 +211,22 @@ void _performLogout() {
                   ),
                 ),
                 Expanded(
-                  child: _screens[selectedIndex], // Display the selected screen
+                  // child: _screens[selectedIndex], // Display the selected screen\
+                  child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  transitionBuilder: (Widget child, Animation<double> animation) {
+                    return FadeTransition(opacity: animation, child: child);
+                  }, // Display the selected screen
+                  switchInCurve: Curves.easeIn,
+                  switchOutCurve: Curves.easeOut,
+                  layoutBuilder: (currentChild, previousChildren) => Stack(
+                    children: <Widget>[
+                      ...previousChildren,
+                      if (currentChild != null) currentChild,
+                    ],
+                  ),
+                  child: _screens[selectedIndex],
+                ),
                 ),
               ],
             ),

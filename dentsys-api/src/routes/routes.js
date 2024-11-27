@@ -8,6 +8,7 @@ import MedicalHistoryController from '../controllers/medicalHistory-controller.j
 import PatientConditionController from '../controllers/patientCondition-controller.js';
 import AllergiesController from '../controllers/allergies-controller.js';
 import ProcedureController from '../controllers/procedure-controller.js';
+import PatientTreatmentController from '../controllers/patientTreatment-controller.js';
 import TestController from '../controllers/test-controller.js';
 
 const router = express.Router();
@@ -67,10 +68,12 @@ router.get('/get-procedures', ProcedureController.getAllProcedures);
 router.put('/update-procedure/:id', ProcedureController.updateProcedure);
 router.delete('/delete-procedure/:id', ProcedureController.deleteProcedure);
 
-// test routes
-router.post('/test/add-contact', TestController.createContact);
-router.get('/test/get-contact/:id', TestController.getContact);
-router.put('/test/update-contact/:id', TestController.updateContact);
-router.delete('/test/delete-contact/:id', TestController.deleteContact);
+// treatment routes
+router.post('/add-treatment', PatientTreatmentController.addTreatment);
+router.get('/get-treatments/:id', PatientTreatmentController.getTreatmentsByPatientID);
+router.get('/get-last-balance/:id', PatientTreatmentController.getPatientLastBalance);
+router.get('/get-balance-before-treatment/:pid/:tid', PatientTreatmentController.getBalanceBeforeTreatment);
+router.put('/update-treatment/:id', PatientTreatmentController.updateTreatment);
+router.delete('/delete-treatment/:id', PatientTreatmentController.deleteTreatment);
 
 export default router;
