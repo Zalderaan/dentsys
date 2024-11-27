@@ -1,4 +1,4 @@
-import 'package:animated_snack_bar/animated_snack_bar.dart';
+import 'package:dentsys_client/models/patient_model.dart';
 import 'package:flutter/material.dart';
 import 'package:dentsys_client/controllers/procedure_controller.dart';
 import 'package:dentsys_client/models/procedure_model.dart';
@@ -6,17 +6,18 @@ import 'package:flutter/services.dart';
 import 'package:dentsys_client/models/treatments_model.dart';
 import 'package:dentsys_client/controllers/treatment_controller.dart';
 
-class AddTreatmentDialog extends StatefulWidget {
+class EditTreatmentDialog extends StatefulWidget {
   final int patient_id;
   final VoidCallback onTreatmentAdded;
-  const AddTreatmentDialog({super.key, required this.patient_id, required this.onTreatmentAdded});
+  final PatientTreatment treatment;
+  const EditTreatmentDialog({super.key, required this.patient_id, required this.onTreatmentAdded, required this.treatment});
   
 
   @override
-  _AddTreatmentDialogState createState() => _AddTreatmentDialogState();
+  _EditTreatmentDialogState createState() => _EditTreatmentDialogState();
 }
 
-class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
+class _EditTreatmentDialogState extends State<EditTreatmentDialog> {
   List<String> proceduresDone = []; // List of procedures that have been selected by the user.
   List<Procedure> servicesOffered = []; // List of all available procedures fetched from the backend
   Map<String, List<Procedure>> categorizedProcedures = {}; // A map to group procedures by their categories
@@ -32,6 +33,10 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
   @override
   void initState() {
     super.initState();
+    amountPaidController.text = widget.treatment.treatment_paid.toString();
+    toothNoController.text = widget.treatment.treatment_toothNo;
+    dentistNameController.text = widget.treatment.treatment_dentist;
+    proceduresDone = widget.treatment.treatment_prcdName.split(', ');
     loadProcedures();
   }
 
@@ -45,20 +50,21 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
     // print(servicesOffered);
   }
 
-  Future<void> handleAddTreatment() async {
+  Future<void> handleUpdTreatment() async {
     final treatment = PatientTreatment(
+      id: widget.treatment.id,
       patient_id: widget.patient_id, // Assume the patient ID is 1
-      treatment_prcdName: proceduresDone.join(', '), // Join the procedures with a comma and space
+      treatment_prcdName: proceduresDone.join(', '),
       treatment_dentist: dentistNameController.text,
       treatment_charged: calculateTotalPrice(),
       treatment_paid: double.parse(amountPaidController.text), 
-      treatment_balance: await calculateBalance(),
+      treatment_balance: await calculateEditBalance(),
       treatment_date: DateTime.now().toString(),
       treatment_toothNo: toothNoController.text,
     );
     try {
-      final createdTreatment = await treatmentController.createTreatment(treatment);
-      print('Treatment added: $createdTreatment');
+      final createdTreatment = await treatmentController.updateTreatment(treatment);
+      // print('Treatment added: $createdTreatment');
 
       widget.onTreatmentAdded();
     } catch (error) {
@@ -87,20 +93,18 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
       procedureNames.add(name);
     }
     print('procedure names: $procedureNames');
-    var cleanProcedureNames = procedureNames.join(', '); // Joins with a comma and space    
-    print ('clean procedure names: $cleanProcedureNames');
-    return cleanProcedureNames;
+    return procedureNames;
   }
 
-  Future<double> calculateBalance() async {
+  Future<double> calculateEditBalance() async {
     
     try {
-      final last_balance = await treatmentController.getPatientLastBalance(widget.patient_id.toString());
+      final carrOverBal = await treatmentController.getBalanceBeforeTreatment(widget.patient_id.toString(), widget.treatment.id.toString());
       final total_price = calculateTotalPrice();
       final amount_paid = double.parse(amountPaidController.text);
-      final balance = (total_price - amount_paid) + last_balance;
-      print('balance: $balance');
-      return balance;
+      final newBal = (total_price - amount_paid) + carrOverBal;
+      print('new bal: $newBal');
+      return newBal;
     } catch (error) {
       print('Error calculating balance: $error');
       throw Exception('Error calculating balance: $error');// Return a default value in case of an error
@@ -121,7 +125,7 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text(
-        'Add Patient Treatment',
+        'Edit Patient Treatment',
         textAlign: TextAlign.left,
         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 36),
       ),
@@ -168,7 +172,6 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
                   
                   TextFormField(
                     controller: TextEditingController(text: '₱${calculateTotalPrice().toStringAsFixed(2)}'),
-                    readOnly: true,
                     decoration: const InputDecoration(
                       labelText: 'Amount Charged',
                       border: UnderlineInputBorder(), 
@@ -264,15 +267,15 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
 
                               if (existingProcedure.isEmpty) {
                                 // If the procedure is not already in the list, proceed to show the pricing dialog
-                                if (selectedProcedure.priceType == 'Unit') {
-                                  await showPricingDialog(context, selectedProcedure, (selectedPrice) {
+                                if (selectedProcedure.priceType == 'Fixed') {
+                                  await showPricingDialogFixed(context, selectedProcedure, (selectedPrice) {
                                     setState(() {
                                       proceduresDone.add('${selectedProcedure.name} (₱${selectedPrice.toStringAsFixed(2)})');
                                       print(proceduresDone);
                                     });
                                   });
                                 } else {
-                                  await showPricingDialogFixed(context, selectedProcedure, (selectedPrice) {
+                                  await showPricingDialog(context, selectedProcedure, (selectedPrice) {
                                     setState(() {
                                       proceduresDone.add('${selectedProcedure.name} (₱${selectedPrice.toStringAsFixed(2)})');
                                     });
@@ -280,17 +283,11 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
                                 }
                               } else {
                                 // If the procedure is already in the list, show a message
-                                
-                                AnimatedSnackBar.material(
-                                  '${selectedProcedure.name} is already added.',
-                                  type: AnimatedSnackBarType.warning,
-                                  duration: const Duration(seconds: 3),
-                                ).show(context);
-                                // ScaffoldMessenger.of(context).showSnackBar(
-                                //   SnackBar(
-                                //     content: Text('${selectedProcedure.name} is already added.'),
-                                //   ),
-                                // );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('${selectedProcedure.name} is already added.'),
+                                  ),
+                                );
                               }
                             }
                           },
@@ -312,9 +309,9 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
           },
         ),
         ElevatedButton(
-          child: const Text('Add Treatment'),
+          child: const Text('Update Treatment'),
           onPressed: () async {
-            await handleAddTreatment();
+            await handleUpdTreatment();
             Navigator.of(context).pop();
           },
         ),
@@ -347,7 +344,7 @@ Future<void> showPricingDialog(BuildContext context, Procedure procedure, Functi
                 // Base Price Field
                 const TextField(
                   decoration: InputDecoration(
-                    labelText: 'Unit/Teeth/Quadrant Amount',
+                    labelText: 'Number of Units',
                     border: UnderlineInputBorder(),
                   ),
                   keyboardType: TextInputType.number,
@@ -534,17 +531,3 @@ Future<void> showPricingDialogFixed(BuildContext context, Procedure procedure, F
     },
   );
 }
-
-
-// void showAddTreatmentDialog(BuildContext context, int patientId) {
-//   showDialog(
-//     context: context,
-//     builder: (BuildContext context) {
-//       return AddTreatmentDialog(patient_id: patientId, onTreatmentAdded: () {  },);
-//     },
-//   );
-// }
-
-
-
-

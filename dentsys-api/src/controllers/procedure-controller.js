@@ -39,7 +39,7 @@ export default class ProcedureController {
             if(!allProcedures) {
                 throw new Error('Error fetching all procedures');
             } else if (allProcedures) {
-                console.log('All procedures fetched successfully from controller:', allProcedures);
+                // console.log('All procedures fetched successfully from controller:', allProcedures);
                 return res.status(200).json({ message: 'All procedures fetched successfully from controller', allProcedures});
             }
         } catch (error) {
