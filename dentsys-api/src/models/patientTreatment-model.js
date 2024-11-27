@@ -107,6 +107,52 @@ export default class PatientTreatment {
         }
     }
 
+    static async cascadeUpdateBalance(patient_id, treatment_id, treatment_balance) {
+        // console.log(data);
+        console.log('patient_id:', patient_id);
+        console.log('treatment_id:', treatment_id);
+        console.log('treatment_balance:', treatment_balance);
+        const connection = await pool.getConnection();
+        try {
+            await connection.beginTransaction();
+            // get the subsequent treatments
+            const queryStr = `
+                SELECT treatment_id, treatment_charged, treatment_paid
+                FROM patient_treatments 
+                WHERE patient_id = ? AND treatment_id > ?
+                ORDER BY treatment_id ASC
+            `;
+            const values = [patient_id, treatment_id];
+            const [subsequentTr] = await connection.query(queryStr, values);
+            
+            let carryOverBalance = treatment_balance; // the balance of the updated treatment
+            for (const treatment of subsequentTr) {
+                const {treatment_charged, treatment_paid} = treatment;
+                const updatedBalance = (treatment_charged - treatment_paid) + carryOverBalance; // recalculate the balance with the updated tr's new balance
+                
+                // query the db
+                const updateStr = `
+                    UPDATE patient_treatments
+                    SET treatment_balance = ?
+                    WHERE treatment_id = ?
+                `;
+                const updateValues = [updatedBalance, treatment.treatment_id];
+                await connection.query(updateStr, updateValues);
+                console.log('Treatment balance updated ', treatment.treatment_id, updatedBalance);
+                carryOverBalance = updatedBalance; // update the carryOverBalance for the next iteration
+            }
+
+            await connection.commit();
+            
+        } catch (error) {
+            await connection.rollback();
+            console.error('Error in cascadeUpdateBalance model:', error);
+            throw error;
+        } finally {
+            connection.release();
+        }
+    }
+
     static async deletePatientTreatment(data) {
         try {
             const treatment_id = data;

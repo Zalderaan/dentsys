@@ -54,6 +54,11 @@ export default class PatientTreatmentController {
             data.treatment_id = req.params.id;
             console.log('data: ', data);
             const updatedTreatment = await PatientTreatment.updatePatientTreatment(data);
+            console.log('updatedTreatment:', updatedTreatment);
+            const cascadePid = updatedTreatment['patient_id'];
+            const cascadeTid = updatedTreatment['treatment_id'];
+            const cascadeBal = updatedTreatment['treatment_balance'];
+            await PatientTreatment.cascadeUpdateBalance(cascadePid, cascadeTid, cascadeBal);
             return res.status(200).json({ message: 'Treatment updated successfully', updatedTreatment });
         } catch (error) {
             console.error('Error in updateTreatment controller:', error);

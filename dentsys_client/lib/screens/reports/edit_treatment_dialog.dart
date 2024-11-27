@@ -54,7 +54,7 @@ class _EditTreatmentDialogState extends State<EditTreatmentDialog> {
     final treatment = PatientTreatment(
       id: widget.treatment.id,
       patient_id: widget.patient_id, // Assume the patient ID is 1
-      treatment_prcdName: takeProcedureNames().toString(),
+      treatment_prcdName: proceduresDone.join(', '),
       treatment_dentist: dentistNameController.text,
       treatment_charged: calculateTotalPrice(),
       treatment_paid: double.parse(amountPaidController.text), 
