@@ -47,7 +47,7 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
   Future<void> handleAddTreatment() async {
     final treatment = PatientTreatment(
       patient_id: widget.patient_id, // Assume the patient ID is 1
-      treatment_prcdName: takeProcedureNames().toString(),
+      treatment_prcdName: proceduresDone.join(', '), // Join the procedures with a comma and space
       treatment_dentist: dentistNameController.text,
       treatment_charged: calculateTotalPrice(),
       treatment_paid: double.parse(amountPaidController.text), 
@@ -86,7 +86,9 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
       procedureNames.add(name);
     }
     print('procedure names: $procedureNames');
-    return procedureNames;
+    var cleanProcedureNames = procedureNames.join(', '); // Joins with a comma and space    
+    print ('clean procedure names: $cleanProcedureNames');
+    return cleanProcedureNames;
   }
 
   Future<double> calculateBalance() async {

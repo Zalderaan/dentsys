@@ -33,6 +33,24 @@ class TreatmentController {
     }
   }
 
+  Future<double> getBalanceBeforeTreatment(String patient_id, String treatment_id) async {
+    try {
+      final balanceBeforeTreatment = await _treatmentService.getBalanceBeforeTreatment(patient_id, treatment_id);
+      return balanceBeforeTreatment;
+    } catch (error) {
+      throw Exception('Error getting balance before treatment in frontend controller: $error');
+    }
+  }
+
+  // UPDATE
+  Future<void> updateTreatment(PatientTreatment treatment) async {
+    try {
+      final updatedTreatment = await _treatmentService.updateTreatmentService(treatment);
+    } catch (error) {
+      throw Exception('Error updating treatment in frontend controller: $error');
+    }
+  }
+
   // DELETE
   Future<void> deleteTreatment(String treatment_id) async {
     try {

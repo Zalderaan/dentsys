@@ -58,7 +58,26 @@ export default class PatientTreatment {
         }
     }
 
+    static async getBalanceBeforeTreatment(patient_id, treatment_id) {
+        try {
+            const queryStr = `
+                SELECT treatment_balance 
+                FROM patient_treatments 
+                WHERE patient_id = ? AND treatment_id < ?
+                ORDER BY treatment_id DESC 
+                LIMIT 1
+            `;
+            const values = [patient_id, treatment_id];
+            const [result] = await pool.query(queryStr, values);
+            return result.length > 0 ? result[0].treatment_balance : 0.0;
+        } catch (error) {
+            console.error('Error in getBalanceBeforeTreatment model:', error);
+            throw error;
+        }
+    }
+
     static async updatePatientTreatment(data) {
+        console.log('data in model: ', data);
         try {
             const {treatment_id, treatment_prcdName, treatment_date, treatment_toothNo, treatment_charged, treatment_paid, treatment_balance} = data;
             const queryStr = `

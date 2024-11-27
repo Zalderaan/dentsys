@@ -1,3 +1,4 @@
+import 'package:dentsys_client/models/patient_model.dart';
 import 'package:flutter/material.dart';
 import 'package:dentsys_client/controllers/procedure_controller.dart';
 import 'package:dentsys_client/models/procedure_model.dart';
@@ -8,7 +9,8 @@ import 'package:dentsys_client/controllers/treatment_controller.dart';
 class EditTreatmentDialog extends StatefulWidget {
   final int patient_id;
   final VoidCallback onTreatmentAdded;
-  const EditTreatmentDialog({super.key, required this.patient_id, required this.onTreatmentAdded});
+  final PatientTreatment treatment;
+  const EditTreatmentDialog({super.key, required this.patient_id, required this.onTreatmentAdded, required this.treatment});
   
 
   @override
@@ -31,6 +33,10 @@ class _EditTreatmentDialogState extends State<EditTreatmentDialog> {
   @override
   void initState() {
     super.initState();
+    amountPaidController.text = widget.treatment.treatment_paid.toString();
+    toothNoController.text = widget.treatment.treatment_toothNo;
+    dentistNameController.text = widget.treatment.treatment_dentist;
+    proceduresDone = widget.treatment.treatment_prcdName.split(', ');
     loadProcedures();
   }
 
@@ -44,20 +50,21 @@ class _EditTreatmentDialogState extends State<EditTreatmentDialog> {
     // print(servicesOffered);
   }
 
-  Future<void> handleAddTreatment() async {
+  Future<void> handleUpdTreatment() async {
     final treatment = PatientTreatment(
+      id: widget.treatment.id,
       patient_id: widget.patient_id, // Assume the patient ID is 1
       treatment_prcdName: takeProcedureNames().toString(),
       treatment_dentist: dentistNameController.text,
       treatment_charged: calculateTotalPrice(),
       treatment_paid: double.parse(amountPaidController.text), 
-      treatment_balance: 0.0,
+      treatment_balance: await calculateEditBalance(),
       treatment_date: DateTime.now().toString(),
       treatment_toothNo: toothNoController.text,
     );
     try {
-      final createdTreatment = await treatmentController.createTreatment(treatment);
-      print('Treatment added: $createdTreatment');
+      final createdTreatment = await treatmentController.updateTreatment(treatment);
+      // print('Treatment added: $createdTreatment');
 
       widget.onTreatmentAdded();
     } catch (error) {
@@ -89,8 +96,19 @@ class _EditTreatmentDialogState extends State<EditTreatmentDialog> {
     return procedureNames;
   }
 
-  dynamic calculateBalance() {
-    // if past treatments contain a balance, add it to the current balance
+  Future<double> calculateEditBalance() async {
+    
+    try {
+      final carrOverBal = await treatmentController.getBalanceBeforeTreatment(widget.patient_id.toString(), widget.treatment.id.toString());
+      final total_price = calculateTotalPrice();
+      final amount_paid = double.parse(amountPaidController.text);
+      final newBal = (total_price - amount_paid) + carrOverBal;
+      print('new bal: $newBal');
+      return newBal;
+    } catch (error) {
+      print('Error calculating balance: $error');
+      throw Exception('Error calculating balance: $error');// Return a default value in case of an error
+    }    
   }
 
   // Groups procedures by their `category` field. 
@@ -153,6 +171,7 @@ class _EditTreatmentDialogState extends State<EditTreatmentDialog> {
                   const SizedBox(height: 15),
                   
                   TextFormField(
+                    controller: TextEditingController(text: '₱${calculateTotalPrice().toStringAsFixed(2)}'),
                     decoration: const InputDecoration(
                       labelText: 'Amount Charged',
                       border: UnderlineInputBorder(), 
@@ -290,9 +309,9 @@ class _EditTreatmentDialogState extends State<EditTreatmentDialog> {
           },
         ),
         ElevatedButton(
-          child: const Text('Add Treatment'),
+          child: const Text('Update Treatment'),
           onPressed: () async {
-            await handleAddTreatment();
+            await handleUpdTreatment();
             Navigator.of(context).pop();
           },
         ),

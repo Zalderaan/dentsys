@@ -36,6 +36,31 @@ export default class PatientTreatmentController {
         }
     }
 
+    static async getBalanceBeforeTreatment(req, res) {
+        try {
+            const patient_id = req.params.pid;
+            const treatment_id = req.params.tid;
+            const balBeforeTr = await PatientTreatment.getBalanceBeforeTreatment(patient_id, treatment_id);
+            return res.status(200).json({ balBeforeTr });
+        } catch (error) {
+            console.error('Error in getBalanceBeforeTreatment controller:', error);
+            throw error;
+        }
+    }
+
+    static async updateTreatment(req, res) {
+        try {
+            const data = req.body;
+            data.treatment_id = req.params.id;
+            console.log('data: ', data);
+            const updatedTreatment = await PatientTreatment.updatePatientTreatment(data);
+            return res.status(200).json({ message: 'Treatment updated successfully', updatedTreatment });
+        } catch (error) {
+            console.error('Error in updateTreatment controller:', error);
+            throw error;
+        }
+    }
+
     static async deleteTreatment(req, res) {
         try {
             const treatment_id = req.params.id;

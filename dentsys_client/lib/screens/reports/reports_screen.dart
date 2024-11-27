@@ -473,6 +473,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                                             builder: (context) {
                                                               return EditTreatmentDialog(
                                                                 patient_id: patientDetails!.patient.id!,
+                                                                treatment: treatment,
                                                                 onTreatmentAdded: loadPatientTreatments, // Pass the refresh function
                                                               );
                                                             },

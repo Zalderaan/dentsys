@@ -71,6 +71,43 @@ class TreatmentService {
     }
   }
 
+  Future<double> getBalanceBeforeTreatment(String patient_id, String treatment_id) async {
+    const headers = {'Content-Type': 'application/json'};
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/get-balance-before-treatment/$patient_id/$treatment_id'),
+        headers: headers
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final double balanceBeforeTreatment = data['balBeforeTr'].toDouble();
+        return balanceBeforeTreatment;
+      } else {
+        throw Exception('Failed to fetch balance before treatment: ${response.body}');
+      }
+    } catch (error) {
+      throw Exception('error in service: $error');
+    }
+  }
+  // UPDATE
+  Future<void> updateTreatmentService(PatientTreatment treatment) async {
+    const headers = {'Content-Type': 'application/json'};
+    try {
+      final response = await http.put(
+        Uri.parse('$baseUrl/update-treatment/${treatment.id}'),
+        headers: headers,
+        body: jsonEncode(treatment.toJson())
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to update treatment: ${response.body}');
+      }
+    } catch (error) {
+      throw Exception('error in service: $error');
+    }
+  }
+
   // DELETE
   Future<void> deleteTreatmentService(String treatment_id) async {
     const headers = {'Content-Type': 'application/json'};
