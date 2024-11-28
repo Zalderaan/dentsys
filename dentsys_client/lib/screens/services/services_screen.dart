@@ -44,7 +44,14 @@ class _ServicesScreenState extends State<ServicesScreen> {
 
     setState(() {
       allProcedures = updatedProcedures; // Update the list of all procedures
-      filteredProcedures = List.from(allProcedures); // Refresh the filtered list
+      filteredProcedures = List.from(allProcedures);
+      
+      // Clears text field on add procedure dialog 
+      _procedureNameController.clear();
+      _procedureBasePriceController.clear();
+      _procedureMinDPController.clear();
+      selectedService = null;
+      selectedPaymentType = null;
     });
     } catch (error) {
       print('Error adding procedure: $error');
