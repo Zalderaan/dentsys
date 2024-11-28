@@ -66,6 +66,10 @@ class _PatientRecordsState extends State<PatientRecords> {
           final fullName = "${patient.firstName} ${patient.lastName}".toLowerCase();
           return fullName.contains(searchQuery);
         }).toList();
+
+        // Reset to the first page and update current records
+        currentPage = 1;
+        updateCurrentRecords();
       });
     }).catchError((error) {
       // ignore: avoid_print
@@ -165,7 +169,7 @@ class _PatientRecordsState extends State<PatientRecords> {
                           Expanded(
                             child: buildInfoCard(
                               "NUMBER OF PATIENTS",
-                              ["Returnee: ", "14", "New: ", "10", "Total: ", "24"],
+                              ["Old: ", "14", "New: ", "10", "Total: ", "24"],
                               Icons.people,
                               color: Colors.white,
                             ),
@@ -208,8 +212,12 @@ class _PatientRecordsState extends State<PatientRecords> {
                   ),
                 ),
                 const SizedBox(height: 30.0),
+                
+                // Search and Filter
                 buildSearchAndFilterSection(),
                 const SizedBox(height: 30.0),
+
+                // Patient Record List
                 SizedBox(
                   height: 400, // Set an appropriate height for the list
                   child: FutureBuilder<List<Patient>>(
@@ -228,6 +236,8 @@ class _PatientRecordsState extends State<PatientRecords> {
                   ),
                 ),
                 const SizedBox(height: 20.0),
+
+                // Pagination
                 buildPagination(),
               ],
             ),
@@ -474,7 +484,7 @@ class _PatientRecordsState extends State<PatientRecords> {
     final totalPages = (filteredRecords.length / recordsPerPage).ceil();
 
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
         IconButton(
           onPressed: currentPage > 1
