@@ -52,7 +52,7 @@ class PatientTreatment {
   }
 
   factory PatientTreatment.fromJson(Map<String, dynamic> json){
-    // print('patientTreatment.fromJson: $json');
+    print('patientTreatment.fromJson: $json');
     final treatmentData = json['newTreatment'] != null ? json['newTreatment'] : json;
     
     return PatientTreatment(

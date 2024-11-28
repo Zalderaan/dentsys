@@ -98,6 +98,15 @@ class _ReportsScreenState extends State<ReportsScreen> {
     }
   }
 
+  void handleDeleteTreatment(String treatmentId) async {
+    try {
+      await treatmentController.deleteTreatment(treatmentId);
+      loadPatientTreatments();
+    } catch (error) {
+      print('Error deleting treatment: $error');
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -464,6 +473,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                                             builder: (context) {
                                                               return EditTreatmentDialog(
                                                                 patient_id: patientDetails!.patient.id!,
+                                                                treatment: treatment,
                                                                 onTreatmentAdded: loadPatientTreatments, // Pass the refresh function
                                                               );
                                                             },
@@ -472,8 +482,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                                       ),
                                                       IconButton(
                                                         icon: const Icon(Icons.delete, color: Colors.red),
-                                                        onPressed: () {
-                                                          // Handle delete action
+                                                        onPressed: () async {
+                                                          handleDeleteTreatment(treatment.id.toString());
                                                         },
                                                       ),
                                                     ],
