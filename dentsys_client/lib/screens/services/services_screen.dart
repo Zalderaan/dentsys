@@ -44,7 +44,14 @@ class _ServicesScreenState extends State<ServicesScreen> {
 
     setState(() {
       allProcedures = updatedProcedures; // Update the list of all procedures
-      filteredProcedures = List.from(allProcedures); // Refresh the filtered list
+      filteredProcedures = List.from(allProcedures);
+      
+      // Clears text field on add procedure dialog 
+      _procedureNameController.clear();
+      _procedureBasePriceController.clear();
+      _procedureMinDPController.clear();
+      selectedService = null;
+      selectedPaymentType = null;
     });
     } catch (error) {
       print('Error adding procedure: $error');
@@ -666,8 +673,12 @@ class _ServicesScreenState extends State<ServicesScreen> {
   void _deleteService(Procedure procedure) async {
     try {
       await _procedureController.deleteProcedure(procedure.id.toString());
+      print('Procedure deleted successfully');
+
+      final updatedProcedures = await _procedureController.getAllProcedures();
       setState(() {
-        procedures = _procedureController.getAllProcedures();
+        allProcedures = updatedProcedures;
+        filteredProcedures = List.from(allProcedures);
       });
     } catch (error) {
       print('Error deleting procedure: $error');
@@ -698,8 +709,10 @@ class _ServicesScreenState extends State<ServicesScreen> {
         print('Procedure updated successfully');
 
         // Reload the procedures to refresh the table
+        final updatedProcedures = await _procedureController.getAllProcedures();
         setState(() {
-          procedures = _procedureController.getAllProcedures();
+          allProcedures = updatedProcedures;
+          filteredProcedures = List.from(allProcedures);
         });
       } catch (error) {
         print('Error updating procedure: $error');
