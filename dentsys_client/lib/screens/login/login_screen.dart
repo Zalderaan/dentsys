@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dentsys_client/screens/login/app_colors.dart';
 //import 'package:dentsys_client/screens/login/app_styles.dart';
-import 'package:dentsys_client/screens/login/app_icons.dart';
+//import 'package:dentsys_client/screens/login/app_icons.dart';
 import 'package:dentsys_client/screens/login/responsive_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 // users imports
@@ -21,6 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   late final UserController userController;
+  bool _isPasswordVisible = false;
 
   @override
   void initState() {
@@ -190,10 +191,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
-                                  prefixIcon: IconButton(
-                                    onPressed: () {},
-                                    icon: Image.asset(AppIcons.emailIcon),
-                                  ),
+                                  prefixIcon: const Icon(Icons.person, color: AppColors.darkBrownColor),
                                   contentPadding: const EdgeInsets.only(top: 16.0),
                                   hintText: 'Enter Username',
                                   hintStyle: GoogleFonts.raleway(
@@ -232,16 +230,22 @@ class _LoginScreenState extends State<LoginScreen> {
                                   color: AppColors.darkBrownColor,
                                   fontSize: 12.0,
                                 ),
-                                obscureText: true,
+                                obscureText: !_isPasswordVisible,
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
+                                  prefixIcon: Icon(Icons.lock, color: AppColors.darkBrownColor),
                                   suffixIcon: IconButton(
-                                    onPressed: () {},
-                                    icon: Image.asset(AppIcons.eyeIcon),
-                                  ),
-                                  prefixIcon: IconButton(
-                                    onPressed: () {},
-                                    icon: Image.asset(AppIcons.lockIcon),
+                                    icon: Icon(
+                                      _isPasswordVisible
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      color: AppColors.darkBrownColor,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _isPasswordVisible = !_isPasswordVisible;
+                                      });
+                                    },
                                   ),
                                   contentPadding: const EdgeInsets.only(top: 16.0),
                                   hintText: 'Enter Password',
