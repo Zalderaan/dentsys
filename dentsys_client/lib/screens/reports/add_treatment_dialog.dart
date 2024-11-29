@@ -265,9 +265,9 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
                               if (existingProcedure.isEmpty) {
                                 // If the procedure is not already in the list, proceed to show the pricing dialog
                                 if (selectedProcedure.priceType == 'Unit') {
-                                  await showPricingDialog(context, selectedProcedure, (selectedPrice) {
+                                  await showPricingDialog(context, selectedProcedure, (selectedPrice, unitAmount) {
                                     setState(() {
-                                      proceduresDone.add('${selectedProcedure.name} (₱${selectedPrice.toStringAsFixed(2)})');
+                                      proceduresDone.add('${selectedProcedure.name} ($unitAmount) (₱${selectedPrice.toStringAsFixed(2)})');
                                       print(proceduresDone);
                                     });
                                   });
@@ -323,10 +323,12 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
   }
 }
 
-Future<void> showPricingDialog(BuildContext context, Procedure procedure, Function(double) onPriceSelected) async {
+Future<void> showPricingDialog(BuildContext context, Procedure procedure, Function(double, int) onPriceSelected) async {
   double basePrice = procedure.basePrice; // Assume `Procedure` has a `basePrice` field.
   double? customPrice;
   bool isCustomPriceSelected = false;
+  int unitAmount = 1;
+
 
   await showDialog(
     context: context,
@@ -345,12 +347,18 @@ Future<void> showPricingDialog(BuildContext context, Procedure procedure, Functi
               children: [
                 const Divider(),
                 // Base Price Field
-                const TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Unit/Teeth/Quadrant Amount',
+                TextField(
+                  decoration: const InputDecoration(
+                    labelText: 'Unit/Tooth/Quadrant/Arch Amount',
                     border: UnderlineInputBorder(),
                   ),
                   keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
+                  onChanged: (value) {
+                    unitAmount = int.tryParse(value) ?? 1;
+                  },
                 ),
                 const SizedBox(height: 15),
                 TextField(
@@ -419,9 +427,9 @@ Future<void> showPricingDialog(BuildContext context, Procedure procedure, Functi
                 child: const Text('Confirm'),
                 onPressed: () {
                   double selectedPrice = isCustomPriceSelected && customPrice != null
-                      ? customPrice!
-                      : basePrice;
-                  onPriceSelected(selectedPrice);
+                      ? customPrice! * unitAmount
+                      : basePrice * unitAmount;
+                  onPriceSelected(selectedPrice, unitAmount);
                   Navigator.of(context).pop();
                 },
               ),
