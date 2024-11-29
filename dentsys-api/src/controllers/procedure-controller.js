@@ -1,6 +1,6 @@
-import Procedure from '../models/procedure-model.js';
+const Procedure = require('../models/procedure-model.js');
 
-export default class ProcedureController {
+class ProcedureController {
     // POST
     static async addProcedure(req, res) {
         const data = req.body;
@@ -74,3 +74,5 @@ export default class ProcedureController {
         }
     }
 }
+
+module.exports = ProcedureController;

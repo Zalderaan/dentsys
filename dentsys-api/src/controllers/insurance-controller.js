@@ -1,6 +1,6 @@
-import Insurance from "../models/insurance-model.js";
+const Insurance = require('../models/insurance-model.js');
 
-export default class InsuranceController {
+class InsuranceController {
     // POST
     static async addInsurance(req, res) {
         const data = req.body;
@@ -49,3 +49,5 @@ export default class InsuranceController {
         }
     }
 }
+
+module.exports = InsuranceController;

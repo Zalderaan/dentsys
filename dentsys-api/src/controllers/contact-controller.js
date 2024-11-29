@@ -1,8 +1,6 @@
-import Contact from "../models/contact-model.js";
+const Contact = require('../models/contact-model.js');
 
-import pool from '../../config/db.js';
-
-export default class ContactController {
+class ContactController {
     // POST 
     static async addContact(req, res) {
         const data = req.body;
@@ -52,3 +50,5 @@ export default class ContactController {
         }
     }
 }
+
+module.exports = ContactController;

@@ -1,8 +1,6 @@
-import User from '../models/user-model.js';
-import { body, validationResult } from 'express-validator';
-import bcrypt, { hash } from 'bcrypt';
+const User = require('../models/user-model');
 
-export default class UserController {
+class UserController {
     // POST
     static async registerUser(req, res) {
         const data = req.body;
@@ -54,3 +52,5 @@ export default class UserController {
         }
     }
 }
+
+module.exports = UserController;
