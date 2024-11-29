@@ -1,7 +1,7 @@
-import pool from '../../config/db.js';
-import bcrypt, { hash } from 'bcrypt';
+const pool = require('../../config/db.js');
+const bcrypt = require('bcryptjs');
 
-export default class User {
+class User {
     constructor(id, firstName, lastName, username, email, password) {
         this.id = id;
         this.firstName = firstName;
@@ -206,3 +206,5 @@ export default class User {
         }
     }
 }
+
+module.exports = User;

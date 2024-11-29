@@ -1,6 +1,6 @@
-import pool from '../../config/db.js';
+const pool = require('../../config/db.js');
 
-export default class PatientTreatment {
+class PatientTreatment {
     static async createPatientTreatment(data) {
         try {
             const {patient_id, treatment_prcdName, treatment_date, treatment_toothNo, treatment_dentist, treatment_charged, treatment_paid, treatment_balance} = data;
@@ -174,3 +174,5 @@ export default class PatientTreatment {
         }
     }
 }
+
+module.exports = PatientTreatment;

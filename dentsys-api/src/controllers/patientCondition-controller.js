@@ -1,6 +1,6 @@
-import PatientCondition from '../models/patientCondition-model.js';
+const PatientCondition = require('../models/patientCondition-model.js');
 
-export default class PatientConditionController{
+class PatientConditionController{
     // POST
     static async changePatientCondition(req, res) {
         const data = req.body;
@@ -58,3 +58,5 @@ export default class PatientConditionController{
     //     }
     // }
 }
+
+module.exports = PatientConditionController;

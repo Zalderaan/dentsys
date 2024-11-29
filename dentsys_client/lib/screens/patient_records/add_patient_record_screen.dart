@@ -748,12 +748,6 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                           labelText: "Occupation",
                                           border: OutlineInputBorder(),
                                         ),
-                                        validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return 'This item is required';
-                                          }
-                                          return null;
-                                        },
                                       ),
                                     ),
                                   ],
@@ -824,12 +818,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                           labelText: "Whom may we thank for referring you?",
                                           border: OutlineInputBorder(),
                                         ),
-                                        validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return 'This item is required';
-                                          }
-                                          return null;
-                                        },
+                                        
                                       ),
                                     ),
                                     const SizedBox(width: 10),
@@ -956,15 +945,10 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                               child: TextFormField(
                                                 controller:  _homeNoController,
                                                 decoration: const InputDecoration(
-                                                  labelText: "Home Number",
+                                                  labelText: "Home Tel. Number",
                                                   border: OutlineInputBorder(),
                                                 ),
-                                                validator: (value) {
-                                                  if (value == null || value.isEmpty) {
-                                                    return 'This item is required';
-                                                  }
-                                                  return null;
-                                                },
+                                                
                                               ),
                                             ),
                                             const SizedBox(width: 10),
@@ -975,12 +959,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                   labelText: "Office Number",
                                                   border: OutlineInputBorder(),
                                                   ),
-                                                validator: (value) {
-                                                  if (value == null || value.isEmpty) {
-                                                    return 'This item is required';
-                                                  }
-                                                  return null;
-                                                },
+                                                
                                               ),
                                             ),
                                             const SizedBox(width: 10),
@@ -991,12 +970,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                   labelText: "Fax Number",
                                                   border: OutlineInputBorder(),
                                                 ),
-                                                validator: (value) {
-                                                  if (value == null || value.isEmpty) {
-                                                    return 'This item is required';
-                                                  }
-                                                  return null;
-                                                },
+                                                
                                               ),
                                             ),
                                           
@@ -1137,12 +1111,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                   labelText: "Dental Insurance",
                                                   border: OutlineInputBorder(),
                                                 ),
-                                                validator: (value) {
-                                                  if (value == null || value.isEmpty) {
-                                                    return 'This item is required';
-                                                  }
-                                                  return null;
-                                                },
+                                                
                                               ),
                                             ),
                                             const SizedBox(width: 10),
@@ -1167,12 +1136,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                     _insuranceEffectiveDateController.text = formattedDate; // Set the selected date
                                                   }
                                                 },
-                                                validator: (value) {
-                                                  if (value == null || value.isEmpty) {
-                                                    return 'This item is required';
-                                                  }
-                                                  return null;
-                                                },
+                                                
                                               ),
                                             ),
                                           ],
@@ -1276,12 +1240,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                   labelText: "Previous Dentist",
                                                   border: OutlineInputBorder(),
                                                 ),
-                                                validator: (value) {
-                                                  if (value == null || value.isEmpty) {
-                                                    return 'This item is required';
-                                                  }
-                                                  return null;
-                                                },
+                                                
                                               ),
                                             ),
                                             const SizedBox(width: 10),
@@ -1292,12 +1251,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                   labelText: "Latest Dental Visit",
                                                   border: OutlineInputBorder(),
                                                 ),
-                                                validator: (value) {
-                                                  if (value == null || value.isEmpty) {
-                                                    return 'This item is required';
-                                                  }
-                                                  return null;
-                                                },
+                                                
                                               ),
                                             ),
                                           ],

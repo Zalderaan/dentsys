@@ -1,15 +1,14 @@
-import express from 'express';
-import UserController from '../controllers/user-controller.js';
-import PatientController from '../controllers/patient-controller.js';
-import ContactController from '../controllers/contact-controller.js';
-import DentalHistoryController from '../controllers/dentalHistory-controller.js';
-import InsuranceController from '../controllers/insurance-controller.js';
-import MedicalHistoryController from '../controllers/medicalHistory-controller.js';
-import PatientConditionController from '../controllers/patientCondition-controller.js';
-import AllergiesController from '../controllers/allergies-controller.js';
-import ProcedureController from '../controllers/procedure-controller.js';
-import PatientTreatmentController from '../controllers/patientTreatment-controller.js';
-import TestController from '../controllers/test-controller.js';
+const express = require('express');
+const UserController = require('../controllers/user-controller.js');
+const PatientController = require('../controllers/patient-controller.js');
+const ContactController = require('../controllers/contact-controller.js');
+const DentalHistoryController = require('../controllers/dentalHistory-controller.js');
+const InsuranceController = require('../controllers/insurance-controller.js');
+const MedicalHistoryController = require('../controllers/medicalHistory-controller.js');
+const PatientConditionController = require('../controllers/patientCondition-controller.js');
+const AllergiesController = require('../controllers/allergies-controller.js');
+const ProcedureController = require('../controllers/procedure-controller.js');
+const PatientTreatmentController = require('../controllers/patientTreatment-controller.js');
 
 const router = express.Router();
 
@@ -76,4 +75,4 @@ router.get('/get-balance-before-treatment/:pid/:tid', PatientTreatmentController
 router.put('/update-treatment/:id', PatientTreatmentController.updateTreatment);
 router.delete('/delete-treatment/:id', PatientTreatmentController.deleteTreatment);
 
-export default router;
+module.exports = router;

@@ -1,6 +1,6 @@
-import PatientTreatment from "../models/patientTreatment-model.js";
+const PatientTreatment = require('../models/patientTreatment-model.js');
 
-export default class PatientTreatmentController {
+class PatientTreatmentController {
     // POST
     static async addTreatment(req, res) {
         try {
@@ -78,3 +78,5 @@ export default class PatientTreatmentController {
         }
     }
 }
+
+module.exports = PatientTreatmentController;

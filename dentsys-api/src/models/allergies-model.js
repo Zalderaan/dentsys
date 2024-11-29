@@ -1,6 +1,6 @@
-import pool from '../../config/db.js';
+const pool = require('../../config/db.js');
 
-export default class Allergies {
+class Allergies {
     constructor(anesthetic, penicillin, antibiotics, sulfaDrugs, aspirin, latex, others, patient_id){
         this.anesthetic = anesthetic;
         this.penicillin = penicillin;
@@ -127,3 +127,5 @@ export default class Allergies {
         }
     }
 }
+
+module.exports = Allergies; 

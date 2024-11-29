@@ -1,6 +1,6 @@
-import MedicalHistory from '../models/medicalHistory-model.js';
+const MedicalHistory = require('../models/medicalHistory-model.js');
 
-export default class MedicalHistoryController {
+class MedicalHistoryController {
     // POST
     static async addMedicalHistory(req, res) {
         const data = req.body;
@@ -48,3 +48,5 @@ export default class MedicalHistoryController {
         }
     }
 }
+
+module.exports = MedicalHistoryController;

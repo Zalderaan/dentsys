@@ -1,6 +1,6 @@
-import pool from '../../config/db.js';
+const pool = require('../../config/db.js');
 
-export default class DentalHistory {
+class DentalHistory {
     constructor(previous_dentist, last_visit, patient_id){
         this.previous_dentist = previous_dentist;
         this.last_visit = last_visit;
@@ -104,3 +104,5 @@ export default class DentalHistory {
         }
     }
 }
+
+module.exports = DentalHistory;

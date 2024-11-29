@@ -525,105 +525,105 @@ class _ReportsScreenState extends State<ReportsScreen> {
                           const SizedBox(height: 15.0),
 
                           // APPOINTMENTS CONTAINER
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10.0),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  spreadRadius: 2,
-                                  blurRadius: 5,
-                                  offset: const Offset(0, 3),
-                                ),
-                              ],
-                            ),
-                            padding: const EdgeInsets.all(20.0),
-                            child: Column(
-                              children: [
-                                const Row(
-                                  children: [
-                                    Text(
-                                      "Appointments",
-                                      style: TextStyle(
-                                        fontSize: 24.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(255, 66, 43, 21),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 5.0),
-                                      Divider(
-                                        height: 10,
-                                        color: Colors.grey[800],
-                                        thickness: 0.5,
-                                      ),
-                                const SizedBox(height: 10),
+                          // Container(
+                          //   decoration: BoxDecoration(
+                          //     color: Colors.white,
+                          //     borderRadius: BorderRadius.circular(10.0),
+                          //     boxShadow: [
+                          //       BoxShadow(
+                          //         color: Colors.black.withOpacity(0.2),
+                          //         spreadRadius: 2,
+                          //         blurRadius: 5,
+                          //         offset: const Offset(0, 3),
+                          //       ),
+                          //     ],
+                          //   ),
+                          //   padding: const EdgeInsets.all(20.0),
+                          //   child: Column(
+                          //     children: [
+                          //       const Row(
+                          //         children: [
+                          //           Text(
+                          //             "Appointments",
+                          //             style: TextStyle(
+                          //               fontSize: 24.0,
+                          //               fontWeight: FontWeight.bold,
+                          //               color: Color.fromARGB(255, 66, 43, 21),
+                          //             ),
+                          //           ),
+                          //         ],
+                          //       ),
+                          //       const SizedBox(height: 5.0),
+                          //             Divider(
+                          //               height: 10,
+                          //               color: Colors.grey[800],
+                          //               thickness: 0.5,
+                          //             ),
+                          //       const SizedBox(height: 10),
 
-                                Table(
-                                  columnWidths: const {
-                                    0: FlexColumnWidth(3),  // Date-Time
-                                    1: FlexColumnWidth(4),  // Procedure
-                                    2: FlexColumnWidth(2),  // Price
-                                  },
-                                  border: TableBorder.all(
-                                    color: Colors.black,
-                                    width: 1.0,
-                                  ),
-                                  children: const [
-                                    TableRow(
+                          //       Table(
+                          //         columnWidths: const {
+                          //           0: FlexColumnWidth(3),  // Date-Time
+                          //           1: FlexColumnWidth(4),  // Procedure
+                          //           2: FlexColumnWidth(2),  // Price
+                          //         },
+                          //         border: TableBorder.all(
+                          //           color: Colors.black,
+                          //           width: 1.0,
+                          //         ),
+                          //         children: const [
+                          //           TableRow(
                                       
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "Date-Time",
-                                            style: TextStyle(fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "Procedure",
-                                            style: TextStyle(fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "Price",
-                                            style: TextStyle(fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                          //             children: [
+                          //               Padding(
+                          //                 padding: EdgeInsets.all(8.0),
+                          //                 child: Text(
+                          //                   "Date-Time",
+                          //                   style: TextStyle(fontWeight: FontWeight.bold),
+                          //                 ),
+                          //               ),
+                          //               Padding(
+                          //                 padding: EdgeInsets.all(8.0),
+                          //                 child: Text(
+                          //                   "Procedure",
+                          //                   style: TextStyle(fontWeight: FontWeight.bold),
+                          //                 ),
+                          //               ),
+                          //               Padding(
+                          //                 padding: EdgeInsets.all(8.0),
+                          //                 child: Text(
+                          //                   "Price",
+                          //                   style: TextStyle(fontWeight: FontWeight.bold),
+                          //                 ),
+                          //               ),
+                          //             ],
+                          //           ),
                                     
-                                    // Example Row (Replace with dynamic data rows as needed)
-                                    TableRow(
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text("2024-11-10 14:30"),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text("Cleaning"),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text("₱500"),
-                                        ),
-                                      ],
-                                    ),
-                                    // Additional rows can go here
-                                  ],
-                                ),
+                          //           // Example Row (Replace with dynamic data rows as needed)
+                          //           TableRow(
+                          //             children: [
+                          //               Padding(
+                          //                 padding: EdgeInsets.all(8.0),
+                          //                 child: Text("2024-11-10 14:30"),
+                          //               ),
+                          //               Padding(
+                          //                 padding: EdgeInsets.all(8.0),
+                          //                 child: Text("Cleaning"),
+                          //               ),
+                          //               Padding(
+                          //                 padding: EdgeInsets.all(8.0),
+                          //                 child: Text("₱500"),
+                          //               ),
+                          //             ],
+                          //           ),
+                          //           // Additional rows can go here
+                          //         ],
+                          //       ),
 
 
-                              ],
-                            ),
-                          ),
+                          //     ],
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
@@ -1270,8 +1270,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
       // Use the screen width to adjust the layout
       bool isWideScreen = constraints.maxWidth > 600;
 
-      return isWideScreen
-          ? Row(
+      if (isWideScreen) {
+        return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
@@ -1300,8 +1300,18 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       buildInfoSection("Nationality", [details.patient.nationality]),
                       buildInfoSection("Occupation", [details.patient.occupation]),
                       buildInfoSection("Religion", [details.patient.religion]),                    
-                      buildInfoSection("Good Health", [details.medical.medical_goodHealth.toString()]),
-                      buildInfoSection("Under Medical Treatment", [details.medical.medical_isMedication.toString()]),
+                      buildInfoSection(
+                        "Good Health",
+                        details.medical.medical_goodHealth
+                            ? ["Yes"]
+                            : ["No"],
+                      ),
+                      buildInfoSection(
+                        "Under Medical Treatment",
+                        details.medical.medical_isUnderTreatment
+                            ? [details.medical.medical_treatmentDetails.toString()]
+                            : ["No"],
+                      ),                      
                       buildInfoSection("Blood Type", [details.medical.medical_bloodType]),
                       buildInfoSection("Blood Pressure", [details.medical.medical_bloodPressure]),
                       buildInfoSection("Bleeding Time", [details.medical.medical_bleedingTime]),
@@ -1368,22 +1378,63 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       buildInfoSection("Speciality", [details.medical.medical_physicianSpec.toString()]),
                       buildInfoSection("Office Address", [details.medical.medical_officeAddress]),
                       buildInfoSection("Office Number", [details.medical.medical_officeNo]),
-                      buildInfoSection("Usage of Tobacco", [details.medical.medical_isTobacco.toString()]),
-                      buildInfoSection("Usage of Alcohol", [details.medical.medical_dangerousSubstance.toString()]),
-                      buildInfoSection("Hospitalized", [details.medical.medical_hospitalized.toString()]),
-                      buildInfoSection("Taking Prescriptions", [details.medical.medical_isMedication.toString()]),
-                      buildInfoSection("Serious Illness", [details.medical.medical_seriousOperation.toString()]),
-                      buildInfoSection("Pregnant", [details.medical.medical_isPregnant.toString()]),
-                      buildInfoSection("Taking Birth Controls", [details.medical.medical_isBirthControl.toString()]),
-                      buildInfoSection("Nursing", [details.medical.medical_isNursing.toString()]),
+                      buildInfoSection(
+                        "Usage of Tobacco",
+                        details.medical.medical_isTobacco
+                            ? ["Yes"]
+                            : ["No"],
+                      ),
+                      buildInfoSection(
+                        "Usage of Alcohol",
+                        details.medical.medical_dangerousSubstance
+                            ? ["Yes"]
+                            : ["No"],
+                      ),
+                      buildInfoSection(
+                        "Hospitalized",
+                        details.medical.medical_hospitalized
+                            ? [details.medical.medical_hospitalizedDetails.toString()]
+                            : ["No"],
+                      ),
+                      buildInfoSection(
+                        "Taking Any Prescription",
+                        details.medical.medical_isMedication
+                            ? [details.medical.medical_medicationDetails.toString()]
+                            : ["No"],
+                      ),
+                      buildInfoSection(
+                        "Serious Illness",
+                        details.medical.medical_seriousOperation
+                            ? [details.medical.medical_seriousOperationDetails.toString()]
+                            : ["No"],
+                      ),
+                      buildInfoSection(
+                        "Pregnant",
+                        details.medical.medical_isPregnant == true
+                            ? ["Yes"]
+                            : ["No"],
+                      ),
+                      buildInfoSection(
+                        "Taking Birth Controls",
+                        details.medical.medical_isBirthControl == true
+                            ? ["Yes"]
+                            : ["No"],
+                      ),
+                      buildInfoSection(
+                        "Nursing",
+                        details.medical.medical_isNursing == true
+                            ? ["Yes"]
+                            : ["No"],
+                      ),
                       buildInfoSection("Allergies", getTrueAllergies(details.allergies)),
                       buildInfoSection("Conditions", [formatConditions(details.conditions)]),
                     ],
                   ),
                 ),
               ],
-            )
-          : SingleChildScrollView(
+            );
+      } else {
+        return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -1399,8 +1450,18 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   buildInfoSection("Address", [details.contact.home_number, details.contact.home_address]),
                   buildInfoSection("Fax Number", [details.contact.fax_number]),
                   buildInfoSection("Office Number", [details.contact.work_number]),
-                  buildInfoSection("Good Health", [details.medical.medical_goodHealth.toString()]),
-                  buildInfoSection("Under Medical Treatment", [details.medical.medical_isMedication.toString()]),
+                  buildInfoSection(
+                    "Good Health",
+                    details.medical.medical_goodHealth
+                        ? ["Yes"]
+                        : ["No"],
+                  ),
+                  buildInfoSection(
+                    "Under Medical Treatment",
+                    details.medical.medical_isUnderTreatment
+                        ? [details.medical.medical_treatmentDetails.toString()]
+                        : ["No"],
+                  ),              
                   buildInfoSection("Blood Type", [details.medical.medical_bloodType]),
                   buildInfoSection("Blood Pressure", [details.medical.medical_bloodPressure]),
                   buildInfoSection("Bleeding Time", [details.medical.medical_bleedingTime]),
@@ -1412,19 +1473,60 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   buildInfoSection("Speciality", [details.medical.medical_physicianSpec.toString()]),
                   buildInfoSection("Office Address", [details.medical.medical_officeAddress]),
                   buildInfoSection("Office Number", [details.medical.medical_officeNo]),
-                  buildInfoSection("Usage of Tobacco", [details.medical.medical_isTobacco.toString()]),
-                  buildInfoSection("Usage of Alcohol", [details.medical.medical_dangerousSubstance.toString()]),
-                  buildInfoSection("Hospitalized", [details.medical.medical_hospitalized.toString()]),
-                  buildInfoSection("Taking Prescriptions", [details.medical.medical_isMedication.toString()]),
-                  buildInfoSection("Serious Illness", [details.medical.medical_seriousOperation.toString()]),
-                  buildInfoSection("Pregnant", [details.medical.medical_isPregnant.toString()]),
-                  buildInfoSection("Taking Birth Controls", [details.medical.medical_isBirthControl.toString()]),
-                  buildInfoSection("Nursing", [details.medical.medical_isNursing.toString()]),
+                  buildInfoSection(
+                    "Usage of Tobacco",
+                    details.medical.medical_isTobacco
+                        ? ["Yes"]
+                        : ["No"],
+                  ),
+                  buildInfoSection(
+                    "Usage of Alcohol",
+                    details.medical.medical_dangerousSubstance
+                        ? ["Yes"]
+                        : ["No"],
+                  ),
+                  buildInfoSection(
+                    "Hospitalized",
+                    details.medical.medical_hospitalized
+                        ? [details.medical.medical_hospitalizedDetails.toString()]
+                        : ["No"],
+                  ),
+                  buildInfoSection(
+                    "Taking Any Prescription",
+                    details.medical.medical_isMedication
+                        ? [details.medical.medical_medicationDetails.toString()]
+                        : ["No"],
+                  ),
+                  buildInfoSection(
+                    "Serious Illness",
+                    details.medical.medical_seriousOperation
+                        ? [details.medical.medical_seriousOperationDetails.toString()]
+                        : ["No"],
+                  ),
+                  buildInfoSection(
+                    "Pregnant",
+                    details.medical.medical_isPregnant == true
+                        ? ["Yes"]
+                        : ["No"],
+                  ),
+                  buildInfoSection(
+                    "Taking Birth Controls",
+                    details.medical.medical_isBirthControl == true
+                        ? ["Yes"]
+                        : ["No"],
+                  ),
+                  buildInfoSection(
+                    "Nursing",
+                    details.medical.medical_isNursing == true
+                        ? ["Yes"]
+                        : ["No"],
+                  ),
                   buildInfoSection("Allergies", getTrueAllergies(details.allergies)),
                   buildInfoSection("Conditions", [formatConditions(details.conditions)]),
                 ],
               ),
             );
+      }
           },
         );
       }

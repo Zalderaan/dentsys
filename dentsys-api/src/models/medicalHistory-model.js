@@ -1,6 +1,5 @@
-import pool from '../../config/db.js';
-
-export default class MedicalHistory {
+const pool = require('../../config/db.js');
+class MedicalHistory {
     constructor(patient_id, medical_physician, medical_physicianSpec, medical_officeAddress, medical_officeNo, medical_goodHealth, medical_isUnderTreatment, 
         medical_treatmentDetails, medical_seriousOperation, medical_seriousOperationDetails, medical_hospitalized, medical_hospitalizedDetails, medical_isMedication, 
         medical_medicationDetails, medical_isTobacco, medical_dangerousSubstance, medical_bleedingTime, medical_bloodPressure, medical_bloodType, medical_isPregnant, medical_isNursing, medical_isBirthControl
@@ -170,3 +169,5 @@ export default class MedicalHistory {
         }
     }
 }
+
+module.exports = MedicalHistory;
