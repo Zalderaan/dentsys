@@ -1,20 +1,10 @@
-import 'package:dentsys_client/screens/reports/reports_screen.dart';
-import 'package:dentsys_client/screens/services/services_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-
 import 'package:dentsys_client/screens/patient_records/patient_records.dart';
 import 'package:dentsys_client/screens/patient_records/add_patient_record_screen.dart';
-import 'package:dentsys_client/screens/add_appointment/add_appointment_screen.dart';
-import 'package:dentsys_client/screens/add_appointment/appointment_screen.dart';
-//import 'package:dentsys_client/screens/reports/reports_screen.dart';
-//import 'package:dentsys_client/screens/services/services_screen.dart';
-// Uncomment and import your other screens as needed
-// import 'package:dentsys_client/screens/scheduling_screen.dart';
-// import 'package:dentsys_client/screens/records_screen.dart';
-// import 'package:dentsys_client/screens/reports_screen.dart';
-// import 'package:dentsys_client/screens/services_screen.dart';
+import 'package:dentsys_client/screens/reports/reports_screen.dart';
+import 'package:dentsys_client/screens/services/services_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -32,10 +22,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
     _screens = [
-      const AppointmentScreen(),
-      const AddAppointmentScreen(),
       PatientRecords(
-        onAddPatient: _handleAddPatient, 
+        onAddPatient: _handleAddPatient,
         onReports: _handlePatientReports,
       ),
       const AddPatientRecordScreen(),
@@ -44,57 +32,55 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ];
   }
 
-  // Helper method to handle the onAddPatient action
   void _handleAddPatient() {
     setState(() {
-      selectedIndex = 3; // Set index for AddPatientRecordScreen
+      selectedIndex = 1;
     });
   }
 
-void _handlePatientReports(int? id) {
-  if (id != null) {
-    print('Selected patient ID: $id');
-    _screens[4] = ReportsScreen(patient_id: id);
-    setState(() {
-      selectedIndex = 4; // Set index for ReportsScreen
-    });
-  } else {
-    print('No patient ID provided.');
+  void _handlePatientReports(int? id) {
+    if (id != null) {
+      print('Selected patient ID: $id');
+      _screens[2] = ReportsScreen(patient_id: id);
+      setState(() {
+        selectedIndex = 2;
+      });
+    } else {
+      print('No patient ID provided.');
+    }
   }
-}
 
-Future<void> _showLogoutDialog() async {
-  return showDialog<void>(
-    context: context,
-    barrierDismissible: false,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Logout'),
-        content: const Text('Are you sure you want to logout?'),
-        actions: <Widget>[
-          TextButton(
-            child: const Text('Cancel'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          TextButton(
-            child: const Text('Logout'),
-            onPressed: () {
-              Navigator.of(context).pop();
-              _performLogout();
-              // Perform logout action here
-            },
-          ),
-        ],
-      );
-    },
-  );
-}
+  Future<void> _showLogoutDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Logout'),
+          content: const Text('Are you sure you want to logout?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Logout'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _performLogout();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
-void _performLogout() {
-  Navigator.of(context).pushReplacementNamed('/login');
-}
+  void _performLogout() {
+    Navigator.of(context).pushReplacementNamed('/login');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,84 +93,84 @@ void _performLogout() {
               borderRadius: BorderRadius.horizontal(right: Radius.circular(10)),
             ),
             child: NavigationRail(
-              extended: isExpanded,
-              backgroundColor: Colors.transparent,
-              unselectedIconTheme: const IconThemeData(color: Colors.white, opacity: 1),
-              unselectedLabelTextStyle: const TextStyle(color: Colors.white),
-              selectedIconTheme: const IconThemeData(color: Colors.brown),
               selectedIndex: selectedIndex,
+              extended: isExpanded,
               onDestinationSelected: (int index) {
                 setState(() {
                   selectedIndex = index;
                 });
-
-                if (index == 3) {
+            
+                if (index == 1) {
                   _handleAddPatient();
                 }
-
               },
+              labelType: isExpanded
+                  ? NavigationRailLabelType.none
+                  : NavigationRailLabelType.all,
+              backgroundColor: Colors.transparent,
+              groupAlignment: -1.0,
               leading: Column(
                 children: [
                   Ink.image(
-                    width: 100,
-                    height: 100,
+                    width: isExpanded ? 150 : 100,
+                    height: isExpanded ? 150 : 100,
                     fit: BoxFit.fitHeight,
                     image: const AssetImage('assets/images/YNS Logo1.png'),
                   ),
-                  const SizedBox(width: 5),
-                  const Text(
+                  const SizedBox(height: 10),
+                  Text(
                     'YNS',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: isExpanded ? 24 : 20,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
                   ),
                 ],
               ),
+              trailing: Column(
+                mainAxisAlignment: MainAxisAlignment.end, // Align at the bottom
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.logout, color: Colors.red),
+                    onPressed: _showLogoutDialog,
+                    tooltip: 'Logout',
+                  ),
+                ],
+              ),
               destinations: const [
                 NavigationRailDestination(
-                  icon: Icon(Icons.date_range),
-                  label: Text("Appointments"),
+                  icon: Icon(Icons.person_outline, color: Colors.white),
+                  selectedIcon: Icon(Icons.person, color: Color.fromARGB(255, 130, 99, 4)),
+                  label: Text("Patient Records", style: TextStyle(color: Colors.white)),
                 ),
                 NavigationRailDestination(
-                  icon: Icon(Icons.schedule),
-                  label: Text("Scheduling"),
+                  icon: Icon(Icons.add_box_outlined, color: Colors.white),
+                  selectedIcon: Icon(Icons.add_box, color: Color.fromARGB(255, 130, 99, 4)),
+                  label: Text("Add Record", style: TextStyle(color: Colors.white)),
                 ),
                 NavigationRailDestination(
-                  icon: Icon(Icons.person),
-                  label: Text("Records"),
+                  icon: Icon(Icons.report_outlined, color: Colors.white),
+                  selectedIcon: Icon(Icons.report, color: Color.fromARGB(255, 130, 99, 4)),
+                  label: Text("Reports", style: TextStyle(color: Colors.white)),
                 ),
                 NavigationRailDestination(
-                  icon: Icon(Icons.add),
-                  label: Text("Add Records"),
-                ),
-                NavigationRailDestination(
-                  icon: Icon(Icons.report),
-                  label: Text("Reports"),
-                ),
-                NavigationRailDestination(
-                  icon: Icon(Icons.miscellaneous_services),
-                  label: Text("Services"),
+                  icon: Icon(Icons.miscellaneous_services_outlined, color: Colors.white),
+                  selectedIcon: Icon(Icons.miscellaneous_services, color: Color.fromARGB(255, 130, 99, 4)),
+                  label: Text("Services", style: TextStyle(color: Colors.white)),
                 ),
               ],
-              trailing: Padding(
-                padding: const EdgeInsets.only(bottom: 20.0),
-                child: IconButton(
-                  icon: const Icon(Icons.logout, color: Color.fromARGB(255, 255, 87, 75)),
-                  onPressed: _showLogoutDialog,
-                  tooltip: 'Logout',
-                )
-              )
             ),
           ),
+          const VerticalDivider(thickness: 1, width: 1),
           Expanded(
             child: Column(
               children: [
                 Container(
                   color: Colors.white,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -194,15 +180,19 @@ void _performLogout() {
                               isExpanded = !isExpanded;
                             });
                           },
-                          icon: const Icon(Icons.menu),
+                          icon: Icon(
+                            isExpanded ? Icons.menu_open : Icons.menu,
+                          ),
                         ),
                         Row(
                           children: [
                             const Icon(Icons.calendar_today, size: 20.0),
                             const SizedBox(width: 8.0),
                             Text(
-                              DateFormat('EEEE, MMMM d, yyyy').format(DateTime.now()),
-                              style: const TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
+                              DateFormat('EEEE, MMMM d, yyyy')
+                                  .format(DateTime.now()),
+                              style: const TextStyle(
+                                  fontSize: 14.0, fontWeight: FontWeight.bold),
                             ),
                           ],
                         ),
@@ -212,21 +202,21 @@ void _performLogout() {
                 ),
                 Expanded(
                   // child: _screens[selectedIndex], // Display the selected screen\
-                  child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 300),
-                  transitionBuilder: (Widget child, Animation<double> animation) {
-                    return FadeTransition(opacity: animation, child: child);
-                  }, // Display the selected screen
-                  switchInCurve: Curves.easeIn,
-                  switchOutCurve: Curves.easeOut,
-                  layoutBuilder: (currentChild, previousChildren) => Stack(
-                    children: <Widget>[
-                      ...previousChildren,
-                      if (currentChild != null) currentChild,
-                    ],
+                    child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    transitionBuilder: (Widget child, Animation<double> animation) {
+                      return FadeTransition(opacity: animation, child: child);
+                    }, // Display the selected screen
+                    switchInCurve: Curves.easeIn,
+                    switchOutCurve: Curves.easeOut,
+                    layoutBuilder: (currentChild, previousChildren) => Stack(
+                      children: <Widget>[
+                        ...previousChildren,
+                        if (currentChild != null) currentChild,
+                      ],
+                    ),
+                    child: _screens[selectedIndex],
                   ),
-                  child: _screens[selectedIndex],
-                ),
                 ),
               ],
             ),
