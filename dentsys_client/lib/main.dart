@@ -5,7 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:dentsys_client/screens/login/login_screen.dart';
 import 'package:dentsys_client/screens/dashboard/dashboard_screen.dart';
 import 'package:dentsys_client/screens/patient_records/add_patient_record_screen.dart';
-void main() {
+import 'package:dentsys_client/app_start.dart';
+void main() async {
+  // // for prod only
+  // WidgetsFlutterBinding.ensureInitialized(); // ensures async calls work before runApp is called
+  await startProcesses();
   runApp(const MyApp());
 }
 
