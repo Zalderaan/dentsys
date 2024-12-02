@@ -14,5 +14,4 @@ package-lock.json
 dentsys-api/dentsys-api.exe
 
 # dentsys_release exe
-dentsys_release/build/
-dentsys_release/densys-api.exe
+dentsys_release/
