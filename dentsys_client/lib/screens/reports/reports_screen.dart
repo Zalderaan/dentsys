@@ -1,4 +1,5 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
+import 'package:dentsys_client/screens/reports/edit_treatment_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -38,6 +39,9 @@ import 'package:dentsys_client/controllers/conditions_controller.dart';
 import 'package:dentsys_client/models/procedure_model.dart';
 import 'package:dentsys_client/controllers/procedure_controller.dart';
 
+import 'package:dentsys_client/models/treatments_model.dart';
+import 'package:dentsys_client/controllers/treatment_controller.dart';
+
 class ReportsScreen extends StatefulWidget {
   final int? patient_id;
   const ReportsScreen({super.key , this.patient_id});
@@ -49,7 +53,9 @@ class ReportsScreen extends StatefulWidget {
 class _ReportsScreenState extends State<ReportsScreen> {
   final PatientController patientController = PatientController();
   final ProcedureController procedureController = ProcedureController();
+  final TreatmentController treatmentController = TreatmentController();
   PatientDetails? patientDetails;
+  List<PatientTreatment>? patientTreatments;
   bool isLoading = true;
 
 
@@ -57,6 +63,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
   void initState() {
     super.initState();
     loadPatientDetails();
+    loadPatientTreatments();
   }
 
   // get patient details
@@ -72,6 +79,31 @@ class _ReportsScreenState extends State<ReportsScreen> {
       setState(() {
         isLoading = false;
       });
+    }
+  }
+
+  void loadPatientTreatments() async {
+    try {
+      final treatments = await treatmentController.getPatientTreatments(widget.patient_id.toString());
+      setState(() {
+        patientTreatments = treatments;
+        isLoading = false;
+      });
+      print('patient treatments: $patientTreatments');
+    } catch (error) {
+      print('Error getting patient treatments: $error');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  void handleDeleteTreatment(String treatmentId) async {
+    try {
+      await treatmentController.deleteTreatment(treatmentId);
+      loadPatientTreatments();
+    } catch (error) {
+      print('Error deleting treatment: $error');
     }
   }
 
@@ -102,7 +134,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(20.0),
+                    borderRadius: BorderRadius.circular(10.0),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.2),
@@ -119,7 +151,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         child: Text(
                           "Patient Record",
                           style: TextStyle(
-                            fontSize: 24.0,
+                            fontSize: 32.0,
                             fontWeight: FontWeight.bold,
                             color: Color.fromARGB(255, 66, 43, 21),
                           ),
@@ -230,7 +262,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 const SizedBox(height: 15.0),
                  // COLUMN FOR TREATMENT RECORD AND APPOINTMENTS
                 Row(
-                   crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                     Expanded(
                       child: Column(
@@ -267,19 +299,23 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                     ),
                                     ElevatedButton.icon(
                                       onPressed: () {
-                                       //
                                         if (patientDetails?.patient.id != null) {
-                                          showAddTreatmentDialog(context, patientDetails!.patient.id!);
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AddTreatmentDialog(
+                                                patient_id: patientDetails!.patient.id!,
+                                                onTreatmentAdded: loadPatientTreatments, // Pass the refresh function
+                                              );
+                                            },
+                                          );
                                         }
                                       },
-                                      label: const Text(
-                                        "",
-                                      ),
+                                      label: const Text(""),
                                       icon: Icon(
                                         Icons.add,
                                         color: Colors.brown[800],
                                       ),
-                                      
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Colors.transparent,
                                         shadowColor: Colors.transparent,
@@ -288,7 +324,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                         ),
                                       ),
                                     ),
-                                
                                   ],
                                 ),
                                 const SizedBox(height: 5.0),
@@ -298,115 +333,167 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                   thickness: 0.5,
                                 ),
                                 const SizedBox(height: 5),
-                                
-                                // Table Headers
-                                Table(
-                                  columnWidths: const {
-                                    0: FlexColumnWidth(2),  // Date-Time
-                                    1: FlexColumnWidth(2),  // tooth no
-                                    2: FlexColumnWidth(4),  // Procedure
-                                    3: FlexColumnWidth(2),  // dentists
 
-                                    4: FlexColumnWidth(2),  // amount charged 
-                                    5: FlexColumnWidth(2),  // amount paid
-                                    6: FlexColumnWidth(2),  // Balance
-                                  },
-                                  border: TableBorder.all(
-                                    color: Colors.black,
-                                    width: 1.0,
-                                  ),
-                                  children: const [
-                                    TableRow(
-                                      
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "Date-Time",
-                                            style: TextStyle(fontWeight: FontWeight.bold),
+                                // Table with Dynamic Data
+                                isLoading
+                                    ? const Center(child: CircularProgressIndicator())
+                                    : Table(
+                                        columnWidths: const {
+                                          0: FlexColumnWidth(2), // Date-Time
+                                          1: FlexColumnWidth(2), // Tooth No
+                                          2: FlexColumnWidth(4), // Procedure
+                                          3: FlexColumnWidth(2), // Dentist
+                                          4: FlexColumnWidth(2), // Amount Charged
+                                          5: FlexColumnWidth(2), // Amount Paid
+                                          6: FlexColumnWidth(2), // Balance
+                                          7: FlexColumnWidth(2), // Actions
+                                        },
+                                        border: TableBorder.all(
+                                          color: Colors.black,
+                                          width: 1.0,
+                                        ),
+                                        children: [
+                                          // Table Headers
+                                          const TableRow(
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  "Date-Time",
+                                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  "Tooth/s No.",
+                                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  "Procedure",
+                                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  "Dentist/s",
+                                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  "Amount Charged",
+                                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  "Amount Paid",
+                                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  "Balance",
+                                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  "Actions",
+                                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "Tooth/s No.",
-                                            style: TextStyle(fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "Procedure",
-                                            style: TextStyle(fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "Dentist/s",
-                                            style: TextStyle(fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "Amount Charged",
-                                            style: TextStyle(fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "Amount Paid",
-                                            style: TextStyle(fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "Balance",
-                                            style: TextStyle(fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    
-                                    // Example Row (Replace with dynamic data rows as needed)
-                                    TableRow(
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text("2024-11-10 14:30"),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text("Cleaning"),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text("₱500"),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text("2024-11-10 14:30"),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text("Cleaning"),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text("₱500"),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text("₱500"),
-                                        ),
-                                      ],
-                                    ),
-                                    // Additional rows can go here
-                                  ],
-                                ),
+                                          // Dynamic Data Rows
+                                          ...patientTreatments!.map((treatment) {
+                                            return TableRow(
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Text(DateTime.parse(treatment.treatment_date.toString())
+                                                      .toLocal()
+                                                      .toString()),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Text(treatment.treatment_toothNo.toString()),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                    (treatment.treatment_prcdName),                                                      
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Text(treatment.treatment_dentist),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                    "₱${treatment.treatment_charged.toStringAsFixed(2)}",
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                    "₱${treatment.treatment_paid.toStringAsFixed(2)}",
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                    "₱${treatment.treatment_balance.toStringAsFixed(2)}",
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.symmetric(
+                                                    vertical: 10.0,
+                                                    horizontal: 8.0,
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      IconButton(
+                                                        icon: const Icon(Icons.edit, color: Colors.blue),
+                                                        onPressed: () {
+                                                          // Handle edit action
+                                                          showDialog(
+                                                            context: context,
+                                                            builder: (context) {
+                                                              return EditTreatmentDialog(
+                                                                patient_id: patientDetails!.patient.id!,
+                                                                treatment: treatment,
+                                                                onTreatmentAdded: loadPatientTreatments, // Pass the refresh function
+                                                              );
+                                                            },
+                                                          );
+                                                        },
+                                                      ),
+                                                      IconButton(
+                                                        icon: const Icon(Icons.delete, color: Colors.red),
+                                                        onPressed: () async {
+                                                          handleDeleteTreatment(treatment.id.toString());
+                                                        },
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          }).toList(),
+                                        ],
+                                      ),
 
                                 const SizedBox(height: 10.0),
 
@@ -438,105 +525,105 @@ class _ReportsScreenState extends State<ReportsScreen> {
                           const SizedBox(height: 15.0),
 
                           // APPOINTMENTS CONTAINER
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10.0),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  spreadRadius: 2,
-                                  blurRadius: 5,
-                                  offset: const Offset(0, 3),
-                                ),
-                              ],
-                            ),
-                            padding: const EdgeInsets.all(20.0),
-                            child: Column(
-                              children: [
-                                const Row(
-                                  children: [
-                                    Text(
-                                      "Appointments",
-                                      style: TextStyle(
-                                        fontSize: 24.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(255, 66, 43, 21),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 5.0),
-                                      Divider(
-                                        height: 10,
-                                        color: Colors.grey[800],
-                                        thickness: 0.5,
-                                      ),
-                                const SizedBox(height: 10),
+                          // Container(
+                          //   decoration: BoxDecoration(
+                          //     color: Colors.white,
+                          //     borderRadius: BorderRadius.circular(10.0),
+                          //     boxShadow: [
+                          //       BoxShadow(
+                          //         color: Colors.black.withOpacity(0.2),
+                          //         spreadRadius: 2,
+                          //         blurRadius: 5,
+                          //         offset: const Offset(0, 3),
+                          //       ),
+                          //     ],
+                          //   ),
+                          //   padding: const EdgeInsets.all(20.0),
+                          //   child: Column(
+                          //     children: [
+                          //       const Row(
+                          //         children: [
+                          //           Text(
+                          //             "Appointments",
+                          //             style: TextStyle(
+                          //               fontSize: 24.0,
+                          //               fontWeight: FontWeight.bold,
+                          //               color: Color.fromARGB(255, 66, 43, 21),
+                          //             ),
+                          //           ),
+                          //         ],
+                          //       ),
+                          //       const SizedBox(height: 5.0),
+                          //             Divider(
+                          //               height: 10,
+                          //               color: Colors.grey[800],
+                          //               thickness: 0.5,
+                          //             ),
+                          //       const SizedBox(height: 10),
 
-                                Table(
-                                  columnWidths: const {
-                                    0: FlexColumnWidth(3),  // Date-Time
-                                    1: FlexColumnWidth(4),  // Procedure
-                                    2: FlexColumnWidth(2),  // Price
-                                  },
-                                  border: TableBorder.all(
-                                    color: Colors.black,
-                                    width: 1.0,
-                                  ),
-                                  children: const [
-                                    TableRow(
+                          //       Table(
+                          //         columnWidths: const {
+                          //           0: FlexColumnWidth(3),  // Date-Time
+                          //           1: FlexColumnWidth(4),  // Procedure
+                          //           2: FlexColumnWidth(2),  // Price
+                          //         },
+                          //         border: TableBorder.all(
+                          //           color: Colors.black,
+                          //           width: 1.0,
+                          //         ),
+                          //         children: const [
+                          //           TableRow(
                                       
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "Date-Time",
-                                            style: TextStyle(fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "Procedure",
-                                            style: TextStyle(fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "Price",
-                                            style: TextStyle(fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                          //             children: [
+                          //               Padding(
+                          //                 padding: EdgeInsets.all(8.0),
+                          //                 child: Text(
+                          //                   "Date-Time",
+                          //                   style: TextStyle(fontWeight: FontWeight.bold),
+                          //                 ),
+                          //               ),
+                          //               Padding(
+                          //                 padding: EdgeInsets.all(8.0),
+                          //                 child: Text(
+                          //                   "Procedure",
+                          //                   style: TextStyle(fontWeight: FontWeight.bold),
+                          //                 ),
+                          //               ),
+                          //               Padding(
+                          //                 padding: EdgeInsets.all(8.0),
+                          //                 child: Text(
+                          //                   "Price",
+                          //                   style: TextStyle(fontWeight: FontWeight.bold),
+                          //                 ),
+                          //               ),
+                          //             ],
+                          //           ),
                                     
-                                    // Example Row (Replace with dynamic data rows as needed)
-                                    TableRow(
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text("2024-11-10 14:30"),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text("Cleaning"),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text("₱500"),
-                                        ),
-                                      ],
-                                    ),
-                                    // Additional rows can go here
-                                  ],
-                                ),
+                          //           // Example Row (Replace with dynamic data rows as needed)
+                          //           TableRow(
+                          //             children: [
+                          //               Padding(
+                          //                 padding: EdgeInsets.all(8.0),
+                          //                 child: Text("2024-11-10 14:30"),
+                          //               ),
+                          //               Padding(
+                          //                 padding: EdgeInsets.all(8.0),
+                          //                 child: Text("Cleaning"),
+                          //               ),
+                          //               Padding(
+                          //                 padding: EdgeInsets.all(8.0),
+                          //                 child: Text("₱500"),
+                          //               ),
+                          //             ],
+                          //           ),
+                          //           // Additional rows can go here
+                          //         ],
+                          //       ),
 
 
-                              ],
-                            ),
-                          ),
+                          //     ],
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
@@ -1183,63 +1270,171 @@ class _ReportsScreenState extends State<ReportsScreen> {
       // Use the screen width to adjust the layout
       bool isWideScreen = constraints.maxWidth > 600;
 
-      return isWideScreen
-          ? Row(
+      if (isWideScreen) {
+        return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      const Text(
+                              "Personal Details",
+                              style: TextStyle(
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 66, 43, 21),
+                              ),
+                            ),
+                      const SizedBox(height: 10),
+                      Divider(
+                                        height: 10,
+                                        color: Colors.grey[600],
+                                        thickness: 0.5,
+                                      ),
+                      const SizedBox(height: 10),
                       buildInfoSection("Name", [details.patient.firstName, details.patient.lastName]),
                       buildInfoSection("Age", [details.patient.age.toString()]),
                       buildInfoSection("Birthdate", [formatDate(details.patient.birthDate)]),
                       buildInfoSection("Gender", [details.patient.sex.toString()]),
                       buildInfoSection("Nationality", [details.patient.nationality]),
                       buildInfoSection("Occupation", [details.patient.occupation]),
-                      buildInfoSection("Religion", [details.patient.religion]),
-                      buildInfoSection("Email Address", [details.contact.email]),
-                      buildInfoSection("Contact Number", [details.contact.mobile_number]),
-                      buildInfoSection("Address", [details.contact.home_number, details.contact.home_address]),
-                      buildInfoSection("Fax Number", [details.contact.fax_number]),
-                      buildInfoSection("Office Number", [details.contact.work_number]),
-                      buildInfoSection("Good Health", [details.medical.medical_goodHealth.toString()]),
-                      buildInfoSection("Under Medical Treatment", [details.medical.medical_isMedication.toString()]),
+                      buildInfoSection("Religion", [details.patient.religion]),                    
+                      buildInfoSection(
+                        "Good Health",
+                        details.medical.medical_goodHealth
+                            ? ["Yes"]
+                            : ["No"],
+                      ),
+                      buildInfoSection(
+                        "Under Medical Treatment",
+                        details.medical.medical_isUnderTreatment
+                            ? [details.medical.medical_treatmentDetails.toString()]
+                            : ["No"],
+                      ),                      
                       buildInfoSection("Blood Type", [details.medical.medical_bloodType]),
                       buildInfoSection("Blood Pressure", [details.medical.medical_bloodPressure]),
                       buildInfoSection("Bleeding Time", [details.medical.medical_bleedingTime]),
                     ],
                   ),
                 ),
-                //const SizedBox(width: 24),
+                const SizedBox(width: 20),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      const Text(
+                              "Contact Details",
+                              style: TextStyle(
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 66, 43, 21),
+                              ),
+                            ),
+                      const SizedBox(height: 10),
+                      Divider(
+                                        height: 10,
+                                        color: Colors.grey[600],
+                                        thickness: 0.5,
+                                      ),
+                      const SizedBox(height: 10),
+                      buildInfoSection("Email Address", [details.contact.email]),
+                      buildInfoSection("Contact Number", [details.contact.mobile_number]),
+                      buildInfoSection("Address", [details.contact.home_number, details.contact.home_address]),
+                      buildInfoSection("Fax Number", [details.contact.fax_number]),
+                      buildInfoSection("Office Number", [details.contact.work_number]),
                       buildInfoSection("Dental Insurance", [details.insurance.insurance_name]),
                       buildInfoSection("Effective Date", [formatDate(details.insurance.effective_date)]),
                       buildInfoSection("Previous Dentist", [details.dental.previous_dentist]),
                       buildInfoSection("Latest Visit", [formatDate(details.dental.last_visit)]),
+                     
+
+                      
+                     
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 20),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                              "Medical History",
+                              style: TextStyle(
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 66, 43, 21),
+                              ),
+                            ),
+                      const SizedBox(height: 10),
+                      Divider(
+                                        height: 10,
+                                        color: Colors.grey[600],
+                                        thickness: 0.5,
+                                      ),
+                      const SizedBox(height: 10),
                       buildInfoSection("Physician", [details.medical.medical_physician]),
                       buildInfoSection("Speciality", [details.medical.medical_physicianSpec.toString()]),
                       buildInfoSection("Office Address", [details.medical.medical_officeAddress]),
                       buildInfoSection("Office Number", [details.medical.medical_officeNo]),
-                      buildInfoSection("Usage of Tobacco", [details.medical.medical_isTobacco.toString()]),
-                      buildInfoSection("Usage of Alcohol", [details.medical.medical_dangerousSubstance.toString()]),
-                      buildInfoSection("Hospitalized", [details.medical.medical_hospitalized.toString()]),
-                      buildInfoSection("Taking Prescriptions", [details.medical.medical_isMedication.toString()]),
-                      buildInfoSection("Serious Illness", [details.medical.medical_seriousOperation.toString()]),
-                      buildInfoSection("Pregnant", [details.medical.medical_isPregnant.toString()]),
-                      buildInfoSection("Taking Birth Controls", [details.medical.medical_isBirthControl.toString()]),
-                      buildInfoSection("Nursing", [details.medical.medical_isNursing.toString()]),
+                      buildInfoSection(
+                        "Usage of Tobacco",
+                        details.medical.medical_isTobacco
+                            ? ["Yes"]
+                            : ["No"],
+                      ),
+                      buildInfoSection(
+                        "Usage of Alcohol",
+                        details.medical.medical_dangerousSubstance
+                            ? ["Yes"]
+                            : ["No"],
+                      ),
+                      buildInfoSection(
+                        "Hospitalized",
+                        details.medical.medical_hospitalized
+                            ? [details.medical.medical_hospitalizedDetails.toString()]
+                            : ["No"],
+                      ),
+                      buildInfoSection(
+                        "Taking Any Prescription",
+                        details.medical.medical_isMedication
+                            ? [details.medical.medical_medicationDetails.toString()]
+                            : ["No"],
+                      ),
+                      buildInfoSection(
+                        "Serious Illness",
+                        details.medical.medical_seriousOperation
+                            ? [details.medical.medical_seriousOperationDetails.toString()]
+                            : ["No"],
+                      ),
+                      buildInfoSection(
+                        "Pregnant",
+                        details.medical.medical_isPregnant == true
+                            ? ["Yes"]
+                            : ["No"],
+                      ),
+                      buildInfoSection(
+                        "Taking Birth Controls",
+                        details.medical.medical_isBirthControl == true
+                            ? ["Yes"]
+                            : ["No"],
+                      ),
+                      buildInfoSection(
+                        "Nursing",
+                        details.medical.medical_isNursing == true
+                            ? ["Yes"]
+                            : ["No"],
+                      ),
                       buildInfoSection("Allergies", getTrueAllergies(details.allergies)),
                       buildInfoSection("Conditions", [formatConditions(details.conditions)]),
                     ],
                   ),
                 ),
               ],
-            )
-          : SingleChildScrollView(
+            );
+      } else {
+        return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -1255,8 +1450,18 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   buildInfoSection("Address", [details.contact.home_number, details.contact.home_address]),
                   buildInfoSection("Fax Number", [details.contact.fax_number]),
                   buildInfoSection("Office Number", [details.contact.work_number]),
-                  buildInfoSection("Good Health", [details.medical.medical_goodHealth.toString()]),
-                  buildInfoSection("Under Medical Treatment", [details.medical.medical_isMedication.toString()]),
+                  buildInfoSection(
+                    "Good Health",
+                    details.medical.medical_goodHealth
+                        ? ["Yes"]
+                        : ["No"],
+                  ),
+                  buildInfoSection(
+                    "Under Medical Treatment",
+                    details.medical.medical_isUnderTreatment
+                        ? [details.medical.medical_treatmentDetails.toString()]
+                        : ["No"],
+                  ),              
                   buildInfoSection("Blood Type", [details.medical.medical_bloodType]),
                   buildInfoSection("Blood Pressure", [details.medical.medical_bloodPressure]),
                   buildInfoSection("Bleeding Time", [details.medical.medical_bleedingTime]),
@@ -1268,22 +1473,63 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   buildInfoSection("Speciality", [details.medical.medical_physicianSpec.toString()]),
                   buildInfoSection("Office Address", [details.medical.medical_officeAddress]),
                   buildInfoSection("Office Number", [details.medical.medical_officeNo]),
-                  buildInfoSection("Usage of Tobacco", [details.medical.medical_isTobacco.toString()]),
-                  buildInfoSection("Usage of Alcohol", [details.medical.medical_dangerousSubstance.toString()]),
-                  buildInfoSection("Hospitalized", [details.medical.medical_hospitalized.toString()]),
-                  buildInfoSection("Taking Prescriptions", [details.medical.medical_isMedication.toString()]),
-                  buildInfoSection("Serious Illness", [details.medical.medical_seriousOperation.toString()]),
-                  buildInfoSection("Pregnant", [details.medical.medical_isPregnant.toString()]),
-                  buildInfoSection("Taking Birth Controls", [details.medical.medical_isBirthControl.toString()]),
-                  buildInfoSection("Nursing", [details.medical.medical_isNursing.toString()]),
+                  buildInfoSection(
+                    "Usage of Tobacco",
+                    details.medical.medical_isTobacco
+                        ? ["Yes"]
+                        : ["No"],
+                  ),
+                  buildInfoSection(
+                    "Usage of Alcohol",
+                    details.medical.medical_dangerousSubstance
+                        ? ["Yes"]
+                        : ["No"],
+                  ),
+                  buildInfoSection(
+                    "Hospitalized",
+                    details.medical.medical_hospitalized
+                        ? [details.medical.medical_hospitalizedDetails.toString()]
+                        : ["No"],
+                  ),
+                  buildInfoSection(
+                    "Taking Any Prescription",
+                    details.medical.medical_isMedication
+                        ? [details.medical.medical_medicationDetails.toString()]
+                        : ["No"],
+                  ),
+                  buildInfoSection(
+                    "Serious Illness",
+                    details.medical.medical_seriousOperation
+                        ? [details.medical.medical_seriousOperationDetails.toString()]
+                        : ["No"],
+                  ),
+                  buildInfoSection(
+                    "Pregnant",
+                    details.medical.medical_isPregnant == true
+                        ? ["Yes"]
+                        : ["No"],
+                  ),
+                  buildInfoSection(
+                    "Taking Birth Controls",
+                    details.medical.medical_isBirthControl == true
+                        ? ["Yes"]
+                        : ["No"],
+                  ),
+                  buildInfoSection(
+                    "Nursing",
+                    details.medical.medical_isNursing == true
+                        ? ["Yes"]
+                        : ["No"],
+                  ),
                   buildInfoSection("Allergies", getTrueAllergies(details.allergies)),
                   buildInfoSection("Conditions", [formatConditions(details.conditions)]),
                 ],
               ),
             );
-    },
-  );
-}
+      }
+          },
+        );
+      }
 
 
   // initialize condition states

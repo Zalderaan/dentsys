@@ -1,6 +1,6 @@
-import pool from '../../config/db.js';
+const pool = require('../../config/db.js');
 
-export default class Insurance {
+class Insurance {
     constructor(insurance_name, effective_date, patient_id){
         this.insurance_name = insurance_name;
         this.effective_date = effective_date;
@@ -104,3 +104,5 @@ export default class Insurance {
         }
     }
 }
+
+module.exports = Insurance;

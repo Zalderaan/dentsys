@@ -20,8 +20,14 @@ class _PatientRecordsState extends State<PatientRecords> {
   final PatientService _patientService = PatientService();
   late Future<List<Patient>> patientRecords;
   List<Patient> filteredRecords = [];
+  List<Patient> currentRecords = []; // Records for the current page
   String searchQuery = '';
   int selectedFilter = 0;
+
+
+  int currentPage = 1; // Current page number
+  final int recordsPerPage = 10; // Max number of records per page
+  
 
   @override
   void initState() {
@@ -34,9 +40,22 @@ class _PatientRecordsState extends State<PatientRecords> {
     patientRecords.then((records) {
       setState(() {
         filteredRecords = records; // Initially show all records
+        updateCurrentRecords();
       });
     }).catchError((error) {
       print('Error fetching patient records: $error');
+    });
+  }
+
+  void updateCurrentRecords() {
+    final startIndex = (currentPage - 1) * recordsPerPage;
+    final endIndex = startIndex + recordsPerPage;
+
+    setState(() {
+      currentRecords = filteredRecords.sublist(
+        startIndex,
+        endIndex > filteredRecords.length ? filteredRecords.length : endIndex,
+      );
     });
   }
 
@@ -47,6 +66,10 @@ class _PatientRecordsState extends State<PatientRecords> {
           final fullName = "${patient.firstName} ${patient.lastName}".toLowerCase();
           return fullName.contains(searchQuery);
         }).toList();
+
+        // Reset to the first page and update current records
+        currentPage = 1;
+        updateCurrentRecords();
       });
     }).catchError((error) {
       // ignore: avoid_print
@@ -88,7 +111,7 @@ class _PatientRecordsState extends State<PatientRecords> {
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(20.0),
+                    borderRadius: BorderRadius.circular(10.0),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.2), // Shadow color
@@ -146,7 +169,7 @@ class _PatientRecordsState extends State<PatientRecords> {
                           Expanded(
                             child: buildInfoCard(
                               "NUMBER OF PATIENTS",
-                              ["Returnee: ", "14", "New: ", "10", "Total: ", "24"],
+                              ["Old: ", "14", "New: ", "10", "Total: ", "24"],
                               Icons.people,
                               color: Colors.white,
                             ),
@@ -189,8 +212,12 @@ class _PatientRecordsState extends State<PatientRecords> {
                   ),
                 ),
                 const SizedBox(height: 30.0),
+                
+                // Search and Filter
                 buildSearchAndFilterSection(),
                 const SizedBox(height: 30.0),
+
+                // Patient Record List
                 SizedBox(
                   height: 400, // Set an appropriate height for the list
                   child: FutureBuilder<List<Patient>>(
@@ -209,6 +236,8 @@ class _PatientRecordsState extends State<PatientRecords> {
                   ),
                 ),
                 const SizedBox(height: 20.0),
+
+                // Pagination
                 buildPagination(),
               ],
             ),
@@ -317,7 +346,7 @@ class _PatientRecordsState extends State<PatientRecords> {
                 }
               });
             },
-            borderRadius: BorderRadius.circular(20.0),
+            borderRadius: BorderRadius.circular(10.0),
             selectedColor: Colors.white,
             fillColor: Colors.brown[300],
             children: const [
@@ -366,27 +395,12 @@ class _PatientRecordsState extends State<PatientRecords> {
   );
 }
 
-  Widget buildArticleList() {
-    return FutureBuilder<List<Patient>>(
-      future: patientRecords,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(child: Text('No patient records found.'));
-        } else {
-          return ListView.builder(
-            itemCount: filteredRecords.length,
-            itemBuilder: (context, index) {
-              final patient = filteredRecords[index];
-              return buildRecordItem(
-                "${patient.firstName} ${patient.lastName}", patient.id,
-              );
-            },
-          );
-        }
+   Widget buildArticleList() {
+    return ListView.builder(
+      itemCount: currentRecords.length,
+      itemBuilder: (context, index) {
+        final patient = currentRecords[index];
+        return buildRecordItem("${patient.firstName} ${patient.lastName}", patient.id);
       },
     );
   }
@@ -420,13 +434,13 @@ class _PatientRecordsState extends State<PatientRecords> {
                       ),
                       textAlign: TextAlign.left,
                     ),
-                    Text(
-                      "ID: $id",
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.brown[600],
-                      ),
-                    ),
+                    // Text(
+                    //   "ID: $id",
+                    //   style: TextStyle(
+                    //     fontSize: 16.0,
+                    //     color: Colors.brown[600],
+                    //   ),
+                    // ),
                   ],
                 ) 
               ),
@@ -467,17 +481,37 @@ class _PatientRecordsState extends State<PatientRecords> {
   }
 
   Widget buildPagination() {
+    final totalPages = (filteredRecords.length / recordsPerPage).ceil();
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        TextButton(onPressed: () {}, child: Text("1", style: TextStyle(color: Colors.brown[900]))),
-        TextButton(onPressed: () {}, child: Text("2", style: TextStyle(color: Colors.brown[900]))),
-        TextButton(onPressed: () {}, child: Text("3", style: TextStyle(color: Colors.brown[900]))),
-        TextButton(onPressed: () {}, child: Text("See All", style: TextStyle(color: Colors.brown[900]))),
+        IconButton(
+          onPressed: currentPage > 1
+              ? () {
+                  setState(() {
+                    currentPage--;
+                    updateCurrentRecords();
+                  });
+                }
+              : null,
+          icon: const Icon(Icons.arrow_back),
+        ),
+        Text('Page $currentPage of $totalPages'),
+        IconButton(
+          onPressed: currentPage < totalPages
+              ? () {
+                  setState(() {
+                    currentPage++;
+                    updateCurrentRecords();
+                  });
+                }
+              : null,
+          icon: const Icon(Icons.arrow_forward),
+        ),
       ],
     );
   }
 }
-
 
 

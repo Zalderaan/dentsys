@@ -1,12 +1,12 @@
-import Contact from '../models/contact-model.js';
-import Patient from '../models/patient-model.js';
-import DentalHistory from '../models/dentalHistory-model.js';
-import Insurance from '../models/insurance-model.js';
-import Allergies from '../models/allergies-model.js';
-import MedicalHistory from '../models/medicalHistory-model.js';
-import PatientCondition from '../models/patientCondition-model.js';
+const Contact = require('../models/contact-model.js');
+const Patient = require('../models/patient-model.js');
+const DentalHistory = require('../models/dentalHistory-model.js');
+const Insurance = require('../models/insurance-model.js');
+const Allergies = require('../models/allergies-model.js');
+const MedicalHistory = require('../models/medicalHistory-model.js');
+const PatientCondition = require('../models/patientCondition-model.js');
 
-export default class PatientController {
+class PatientController {
     // POST
     static async addPatient(req, res) {
         const data = req.body;
@@ -86,3 +86,5 @@ export default class PatientController {
         }
     }
 }
+
+module.exports = PatientController;

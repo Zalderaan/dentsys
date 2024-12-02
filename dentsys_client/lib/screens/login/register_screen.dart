@@ -24,6 +24,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   late final UserController userController;
+  bool _isPasswordVisible = false;
 
   @override
   void initState() {
@@ -205,10 +206,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
-                                  prefixIcon: IconButton(
-                                    onPressed: () {},
-                                    icon: Image.asset(AppIcons.emailIcon),
-                                  ),
+                                  prefixIcon: const Icon(Icons.person, color: AppColors.darkBrownColor),
                                   contentPadding: const EdgeInsets.only(top: 16.0),
                                   hintText: 'Enter Firstname',
                                   hintStyle: GoogleFonts.raleway(
@@ -251,10 +249,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
-                                  prefixIcon: IconButton(
-                                    onPressed: () {},
-                                    icon: Image.asset(AppIcons.emailIcon),
-                                  ),
+                                  prefixIcon: const Icon(Icons.person, color: AppColors.darkBrownColor),
                                   contentPadding: const EdgeInsets.only(top: 16.0),
                                   hintText: 'Enter Lastname',
                                   hintStyle: GoogleFonts.raleway(
@@ -297,10 +292,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
-                                  prefixIcon: IconButton(
-                                    onPressed: () {},
-                                    icon: Image.asset(AppIcons.emailIcon),
-                                  ),
+                                  prefixIcon: const Icon(Icons.email, color: AppColors.darkBrownColor),
                                   contentPadding: const EdgeInsets.only(top: 16.0),
                                   hintText: 'Enter Email Address',
                                   hintStyle: GoogleFonts.raleway(
@@ -342,10 +334,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
-                                  prefixIcon: IconButton(
-                                    onPressed: () {},
-                                    icon: Image.asset(AppIcons.emailIcon),
-                                  ),
+                                  prefixIcon: const Icon(Icons.person, color: AppColors.darkBrownColor),
                                   contentPadding: const EdgeInsets.only(top: 16.0),
                                   hintText: 'Enter Username',
                                   hintStyle: GoogleFonts.raleway(
@@ -387,16 +376,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   color: AppColors.darkBrownColor,
                                   fontSize: 12.0,
                                 ),
-                                obscureText: true,
+                                obscureText: !_isPasswordVisible,
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
+                                  prefixIcon: Icon(Icons.lock, color: AppColors.darkBrownColor),
                                   suffixIcon: IconButton(
-                                    onPressed: () {},
-                                    icon: Image.asset(AppIcons.eyeIcon),
-                                  ),
-                                  prefixIcon: IconButton(
-                                    onPressed: () {},
-                                    icon: Image.asset(AppIcons.lockIcon),
+                                    icon: Icon(
+                                      _isPasswordVisible
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      color: AppColors.darkBrownColor,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _isPasswordVisible = !_isPasswordVisible;
+                                      });
+                                    },
                                   ),
                                   contentPadding: const EdgeInsets.only(top: 16.0),
                                   hintText: 'Enter Password',

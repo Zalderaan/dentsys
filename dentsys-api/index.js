@@ -1,8 +1,6 @@
 // index.js
-import express from 'express';
-import routes from './src/routes/routes.js';
-// import bodyParser from 'body-parser';
-import pool from './config/db.js';
+const express = require('express');
+const routes = require('./src/routes/routes.js');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,4 +16,4 @@ app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
 
-export default app; // Export the app for testing
+module.exports = app;

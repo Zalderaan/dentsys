@@ -1,6 +1,6 @@
-import pool from '../../config/db.js';
+const pool = require('../../config/db.js');
 
-export default class PatientCondition {
+class PatientCondition {
     constructor(patient_id, condition_id, patientCondition_status) {
         this.patient_id = patient_id;
         this.condition_id = condition_id;
@@ -187,3 +187,4 @@ export default class PatientCondition {
     }
 }
 
+module.exports = PatientCondition;

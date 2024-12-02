@@ -1,6 +1,6 @@
-import DentalHistory from '../models/dentalHistory-model.js';
+const DentalHistory = require('../models/dentalHistory-model.js');
 
-export default class DentalHistoryController {
+class DentalHistoryController {
     // POST
     static async addDentalHistory(req, res) {
         const data = req.body;
@@ -48,3 +48,5 @@ export default class DentalHistoryController {
         }
     }
 }
+
+module.exports = DentalHistoryController;

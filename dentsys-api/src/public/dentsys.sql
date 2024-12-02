@@ -94,8 +94,8 @@ CREATE TABLE IF NOT EXISTS allergies (
 -- PROCEDURES TABLE
 CREATE TABLE IF NOT EXISTS procedures (
     prcd_id INT AUTO_INCREMENT PRIMARY KEY,
-    prcd_name VARCHAR(50) NOT NULL,
-    prcd_priceType ENUM('Fixed', 'Variable', 'Downpayment', 'Unit') NOT NULL,
+    prcd_name VARCHAR(100) NOT NULL,
+    prcd_priceType ENUM('Fixed', 'Variable', 'Down Payment', 'Unit', 'To Be Determined') NOT NULL,
     prcd_category VARCHAR(50) NOT NULL,
     prcd_minDP DECIMAL(10, 2),
     prcd_basePrice DECIMAL(10, 2) NOT NULL
@@ -105,7 +105,7 @@ CREATE TABLE IF NOT EXISTS patient_treatments (
     treatment_id INT AUTO_INCREMENT PRIMARY KEY,
     patient_id INT NOT NULL,
     treatment_date DATE NOT NULL,
-    treatment_prcdName VARCHAR(50) NOT NULL,
+    treatment_prcdName TEXT NOT NULL,
     treatment_toothNo VARCHAR(50) NOT NULL,
     treatment_dentist VARCHAR(50) NOT NULL,
     treatment_charged DECIMAL NOT NULL,
@@ -182,3 +182,86 @@ INSERT INTO conditions (condition_name, condition_description) VALUES ('bloodDis
 INSERT INTO conditions (condition_name, condition_description) VALUES ('headInjury', 'History of head injury');
 INSERT INTO conditions (condition_name, condition_description) VALUES ('arthritis', 'Arthritis');
 INSERT INTO conditions (condition_name, condition_description) VALUES ('others', 'Other health conditions');
+
+-- INSERT DEFAULT PROCEDURES
+-- consultations
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Check up & Consultation', 'Fixed', 'Consultation', 0, 300);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Check up & Consultation w/ Cert', 'Fixed', 'Consultation', 0, 500);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Check up & Consultation (TMJ)', 'Fixed', 'Consultation', 0, 1000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('TMD Screening/Evaluation w Machine', 'Fixed', 'Consultation', 0, 5000);
+-- oral prophylaxis
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Mild OP', 'Fixed', 'Oral Prophylaxis', 0, 1000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Moderate OP', 'Fixed', 'Oral Prophylaxis', 0, 1500);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Severe OP', 'Fixed', 'Oral Prophylaxis', 0, 2000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Fluoride Treatment', 'Fixed', 'Oral Prophylaxis', 0, 1000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Mild OP (w/ braces)', 'Fixed', 'Oral Prophylaxis', 0, 1500);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Moderate OP (w/ braces)', 'Fixed', 'Oral Prophylaxis', 0, 2000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Severe OP (w/ braces)', 'Fixed', 'Oral Prophylaxis', 0, 2500);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Bracket Removal w/ OP & Polishing', 'Fixed', 'Oral Prophylaxis', 0, 3000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Deep Scaling & Root Planning (Perio Case)', 'Unit', 'Oral Prophylaxis', 0, 3000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Deep Scaling & Root Planning w Flap', 'Unit', 'Oral Prophylaxis', 0, 5000);
+-- oral surgery
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Simple Extraction', 'Fixed', 'Oral Surgery', 0, 1000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Minor Surgery (flap, bone reduction, root splitting)', 'Variable', 'Oral Surgery', 0, 3000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Odontectomy (wisdom tooth surgery)', 'Variable', 'Oral Surgery', 0, 8000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Gingivectomy', 'Unit', 'Oral Surgery', 0, 3000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Additional Anesthesia', 'Fixed', 'Oral Surgery', 0, 200);
+-- tooth restoration
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('TR Per Surface', 'Unit', 'Tooth Restoration', 0, 1000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Sealant', 'Fixed', 'Tooth Restoration', 0, 1000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Fiber Reinforced Build-up', 'Fixed', 'Tooth Restoration', 0, 3000);
+-- crowns & veneers
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Direct Composite Veneer', 'Unit', 'Crowns & Veneers', 0, 5000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Zirconia Veneer/Crown', 'Unit', 'Crowns & Veneers', 0, 25000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Emax Veneer/Crown', 'Unit', 'Crowns & Veneers', 0, 20000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('PFM Crown', 'Unit', 'Crowns & Veneers', 0, 8000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Tilite Crown', 'Unit', 'Crowns & Veneers', 0, 10000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Plastic Crown', 'Unit', 'Crowns & Veneers', 0, 4000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Ceramage Crown', 'Unit', 'Crowns & Veneers', 0, 5000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('PMMA Crown', 'Unit', 'Crowns & Veneers', 0, 4000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('SSC', 'Unit', 'Crowns & Veneers', 0, 3000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Fiber Reinforced Maryland', 'Unit', 'Crowns & Veneers', 0, 6000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Gold Crown (TBD)', 'To Be Determined', 'Crowns & Veneers', 0, 0);
+-- dentures
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Standard - Complete Denture', 'Unit', 'Dentures', 0, 10000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Standard - Partial Denture (Anterior & Posterior)', 'Unit', 'Dentures', 0, 8000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Standard - Partial Denture (Anterior OR Posterior)', 'Unit', 'Dentures', 0, 5000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Thermosens/Flexible - Complete Denture', 'Unit', 'Dentures', 0, 20000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Thermosens/Flexible  - Partial Denture (Anterior & Posterior)', 'Unit', 'Dentures', 0, 18000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Thermosens/Flexible  - Partial Denture (Anterior OR Posterior)', 'Unit', 'Dentures', 0, 15000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('IVOCAP', 'Unit', 'Dentures', 0, 25000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Combination of Metal', 'Unit', 'Dentures', 0, 25000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Repair', 'Unit', 'Dentures', 0, 2000);
+-- root canal treatment
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('RCT', 'Unit', 'Root Canal Treatment', 0, 8000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('RCT w/ Big Apical Lesion', 'Unit', 'Root Canal Treatment', 0, 10000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Retreatment', 'Unit', 'Root Canal Treatment', 0, 10000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Pulpectomy', 'Unit', 'Root Canal Treatment', 0, 5000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Pulpotomoy', 'Unit', 'Root Canal Treatment', 0, 3000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Fiber Post', 'Unit', 'Root Canal Treatment', 0, 3000);
+-- orthodontics
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Metal', 'Down Payment', 'Orthodontics', 10000, 50000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Ceramic', 'Down Payment', 'Orthodontics', 20000, 80000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Sapphire', 'Down Payment', 'Orthodontics', 20000, 80000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('SWLF', 'Down Payment', 'Orthodontics', 20000, 80000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Self-Ligating', 'Down Payment', 'Orthodontics', 30000, 100000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Clear Aligners', 'Fixed', 'Orthodontics', 30000, 100000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Recement of Bracket', 'Fixed', 'Orthodontics', 0, 500);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Replacement (Lost Bracket, Buccal Tube)', 'Fixed', 'Orthodontics', 0, 800);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Elastics', 'Fixed', 'Orthodontics', 0, 100);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Ortho Wax', 'Fixed', 'Orthodontics', 0, 50);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Ortho Kit', 'Fixed', 'Orthodontics', 0, 500);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Expander (Fixed)', 'Fixed', 'Orthodontics', 0, 10000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Expander (Removable)', 'Fixed', 'Orthodontics', 0, 8000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ("Hawley's Retainer", 'Unit', 'Orthodontics', 0, 5000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Clear Plastic Retainer', 'Unit', 'Orthodontics', 0, 4000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Lingual Retainer', 'Unit', 'Orthodontics', 0, 3000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Mought/Night Guard', 'Unit', 'Orthodontics', 0, 5000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Splint/Bite Plane', 'Unit', 'Orthodontics', 0, 5000);
+-- TMJ therapy
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('TMJ Therapy', 'Down Payment', 'TMJ Therapy', 25000, 50000);
+-- whitening
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('Whitening - 3 Cycle/Session', 'Fixed', 'Whitening', 0, 15000);
+-- implant
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('w/ PFM Crown', 'Fixed', 'Implant', 0, 100000);
+INSERT INTO procedures (prcd_name, prcd_priceType, prcd_category, prcd_minDP, prcd_basePrice) VALUES ('w/ Zirconia', 'Fixed', 'Implant', 0, 120000);

@@ -1,8 +1,6 @@
-import User from '../models/user-model.js';
-import { body, validationResult } from 'express-validator';
-import bcrypt, { hash } from 'bcrypt';
+const User = require('../models/user-model');
 
-export default class UserController {
+class UserController {
     // POST
     static async registerUser(req, res) {
         const data = req.body;
@@ -16,23 +14,27 @@ export default class UserController {
     }
 
     static async loginUser(req, res) {        
-        const data = req.body;
-        
-        // get the user
-        const user = await User.getByUsername(data);
+        try {
+            const data = req.body;
+            
+            // get the user
+            const user = await User.getByUsername(data);
 
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
+            if (!user) {
+                return res.status(404).json({ error: 'User not found' });
+            }
 
-        // compare password
-        const match = await User.comparePassword(data.password, user.user_password);
-        // console.log('match:', match);
+            // compare password
+            const match = await User.comparePassword(data.password, user.user_password);
+            // console.log('match:', match);
 
-        if (!match) {
-            return res.status(401).json({ error: 'Invalid password' });
-        } else {
-            return res.status(200).json({ message: 'Login successful', user });
+            if (!match) {
+                return res.status(401).json({ error: 'Invalid password' });
+            } else {
+                return res.status(200).json({ message: 'Login successful', user });
+            }
+        } catch (error) {
+            res.status(500).json({ error: error.message });
         }
     }
 
@@ -54,3 +56,5 @@ export default class UserController {
         }
     }
 }
+
+module.exports = UserController;

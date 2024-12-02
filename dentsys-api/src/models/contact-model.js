@@ -1,6 +1,6 @@
-import pool from '../../config/db.js';
+const pool = require('../../config/db.js');
 
-export default class Contact {
+class Contact {
     constructor(email, home_address, home_number, office_number, fax_number, mobile_number, patient_id){
         this.email = email;
         this.home_address = home_address;
@@ -118,3 +118,5 @@ export default class Contact {
         }
     }
 }
+
+module.exports = Contact;

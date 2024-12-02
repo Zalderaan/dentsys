@@ -1,13 +1,16 @@
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:dentsys_client/controllers/procedure_controller.dart';
 import 'package:dentsys_client/models/procedure_model.dart';
 import 'package:flutter/services.dart';
-import 'package:dentsys_client/models/patientTreatments-model.dart';
+import 'package:dentsys_client/models/treatments_model.dart';
 import 'package:dentsys_client/controllers/treatment_controller.dart';
 
 class AddTreatmentDialog extends StatefulWidget {
   final int patient_id;
-  const AddTreatmentDialog({super.key, required this.patient_id});
+  final VoidCallback onTreatmentAdded;
+  const AddTreatmentDialog({super.key, required this.patient_id, required this.onTreatmentAdded});
+  
 
   @override
   _AddTreatmentDialogState createState() => _AddTreatmentDialogState();
@@ -45,17 +48,19 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
   Future<void> handleAddTreatment() async {
     final treatment = PatientTreatment(
       patient_id: widget.patient_id, // Assume the patient ID is 1
-      treatment_prcdName: takeProcedureNames().toString(),
+      treatment_prcdName: proceduresDone.join(', '), // Join the procedures with a comma and space
       treatment_dentist: dentistNameController.text,
       treatment_charged: calculateTotalPrice(),
       treatment_paid: double.parse(amountPaidController.text), 
-      treatment_balance: 0.0,
+      treatment_balance: await calculateBalance(),
       treatment_date: DateTime.now().toString(),
       treatment_toothNo: toothNoController.text,
     );
     try {
       final createdTreatment = await treatmentController.createTreatment(treatment);
-      print('Treatment added: $createdTreatment');  
+      print('Treatment added: $createdTreatment');
+
+      widget.onTreatmentAdded();
     } catch (error) {
       print('Error adding treatment: $error');
     }
@@ -82,11 +87,24 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
       procedureNames.add(name);
     }
     print('procedure names: $procedureNames');
-    return procedureNames;
+    var cleanProcedureNames = procedureNames.join(', '); // Joins with a comma and space    
+    print ('clean procedure names: $cleanProcedureNames');
+    return cleanProcedureNames;
   }
 
-  dynamic calculateBalance() {
-    // if past treatments contain a balance, add it to the current balance
+  Future<double> calculateBalance() async {
+    
+    try {
+      final last_balance = await treatmentController.getPatientLastBalance(widget.patient_id.toString());
+      final total_price = calculateTotalPrice();
+      final amount_paid = double.parse(amountPaidController.text);
+      final balance = (total_price - amount_paid) + last_balance;
+      print('balance: $balance');
+      return balance;
+    } catch (error) {
+      print('Error calculating balance: $error');
+      throw Exception('Error calculating balance: $error');// Return a default value in case of an error
+    }    
   }
 
   // Groups procedures by their `category` field. 
@@ -149,6 +167,8 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
                   const SizedBox(height: 15),
                   
                   TextFormField(
+                    controller: TextEditingController(text: '₱${calculateTotalPrice().toStringAsFixed(2)}'),
+                    readOnly: true,
                     decoration: const InputDecoration(
                       labelText: 'Amount Charged',
                       border: UnderlineInputBorder(), 
@@ -244,15 +264,15 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
 
                               if (existingProcedure.isEmpty) {
                                 // If the procedure is not already in the list, proceed to show the pricing dialog
-                                if (selectedProcedure.priceType == 'Fixed') {
-                                  await showPricingDialogFixed(context, selectedProcedure, (selectedPrice) {
+                                if (selectedProcedure.priceType == 'Unit') {
+                                  await showPricingDialog(context, selectedProcedure, (selectedPrice, unitAmount) {
                                     setState(() {
-                                      proceduresDone.add('${selectedProcedure.name} (₱${selectedPrice.toStringAsFixed(2)})');
+                                      proceduresDone.add('${selectedProcedure.name} ($unitAmount) (₱${selectedPrice.toStringAsFixed(2)})');
                                       print(proceduresDone);
                                     });
                                   });
                                 } else {
-                                  await showPricingDialog(context, selectedProcedure, (selectedPrice) {
+                                  await showPricingDialogFixed(context, selectedProcedure, (selectedPrice) {
                                     setState(() {
                                       proceduresDone.add('${selectedProcedure.name} (₱${selectedPrice.toStringAsFixed(2)})');
                                     });
@@ -260,11 +280,17 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
                                 }
                               } else {
                                 // If the procedure is already in the list, show a message
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text('${selectedProcedure.name} is already added.'),
-                                  ),
-                                );
+                                
+                                AnimatedSnackBar.material(
+                                  '${selectedProcedure.name} is already added.',
+                                  type: AnimatedSnackBarType.warning,
+                                  duration: const Duration(seconds: 3),
+                                ).show(context);
+                                // ScaffoldMessenger.of(context).showSnackBar(
+                                //   SnackBar(
+                                //     content: Text('${selectedProcedure.name} is already added.'),
+                                //   ),
+                                // );
                               }
                             }
                           },
@@ -297,10 +323,12 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
   }
 }
 
-Future<void> showPricingDialog(BuildContext context, Procedure procedure, Function(double) onPriceSelected) async {
+Future<void> showPricingDialog(BuildContext context, Procedure procedure, Function(double, int) onPriceSelected) async {
   double basePrice = procedure.basePrice; // Assume `Procedure` has a `basePrice` field.
   double? customPrice;
   bool isCustomPriceSelected = false;
+  int unitAmount = 1;
+
 
   await showDialog(
     context: context,
@@ -319,12 +347,18 @@ Future<void> showPricingDialog(BuildContext context, Procedure procedure, Functi
               children: [
                 const Divider(),
                 // Base Price Field
-                const TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Number of Units',
+                TextField(
+                  decoration: const InputDecoration(
+                    labelText: 'Unit/Tooth/Quadrant/Arch Amount',
                     border: UnderlineInputBorder(),
                   ),
                   keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
+                  onChanged: (value) {
+                    unitAmount = int.tryParse(value) ?? 1;
+                  },
                 ),
                 const SizedBox(height: 15),
                 TextField(
@@ -393,9 +427,9 @@ Future<void> showPricingDialog(BuildContext context, Procedure procedure, Functi
                 child: const Text('Confirm'),
                 onPressed: () {
                   double selectedPrice = isCustomPriceSelected && customPrice != null
-                      ? customPrice!
-                      : basePrice;
-                  onPriceSelected(selectedPrice);
+                      ? customPrice! * unitAmount
+                      : basePrice * unitAmount;
+                  onPriceSelected(selectedPrice, unitAmount);
                   Navigator.of(context).pop();
                 },
               ),
@@ -510,14 +544,14 @@ Future<void> showPricingDialogFixed(BuildContext context, Procedure procedure, F
 }
 
 
-void showAddTreatmentDialog(BuildContext context, int patientId) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AddTreatmentDialog(patient_id: patientId);
-    },
-  );
-}
+// void showAddTreatmentDialog(BuildContext context, int patientId) {
+//   showDialog(
+//     context: context,
+//     builder: (BuildContext context) {
+//       return AddTreatmentDialog(patient_id: patientId, onTreatmentAdded: () {  },);
+//     },
+//   );
+// }
 
 
 

@@ -10,3 +10,8 @@ node_modules/
 # package
 package-lock.json
 
+# dentsys-api exe
+dentsys-api/dentsys-api.exe
+
+# dentsys_release exe
+dentsys_release/

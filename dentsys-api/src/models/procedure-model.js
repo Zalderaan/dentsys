@@ -1,6 +1,6 @@
-import pool from '../../config/db.js';
+const pool = require('../../config/db.js');
 
-export default class Procedure {
+class Procedure {
     constructor(prcd_id, prcd_name, prcd_priceType, prcd_category, prcd_basePrice, prcd_minDP){
         this.prcd_id = prcd_id;
         this.prcd_name = prcd_name;
@@ -102,3 +102,5 @@ export default class Procedure {
         await pool.query(queryStr, values);
     }
 }
+
+module.exports = Procedure;

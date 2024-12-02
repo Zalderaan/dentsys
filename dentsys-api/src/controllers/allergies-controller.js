@@ -1,6 +1,6 @@
-import Allergy from '../models/allergies-model.js';
+const Allergy = require('../models/allergies-model.js');
 
-export default class AllergiesController {
+class AllergiesController {
     // POST
     static async addAllergies(req, res) {
         const data = req.body;
@@ -51,3 +51,5 @@ export default class AllergiesController {
         }
     }
 }
+
+module.exports = AllergiesController;
