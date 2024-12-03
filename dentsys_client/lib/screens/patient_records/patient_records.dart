@@ -395,12 +395,12 @@ class _PatientRecordsState extends State<PatientRecords> {
   );
 }
 
-   Widget buildArticleList() {
+  Widget buildArticleList() {
     return ListView.builder(
       itemCount: currentRecords.length,
       itemBuilder: (context, index) {
         final patient = currentRecords[index];
-        return buildRecordItem("${patient.firstName} ${patient.lastName}", patient.id);
+        return buildRecordItem("${patient.firstName} ${patient.lastName}, created at: ${patient.createdAt}", patient.id,);
       },
     );
   }
