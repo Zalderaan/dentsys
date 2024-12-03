@@ -28,7 +28,9 @@ CREATE TABLE IF NOT EXISTS patients (
     patient_reason VARCHAR(100) NOT NULL, -- Increased size from 50 to 100
     patient_totalBal FLOAT, -- Changed to FLOAT for balance
     patient_parentName VARCHAR(50),
-    patient_parentOccupation VARCHAR(50)
+    patient_parentOccupation VARCHAR(50),
+    patient_createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    patient_updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- CONTACT TABLE
