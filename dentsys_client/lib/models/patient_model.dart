@@ -15,6 +15,8 @@ class Patient {
   final String? referrer;
   final String? parentName;
   final String? parentOccupation;
+  final String? createdAt;
+  final String? updatedAt;
 
   Patient({
     this.id,
@@ -32,7 +34,9 @@ class Patient {
     this.balance,
     this.referrer,
     this.parentName,
-    this.parentOccupation
+    this.parentOccupation,
+    this.createdAt,
+    this.updatedAt
   });
 
   @override
@@ -85,7 +89,9 @@ class Patient {
       balance: patientData['patient_totalBal'],
       parentName: patientData['patient_parentName'],
       parentOccupation: patientData['patient_parentOccupation'],
-      referrer: patientData['patient_referrer']
+      referrer: patientData['patient_referrer'],
+      createdAt: patientData['patient_createdAt'],
+      updatedAt: patientData['patient_updatedAt']
     );
     // remember: balance temporarily removed
   }

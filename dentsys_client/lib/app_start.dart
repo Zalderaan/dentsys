@@ -6,11 +6,11 @@ import 'package:window_manager/window_manager.dart';
 
 Future<void> startProcesses() async {
   try {
-    // dev and testing paths  
+    // // dev and testing paths  
     var NODEJS_PATH = 'C:/xampp/htdocs/dentsys/dentsys-api/dentsys-api.exe';
     
-    // // production path
-    // var NODEJS_PATH = 'dentsys_release\dentsys-api.exe';
+    // production path
+    //var NODEJS_PATH = 'C:/Program Files/DentSys/dentsys-api.exe';
     
     // Check and start Apache server
     final apacheStatus = await Process.run('sc', ['query', 'Apache2.4'], runInShell: true);

@@ -15,7 +15,7 @@ class PatientRecords extends StatefulWidget {
 
 class _PatientRecordsState extends State<PatientRecords> {
   bool isExpanded = false;
-  final List<bool> _filterSelections = [true, false, false, false];
+  final List<bool> _filterSelections = [true, false, false];
 
   final PatientService _patientService = PatientService();
   late Future<List<Patient>> patientRecords;
@@ -23,6 +23,11 @@ class _PatientRecordsState extends State<PatientRecords> {
   List<Patient> currentRecords = []; // Records for the current page
   String searchQuery = '';
   int selectedFilter = 0;
+  int numberOfOldPatients = 0;
+  int numberOfNewPatients = 0;
+  int totalPatients = 0;
+  Patient? latestNewPatient;
+  Patient? latestEditedPatient;
 
 
   int currentPage = 1; // Current page number
@@ -33,6 +38,7 @@ class _PatientRecordsState extends State<PatientRecords> {
   void initState() {
     super.initState();
     loadPatientRecords();
+    computeDashboardData();
   }
 
   void loadPatientRecords() async {
@@ -62,41 +68,117 @@ class _PatientRecordsState extends State<PatientRecords> {
   void filterRecords() {
     patientRecords.then((records) {
       setState(() {
+        final now = DateTime.now();
         filteredRecords = records.where((patient) {
-          final fullName = "${patient.firstName} ${patient.lastName}".toLowerCase();
-          return fullName.contains(searchQuery);
+          // Filter by "New" and "Old" criteria
+          if (selectedFilter != 0 && patient.createdAt != null) {
+            final createdAt = DateTime.tryParse(patient.createdAt!);
+            if (createdAt != null) {
+              final difference = now.difference(createdAt).inDays;
+              if (selectedFilter == 1 && difference > 30) return false; // New only
+              if (selectedFilter == 2 && difference <= 30) return false; // Old only
+            }
+          }
+
+          // Filter by search query
+          if (searchQuery.isNotEmpty) {
+            final query = searchQuery.toLowerCase();
+            final fullName = '${patient.firstName} ${patient.lastName}'.toLowerCase();
+            if (!fullName.contains(query)) return false; // Exclude if name doesn't match
+          }
+
+          return true;
         }).toList();
 
-        // Reset to the first page and update current records
-        currentPage = 1;
-        updateCurrentRecords();
+        currentPage = 1; // Reset pagination
+        updateCurrentRecords(); // Apply filtered results to the current view
       });
     }).catchError((error) {
-      // ignore: avoid_print
       print('Error filtering records: $error');
     });
   }
 
-  // void applyFilters() {
-  //   patientRecords.then((records) {
-  //     setState(() {
-  //       filteredRecords = records.where((patient) {
-  //         // Apply search filter
-  //         final matchesSearch = searchQuery.isEmpty ||
-  //             patient.firstName.toLowerCase().contains(searchQuery.toLowerCase()) ||
-  //             patient.lastName.toLowerCase().contains(searchQuery.toLowerCase());
+  // Update toggle button selection
+  void handleFilterSelection(int index) {
+    setState(() {
+      selectedFilter = index; // Track the selected filter
+      for (int i = 0; i < _filterSelections.length; i++) {
+        _filterSelections[i] = i == index;
+      }
+      filterRecords(); // Apply the selected filter
+    });
+  }
 
-  //         // Apply status filter
-  //         final matchesFilter = (selectedFilter == 0) ||
-  //             (selectedFilter == 1 && patient.status == "Scheduled") ||
-  //             (selectedFilter == 2 && patient.status == "New") ||
-  //             (selectedFilter == 3 && patient.status == "Old");
+ void computeDashboardData() {
+  patientRecords.then((records) {
+    setState(() {
+      final now = DateTime.now();
 
-  //         return matchesSearch && matchesFilter;
-  //       }).toList();
-  //     });
-  //   });
-  // }
+      // Count new and old patients
+      numberOfOldPatients = records.where((patient) {
+        final createdAt = DateTime.tryParse(patient.createdAt ?? "");
+        return createdAt != null && now.difference(createdAt).inDays > 30;
+      }).length;
+
+      numberOfNewPatients = records.where((patient) {
+        final createdAt = DateTime.tryParse(patient.createdAt ?? "");
+        return createdAt != null && now.difference(createdAt).inDays <= 30;
+      }).length;
+
+      totalPatients = records.length;
+
+      // Find latest new patient (based on createdAt)
+      latestNewPatient = records.lastWhere(
+        (patient) {
+          final createdAt = DateTime.tryParse(patient.createdAt ?? "");
+          return createdAt != null && now.difference(createdAt).inDays <= 30;
+        },
+        orElse: () => Patient(
+          id: 0,
+          firstName: "No data",
+          lastName: "",
+          createdAt: null, 
+          middleName: '', 
+          birthDate: '', 
+          age: 0, 
+          sex: '',
+          nationality: '', 
+          religion: '', 
+          occupation: '', 
+          reason: '',
+        ),
+      );
+
+      // Find latest edited patient (based on updatedAt, ignoring createdAt)
+      latestEditedPatient = records.lastWhere(
+        (patient) {
+          final updatedAt = DateTime.tryParse(patient.updatedAt ?? "");
+          final createdAt = DateTime.tryParse(patient.createdAt ?? "");
+          return updatedAt != null && 
+                 (createdAt == null || updatedAt.isAfter(createdAt)) &&
+                 now.difference(updatedAt).inDays <= 30;
+        },
+        orElse: () => Patient(
+          id: 0,
+          firstName: "No data",
+          lastName: "",
+          createdAt: null, 
+          middleName: '', 
+          birthDate: '', 
+          age: 0, 
+          sex: '',
+          nationality: '', 
+          religion: '', 
+          occupation: '', 
+          reason: '',
+        ),
+      );
+    });
+  }).catchError((error) {
+    print('Error computing dashboard data: $error');
+  });
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -169,7 +251,11 @@ class _PatientRecordsState extends State<PatientRecords> {
                           Expanded(
                             child: buildInfoCard(
                               "NUMBER OF PATIENTS",
-                              ["Old: ", "14", "New: ", "10", "Total: ", "24"],
+                              [
+                                "Old: ", "$numberOfOldPatients",
+                                "New: ", "$numberOfNewPatients",
+                                "Total: ", "$totalPatients"
+                              ],
                               Icons.people,
                               color: Colors.white,
                             ),
@@ -177,14 +263,14 @@ class _PatientRecordsState extends State<PatientRecords> {
                           const SizedBox(width: 10),
                           Expanded(
                             child: buildInfoCard(
-                              "LAST PATIENT DONE",
+                              "LASTEST UPDATED PATIENT",
                               [
                                 "Patient Name: ",
-                                "Godfrey Eclarinal",
-                                "Procedure Done: ",
-                                "Keme",
-                                "Dentist: ",
-                                "Dr. John Eric Dedicatoria"
+                                latestEditedPatient?.firstName ?? "No data",
+                                "Age: ",
+                                latestEditedPatient?.age.toString() ?? "N/A",
+                                "Sex at Birth: ",
+                                latestEditedPatient?.sex ?? "N/A"
                               ],
                               Icons.person,
                               color: Colors.white,
@@ -194,14 +280,15 @@ class _PatientRecordsState extends State<PatientRecords> {
                           Expanded(
                             child: buildInfoCard(
                               "LATEST NEW PATIENT",
-                              [
-                                "Patient Name: ",
-                                "Jane Doe",
-                                "Procedure Done: ",
-                                "Consultation",
-                                "Dentist: ",
-                                "Dr. John Eric Dedicatoria"
-                              ],
+                              latestNewPatient != null
+                                  ? [
+                                      "Patient Name: ", "${latestNewPatient!.firstName} ${latestNewPatient!.lastName}",
+                                      "Age: ", (latestNewPatient!.age).toString(),
+                                      "Sex at Birth: ", (latestNewPatient!.sex).toString(),
+                                      //"Procedure Done: ", latestNewPatient!.lastProcedure ?? "N/A",
+                                      //"Dentist: ", latestNewPatient!.dentistName ?? "N/A",
+                                    ]
+                                  : ["No data available", "", "", "", "", ""],
                               Icons.person,
                               color: Colors.white,
                             ),
@@ -256,73 +343,72 @@ class _PatientRecordsState extends State<PatientRecords> {
         child: Padding(
           padding: const EdgeInsets.all(18.0),
           child: constraints.maxWidth > 400
-              ? Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          ? Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
                   children: [
-                    Column(
-                      children: [
-                        Icon(icon, size: 80.0, color: color),
-                      ],
-                    ),
-                    const SizedBox(width: 10.0),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            title,
-                            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: color),
-                          ),
-                          const SizedBox(height: 10.0),
-                          // Insert details based on the provided details list
-                          for (int i = 0; i < details.length; i += 2)
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(details[i], style: TextStyle(fontSize: 16, color: color)),
-                                Text(details[i + 1], style: TextStyle(fontSize: 16, color: color)),
-                              ],
-                            ),
-                        ],
-                      ),
-                    ),
-                  ],
-                )
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Center(child: Icon(icon, size: 80.0, color: color)),
-                    const SizedBox(height: 10.0),
-                    Text(
-                      title,
-                      style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: color),
-                    ),
-                    const SizedBox(height: 10.0),
-                    // Insert details based on the provided details list
-                    for (int i = 0; i < details.length; i += 2)
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          
-                          Row(
-                            children: [
-                              Text(details[i], style: TextStyle(fontSize: 16, color: color)),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text(details[i + 1], style: TextStyle(fontSize: 16, color: color)),
-                            ],
-                          ),
-                        ],
-                      ),
+                    Icon(icon, size: 80.0, color: color),
                   ],
                 ),
-        ),
-      );
-    },
-  );
-}
+                const SizedBox(width: 10.0),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: color),
+                      ),
+                      const SizedBox(height: 10.0),
+                      // Insert details based on the provided details list
+                      for (int i = 0; i < details.length; i += 2)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(details[i], style: TextStyle(fontSize: 16, color: color)),
+                            Text(details[i + 1], style: TextStyle(fontSize: 16, color: color)),
+                          ],
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(child: Icon(icon, size: 80.0, color: color)),
+                const SizedBox(height: 10.0),
+                Text(
+                  title,
+                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: color),
+                ),
+                const SizedBox(height: 10.0),
+                // Insert details based on the provided details list
+                for (int i = 0; i < details.length; i += 2)
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(details[i], style: TextStyle(fontSize: 16, color: color)),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(details[i + 1], style: TextStyle(fontSize: 16, color: color)),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
 
 
@@ -337,15 +423,8 @@ class _PatientRecordsState extends State<PatientRecords> {
         children: [
           // Switch-like filter options
           ToggleButtons(
-            //borderWidth: 20.0,
             isSelected: _filterSelections,
-            onPressed: (int index) {
-              setState(() {
-                for (int i = 0; i < _filterSelections.length; i++) {
-                  _filterSelections[i] = i == index;
-                }
-              });
-            },
+            onPressed: handleFilterSelection,
             borderRadius: BorderRadius.circular(10.0),
             selectedColor: Colors.white,
             fillColor: Colors.brown[300],
@@ -353,10 +432,6 @@ class _PatientRecordsState extends State<PatientRecords> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text("All"),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: Text("Scheduled"),
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -395,90 +470,93 @@ class _PatientRecordsState extends State<PatientRecords> {
   );
 }
 
-   Widget buildArticleList() {
-    return ListView.builder(
-      itemCount: currentRecords.length,
-      itemBuilder: (context, index) {
-        final patient = currentRecords[index];
-        return buildRecordItem("${patient.firstName} ${patient.lastName}", patient.id);
-      },
-    );
-  }
+  Widget buildArticleList() {
+  return ListView.builder(
+    itemCount: currentRecords.length,
+    itemBuilder: (context, index) {
+      final patient = currentRecords[index];
+      return buildRecordItem(patient); // Pass the Patient object directly
+    },
+  );
+}
 
-  Widget buildRecordItem(String name, int? id) {
-    return  TextButton(
+ Widget buildRecordItem(Patient patient) {
+  final DateTime now = DateTime.now();
+  
+  // Handle nullable createdAt
+  final DateTime createdAt = patient.createdAt != null
+      ? DateTime.parse(patient.createdAt!)
+      : now; // Default to now if null
+  
+  final bool isOld = now.difference(createdAt).inDays > 30; // Check if older than 30 days
+
+  final String label = isOld ? "Old" : "New";
+  final Color labelColor = isOld ? Colors.blue[300]! : Colors.green[300]!;
+
+  return TextButton(
     onPressed: () {
-      // print ("Patient ID: $id"); // debug line
-      widget.onReports(id);
-      // Navigator.of(context).push(
-      //   MaterialPageRoute(builder: (context) => ReportsScreen(patient_id: id,)),
-      // ); 
+      widget.onReports(patient.id);
     },
     child: Card(
-        color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                flex: 3,
-                child: Row (
-                  children: [
-                    Text(
-                      name,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.0,
-                        color: Colors.brown[900],
-                      ),
-                      textAlign: TextAlign.left,
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              flex: 3,
+              child: Row(
+                children: [
+                  Text(
+                    "${patient.firstName} ${patient.lastName}",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20.0,
+                      color: Colors.brown[900],
                     ),
-                    // Text(
-                    //   "ID: $id",
-                    //   style: TextStyle(
-                    //     fontSize: 16.0,
-                    //     color: Colors.brown[600],
-                    //   ),
-                    // ),
-                  ],
-                ) 
+                    textAlign: TextAlign.left,
+                  ),
+                ],
               ),
-              const Expanded(
-                flex: 1,
+            ),
+            const Expanded(
+              flex: 1,
+              child: Text(
+                "Patient",
+                style: TextStyle(
+                  color: Colors.brown,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
+                decoration: BoxDecoration(
+                  color: labelColor,
+                  borderRadius: BorderRadius.circular(15),
+                ),
                 child: Text(
-                  "Patient",
-                  style: TextStyle(
-                    color: Colors.brown,
+                  label,
+                  style: const TextStyle(
+                    color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
                   textAlign: TextAlign.center,
                 ),
               ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
-                  decoration: BoxDecoration(
-                    color: Colors.green[300],
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: const Text(
-                    "Scheduled",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
+
 
   Widget buildPagination() {
     final totalPages = (filteredRecords.length / recordsPerPage).ceil();

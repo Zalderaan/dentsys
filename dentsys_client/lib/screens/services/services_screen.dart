@@ -90,37 +90,35 @@ class _ServicesScreenState extends State<ServicesScreen> {
     });
   }
 
- 
-
- void _showDeleteConfirmationDialog(BuildContext context, Function onDeleteConfirmed) {
-   showDialog(
-     context: context,
-     builder: (BuildContext context) {
-       return AlertDialog(
-         title: const Text('Confirm Deletion'),
-         content: const Text('Are you sure you want to delete this procedure?'),
-         actions: [
-           TextButton(
-             onPressed: () {
-               Navigator.of(context).pop();
-             },
-             child: const Text('Cancel'),
-           ),
-           TextButton(
-             onPressed: () {
-               onDeleteConfirmed(); 
-               Navigator.of(context).pop(); 
-             },
-             child: const Text(
-               'Delete',
-               style: TextStyle(color: Colors.red),
-             ),
-           ),
-         ],
-       );
-     },
-   );
- }
+  void _showDeleteConfirmationDialog(BuildContext context, Function onDeleteConfirmed) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Deletion'),
+          content: const Text('Are you sure you want to delete this procedure?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                onDeleteConfirmed(); 
+                Navigator.of(context).pop(); 
+              },
+              child: const Text(
+                'Delete',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   void dispose() {
