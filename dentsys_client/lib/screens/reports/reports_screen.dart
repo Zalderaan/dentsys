@@ -657,7 +657,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
     final TextEditingController _dialogLastNameController = TextEditingController(text: details.patient.lastName);
     final TextEditingController _dialogMiddleNameController = TextEditingController(text: details.patient.middleName);
     final TextEditingController _dialogNicknameController = TextEditingController(text: details.patient.nickname);
-    final TextEditingController _dialogSexController = TextEditingController(text: details.patient.sex);
     final TextEditingController _dialogAgeController = TextEditingController(text: details.patient.age.toString());
     final TextEditingController _dialogBirthdateController = TextEditingController(text: details.patient.birthDate);
     final TextEditingController _dialogNationalityController = TextEditingController(text: details.patient.nationality);
@@ -667,6 +666,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
     final TextEditingController _dialogReferrerController = TextEditingController(text: details.patient.referrer);
     final TextEditingController _guardianNameController = TextEditingController(text: details.patient.parentName);
     final TextEditingController _guardianOccupationController = TextEditingController(text: details.patient.parentOccupation);
+    late String? _dialogSex = details.patient.sex;
     late PatientController patientController = PatientController();
 
     // contact info
@@ -761,6 +761,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
   late bool dialogArthritis = details.conditions.any((condition) => condition.condition_id == 35 && condition.patientCondition_status);
   late ConditionsController conditionsController = ConditionsController();
   
+  dynamic retrieveSex(String? updSex) async {
+    _dialogSex = updSex;
+  }
+
   Future<void> saveUpdatePatient() async {
     final updatedPatient = Patient(
       id: details.patient.id,
@@ -770,7 +774,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
       nickname: _dialogNicknameController.text,
       birthDate: _dialogBirthdateController.text,
       age: int.parse(_dialogAgeController.text),
-      sex: _dialogSexController.text,
+      sex: _dialogSex,
       nationality: _dialogNationalityController.text,
       religion: _dialogReligionController.text,
       occupation: _dialogOccupationController.text,
@@ -1113,7 +1117,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   lastNameController: _dialogLastNameController,
                   middleNameController: _dialogMiddleNameController,
                   nicknameController: _dialogNicknameController, 
-                  sexController: _dialogSexController,
+                  selectedSex: _dialogSex,
                   ageController: _dialogAgeController,
                   birthdateController: _dialogBirthdateController, 
                   nationalityController: _dialogNationalityController,
@@ -1124,7 +1128,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   parentNameController: _guardianNameController,
                   parentOccupationController: _guardianOccupationController,
                   formKey: dialogPersonalInfoFormKey, 
-                  patient: details.patient
+                  patient: details.patient,
+                  onSexChanged: retrieveSex,
                 ),
                 ContactInfoForms(
                   emailController: _emailController,

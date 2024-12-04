@@ -7,7 +7,7 @@ import 'package:window_manager/window_manager.dart';
 Future<void> startProcesses() async {
   try {
     // // dev and testing paths  
-     var NODEJS_PATH = 'C:/xampp/htdocs/dentsys/dentsys-api/dentsys-api.exe';
+    var NODEJS_PATH = 'C:/xampp/htdocs/dentsys/dentsys-api/dentsys-api.exe';
     
     // production path
     //var NODEJS_PATH = 'C:/Program Files/DentSys/dentsys-api.exe';

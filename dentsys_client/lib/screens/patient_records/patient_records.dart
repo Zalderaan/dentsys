@@ -509,7 +509,7 @@ class _PatientRecordsState extends State<PatientRecords> {
               child: Row(
                 children: [
                   Text(
-                    "${patient.firstName} ${patient.lastName}, created at: ${patient.createdAt ?? 'Unknown'}",
+                    "${patient.firstName} ${patient.lastName}",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20.0,

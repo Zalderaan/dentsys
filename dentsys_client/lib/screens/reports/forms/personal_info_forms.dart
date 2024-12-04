@@ -11,7 +11,7 @@ class PersonalInfoForms extends StatefulWidget {
   final TextEditingController lastNameController;
   final TextEditingController middleNameController;
   final TextEditingController nicknameController;
-  final TextEditingController sexController;
+  final String? selectedSex;
   final TextEditingController ageController;
   final TextEditingController religionController;
   final TextEditingController nationalityController;
@@ -21,6 +21,7 @@ class PersonalInfoForms extends StatefulWidget {
   final TextEditingController referrerController;
   final TextEditingController reasonController;
   final TextEditingController birthdateController;
+  final Function(String?) onSexChanged;
 
   const PersonalInfoForms({
     super.key, 
@@ -29,7 +30,7 @@ class PersonalInfoForms extends StatefulWidget {
     required this.lastNameController,
     required this.middleNameController,
     required this.nicknameController,
-    required this.sexController,
+    required this.selectedSex,
     required this.ageController,
     required this.birthdateController, 
     required this.religionController,
@@ -39,6 +40,7 @@ class PersonalInfoForms extends StatefulWidget {
     required this.reasonController,
     required this.parentNameController,
     required this.parentOccupationController,
+    required this.onSexChanged,
   });
 
   @override
@@ -73,6 +75,7 @@ class PersonalInfoFormsState extends State<PersonalInfoForms> {
   @override 
   void initState(){
     super.initState();
+    selectedSex = widget.selectedSex; // initial data for patient sex
   }
 
   @override
@@ -244,6 +247,7 @@ class PersonalInfoFormsState extends State<PersonalInfoForms> {
                           onChanged: (value) {
                             setState(() {
                               selectedSex = value;
+                              widget.onSexChanged(selectedSex);
                             });
                           },
                           validator: (value) {
