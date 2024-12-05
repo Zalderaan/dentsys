@@ -658,7 +658,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
     final TextEditingController _dialogMiddleNameController = TextEditingController(text: details.patient.middleName);
     final TextEditingController _dialogNicknameController = TextEditingController(text: details.patient.nickname);
     final TextEditingController _dialogAgeController = TextEditingController(text: details.patient.age.toString());
-    final TextEditingController _dialogBirthdateController = TextEditingController(text: details.patient.birthDate);
+    final TextEditingController _dialogBirthdateController = 
+        TextEditingController(
+            text: DateFormat('yyyy-MM-dd').format(DateTime.parse(details.patient.birthDate).toLocal()),
+        );
     final TextEditingController _dialogNationalityController = TextEditingController(text: details.patient.nationality);
     final TextEditingController _dialogOccupationController = TextEditingController(text: details.patient.occupation);
     final TextEditingController _dialogReligionController = TextEditingController(text: details.patient.religion);
@@ -772,7 +775,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
       lastName: _dialogLastNameController.text,
       middleName: _dialogMiddleNameController.text,
       nickname: _dialogNicknameController.text,
-      birthDate: _dialogBirthdateController.text,
+      birthDate: DateFormat('yyyy-MM-dd').format(DateTime.parse(_dialogBirthdateController.text)),
       age: int.parse(_dialogAgeController.text),
       sex: _dialogSex,
       nationality: _dialogNationalityController.text,
@@ -1594,10 +1597,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
   }
 
   // Format the date
-  String formatDate(String dateTime) {
-    DateTime parsedDate = DateTime.parse(dateTime);
-    return DateFormat('yyyy-MM-dd').format(parsedDate);
-  }
+  String formatDate(String utcDate) {
+  final DateTime parsedDate = DateTime.parse(utcDate).toLocal();
+  return DateFormat('yyyy-MM-dd').format(parsedDate);
+}
 
 
   List<String> getTrueAllergies(Allergies allergies) {
