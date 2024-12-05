@@ -683,12 +683,18 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
     // insurance
     final TextEditingController dialogInsuranceNameController = TextEditingController(text: details.insurance.insurance_name);
-    final TextEditingController dialogEffectiveDateController = TextEditingController(text: details.insurance.effective_date);
+    final TextEditingController dialogEffectiveDateController = 
+          TextEditingController(
+              text: DateFormat('yyyy-MM-dd').format(DateTime.parse(details.insurance.effective_date).toLocal()),
+          );
     late InsuranceController insuranceController = InsuranceController(); // insurance controller
     
     // dental history
     final TextEditingController dialogPreviousDentistController = TextEditingController(text: details.dental.previous_dentist);
-    final TextEditingController dialogLatestVisitController = TextEditingController(text: details.dental.last_visit);
+    final TextEditingController dialogLatestVisitController =
+          TextEditingController(
+              text: DateFormat('yyyy-MM-dd').format(DateTime.parse(details.dental.last_visit).toLocal()),
+          );
     late DentalController dentalController = DentalController(); // dental controller
 
   // medical history
@@ -825,7 +831,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
       final updatedInsurance = Insurance(
         patient_id: details.insurance.patient_id,
         insurance_name: dialogInsuranceNameController.text,
-        effective_date: dialogEffectiveDateController.text,
+        effective_date: DateFormat('yyyy-MM-dd').format(DateTime.parse(dialogEffectiveDateController.text)),
       );
 
       try {
@@ -843,7 +849,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
       final updatedDental = Dental(
         patient_id: details.dental.patient_id,
         previous_dentist: dialogPreviousDentistController.text,
-        last_visit: dialogLatestVisitController.text,
+        last_visit:  DateFormat('yyyy-MM-dd').format(DateTime.parse(dialogLatestVisitController.text)),
       );
 
       try {
