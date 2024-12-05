@@ -5,6 +5,8 @@ import 'package:dentsys_client/screens/patient_records/patient_records.dart';
 import 'package:dentsys_client/screens/patient_records/add_patient_record_screen.dart';
 import 'package:dentsys_client/screens/reports/reports_screen.dart';
 import 'package:dentsys_client/screens/services/services_screen.dart';
+import 'package:dentsys_client/screens/backup/backup_screen.dart';
+
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -29,6 +31,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       const AddPatientRecordScreen(),
       const ReportsScreen(),
       const ServicesScreen(),
+      const BackupScreen(),
     ];
   }
 
@@ -158,6 +161,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   icon: Icon(Icons.miscellaneous_services_outlined, color: Colors.white),
                   selectedIcon: Icon(Icons.miscellaneous_services, color: Color.fromARGB(255, 130, 99, 4)),
                   label: Text("Services", style: TextStyle(color: Colors.white)),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.backup, color: Colors.white),
+                  selectedIcon: Icon(Icons.backup, color: Color.fromARGB(255, 130, 99, 4)),
+                  label: Text("Backup Records", style: TextStyle(color: Colors.white)),
                 ),
               ],
             ),
