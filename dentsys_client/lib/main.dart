@@ -27,11 +27,13 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> with WindowListener {
+  late BuildContext dialogContext; // To store the context for the dialog
+
   @override
   void initState() {
     super.initState();
     windowManager.addListener(this);
-    windowManager.setPreventClose(true);
+    windowManager.setPreventClose(true); // Prevent close by default
   }
 
   @override
@@ -40,26 +42,82 @@ class _MyAppState extends State<MyApp> with WindowListener {
     super.dispose();
   }
 
-  @override
-  void onWindowClose() async {
-  bool _isPreventClose = await windowManager.isPreventClose();
-  if (_isPreventClose) {
-    showDialog(
-      context: navigatorKey.currentState!.overlay!.context,
-      barrierDismissible: false,
+  // Show a confirmation dialog when trying to close the window
+  Future<void> showCloseConfirmationDialog(BuildContext context) async {
+    return showDialog<void>(
+      context: navigatorKey.currentState!.overlay!.context, // Ensure we use a valid context
+      barrierDismissible: false, // Prevent dismissing by tapping outside the dialog
       builder: (BuildContext context) {
-        return WillPopScope(
-          onWillPop: () async => false, // Prevent back navigation
-          child: const AlertDialog(
-            title: Text('Closing Application'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CircularProgressIndicator(),
-                SizedBox(height: 20),
-                Text('Please wait while the application is shutting down...'),
-              ],
+        return AlertDialog(
+          title: const Text(
+            'Confirm Close',
+            style: TextStyle(
+              fontSize: 24.0,
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 66, 43, 21),
             ),
+          ),
+          content: const Text('Are you sure you want to close the application?',
+            style: TextStyle(
+              fontSize: 18.0,
+              color: Color.fromARGB(255, 66, 43, 21),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog, do not close the app
+              },
+              child: const Text('No'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop(); // Close the confirmation dialog
+                // Show loading dialog after confirmation
+                showLoadingDialog(context);
+              },
+              child: const Text(
+                'Yes',
+                style: TextStyle(
+                  color: Colors.red,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // Show loading dialog while performing shutdown tasks
+  Future<void> showLoadingDialog(BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Prevent dismissing the dialog
+      builder: (BuildContext context) {
+        dialogContext = context; // Store the context for later
+        return const AlertDialog(
+          title: Text(
+            'Closing Application',
+            style: TextStyle(
+              fontSize: 24.0,
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 66, 43, 21),
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 20),
+                Text(
+                  'Please wait while the application is shutting down...',
+                  style: TextStyle(
+                  fontSize: 18.0,
+                  color: Color.fromARGB(255, 66, 43, 21),
+                ),
+              ),
+            ],
           ),
         );
       },
@@ -68,11 +126,16 @@ class _MyAppState extends State<MyApp> with WindowListener {
     // Perform shutdown tasks
     await Future.delayed(const Duration(seconds: 2), () async {
       await stopProcesses();
-      Navigator.of(navigatorKey.currentState!.overlay!.context).pop(); // Close the dialog
-      await windowManager.destroy();
+      Navigator.of(dialogContext).pop(); // Close the loading dialog
+      await windowManager.destroy(); // Close the window
     });
   }
-}
+
+  @override
+  void onWindowClose() async {
+    // When the user tries to close the window, show the confirmation dialog
+    showCloseConfirmationDialog(context);
+  }
 
   @override
   Widget build(BuildContext context) {
