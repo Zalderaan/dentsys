@@ -943,12 +943,6 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                   labelText: "Home Tel. Number",
                                                   border: OutlineInputBorder(),
                                                 ),
-                                                validator: (value) {
-                                                  if (int.tryParse(value!) == null) {
-                                                    return 'Please enter a valid number';
-                                                  }
-                                                  return null;
-                                                },
                                               ),
                                             ),
                                             const SizedBox(width: 10),
@@ -960,12 +954,6 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                   labelText: "Office Number",
                                                   border: OutlineInputBorder(),
                                                 ),
-                                                validator: (value) {
-                                                  if (int.tryParse(value!) == null) {
-                                                    return 'Please enter a valid number';
-                                                  }
-                                                  return null;
-                                                },
                                               ),
                                             ),
                                             const SizedBox(width: 10),
@@ -977,12 +965,6 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                   labelText: "Fax Number",
                                                   border: OutlineInputBorder(),
                                                 ),
-                                                validator: (value) {
-                                                  if (int.tryParse(value!) == null) {
-                                                    return 'Please enter a valid number';
-                                                  }
-                                                  return null;
-                                                },
                                               ),
                                             ),
                                           ],
