@@ -9,6 +9,7 @@ const PatientConditionController = require('../controllers/patientCondition-cont
 const AllergiesController = require('../controllers/allergies-controller.js');
 const ProcedureController = require('../controllers/procedure-controller.js');
 const PatientTreatmentController = require('../controllers/patientTreatment-controller.js');
+const BackupController = require('../controllers/backup-controller.js');
 
 const router = express.Router();
 
@@ -74,5 +75,9 @@ router.get('/get-last-balance/:id', PatientTreatmentController.getPatientLastBal
 router.get('/get-balance-before-treatment/:pid/:tid', PatientTreatmentController.getBalanceBeforeTreatment);
 router.put('/update-treatment/:id', PatientTreatmentController.updateTreatment);
 router.delete('/delete-treatment/:id', PatientTreatmentController.deleteTreatment);
+
+// backup routes
+router.post('/backup', BackupController.backup);
+router.post('/restore', BackupController.restore);
 
 module.exports = router;
