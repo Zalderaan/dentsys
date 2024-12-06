@@ -1,4 +1,8 @@
+import 'dart:io';
+
+import 'package:dentsys_client/services/backupService.dart';
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
 
 class BackupScreen extends StatefulWidget {
   const BackupScreen({super.key});
@@ -8,7 +12,6 @@ class BackupScreen extends StatefulWidget {
 }
 
 class _BackupScreenState extends State<BackupScreen> {
- 
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -47,33 +50,84 @@ class _BackupScreenState extends State<BackupScreen> {
                               color: Color.fromARGB(255, 66, 43, 21),
                             ),
                           ),
-                          Container(
-                            decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                colors: [Color(0xFFE2AD5E), Color(0xFF422B15)],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: ElevatedButton.icon(
-                              onPressed: () {},
-                              icon: const Icon(
-                                Icons.backup,
-                                color: Colors.white,
-                              ),
-                              label: const Text(
-                                "Backup",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.transparent,
-                                shadowColor: Colors.transparent,
-                                shape: RoundedRectangleBorder(
+                          Row(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                    colors: [Color.fromARGB(255, 194, 220, 192), Color.fromARGB(255, 101, 201, 146)],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
+                                child: ElevatedButton.icon(
+                                  onPressed: () async {
+                                    FilePickerResult? result = await FilePicker.platform.pickFiles(
+                                      type: FileType.custom,
+                                      allowedExtensions: ['sql'],
+                                    );
+                                    if (result != null ) {
+                                      File file = File(result.files.single.path!);
+                                      String filePath = file.path;
+                                      BackupService().restoreDataService(filePath);
+                                    } else {
+                                      print("No file selected");
+                                    }
+                                  },
+                                  icon: const Icon(
+                                    Icons.backup,
+                                    color: Colors.white,
+                                  ),
+                                  label: const Text(
+                                    "Restore",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.transparent,
+                                    shadowColor: Colors.transparent,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
+
+                              const SizedBox(width: 10.0),
+                              
+                              Container(
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                    colors: [Color(0xFFE2AD5E), Color(0xFF422B15)],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: ElevatedButton.icon(
+                                  onPressed: () async {
+                                    String? selDir = await FilePicker.platform.getDirectoryPath();
+                                    print("selected directory: $selDir");
+                                    BackupService().backupDataService(selDir);
+                                  },
+                                  icon: const Icon(
+                                    Icons.backup,
+                                    color: Colors.white,
+                                  ),
+                                  label: const Text(
+                                    "Backup",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.transparent,
+                                    shadowColor: Colors.transparent,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),

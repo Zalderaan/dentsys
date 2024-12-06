@@ -7,10 +7,10 @@ import 'package:window_manager/window_manager.dart';
 Future<void> startProcesses() async {
   try {
     // // dev and testing paths  
-    var NODEJS_PATH = 'C:/xampp/htdocs/dentsys/dentsys-api/dentsys-api.exe';
+    // var NODEJS_PATH = 'C:/xampp/htdocs/dentsys/dentsys-api/dentsys-api.exe';
     
-    // production path
-    //var NODEJS_PATH = 'C:/Program Files/DentSys/dentsys-api.exe';
+    // // production path
+    // var NODEJS_PATH = 'C:/Program Files/DentSys/dentsys-api.exe';
     
     // Check and start Apache server
     final apacheStatus = await Process.run('sc', ['query', 'Apache2.4'], runInShell: true);
@@ -53,7 +53,7 @@ Future<void> startProcesses() async {
     print(nodeStatus);
     if (!nodeStatus) {
       print('Starting Node server');
-      await Process.start(NODEJS_PATH, [], mode: ProcessStartMode.detached);
+      // await Process.start(NODEJS_PATH, [], mode: ProcessStartMode.detached);
     } else {
       print('Node server already running');
     }
@@ -86,7 +86,7 @@ Future<void> stopProcesses() async {
     print ('Stopping processes...');
     // stop apache
     final apacheStatus = await Process.run('sc', ['query', 'Apache2.4'], runInShell: true);
-    print('Apache status: ${apacheStatus.stdout}');
+    // print('Apache status: ${apacheStatus.stdout}');
     if (apacheStatus.stdout.toString().contains('RUNNING')) {
       print('Stopping Apache server...');
       final stopResult = await Process.run('sc', ['stop', 'Apache2.4'], runInShell: true);

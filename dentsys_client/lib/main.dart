@@ -74,8 +74,6 @@ class _MyAppState extends State<MyApp> with WindowListener {
   }
 }
 
-
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

@@ -589,7 +589,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                               labelText: 'Payment Type',
                               border: UnderlineInputBorder(),
                             ),
-                            items: <String>['Fixed', 'Variable', 'Down Payment', 'Unit']
+                            items: <String>['Fixed', 'Variable', 'Down Payment', 'Unit', 'To Be Determined']
                                 .map((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
@@ -824,7 +824,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                               labelText: 'Payment Type',
                               border: UnderlineInputBorder(),
                             ),
-                            items: <String>['Fixed', 'Variable', 'Down Payment', 'Unit']
+                            items: <String>['Fixed', 'Variable', 'Down Payment', 'Unit', 'To Be Determined']
                                 .map((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,

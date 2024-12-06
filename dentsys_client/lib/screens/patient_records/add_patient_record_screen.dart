@@ -943,39 +943,66 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                           children: [
                                             Expanded(
                                               child: TextFormField(
-                                                controller:  _homeNoController,
+                                                controller: _homeNoController,
+                                                keyboardType: TextInputType.number,
                                                 decoration: const InputDecoration(
                                                   labelText: "Home Tel. Number",
                                                   border: OutlineInputBorder(),
                                                 ),
-                                                
+                                                validator: (value) {
+                                                  if (value == null || value.isEmpty) {
+                                                    return 'Please enter a number';
+                                                  }
+                                                  if (int.tryParse(value) == null) {
+                                                    return 'Please enter a valid number';
+                                                  }
+                                                  return null;
+                                                },
                                               ),
                                             ),
                                             const SizedBox(width: 10),
                                             Expanded(
                                               child: TextFormField(
                                                 controller: _workNoController,
+                                                keyboardType: TextInputType.number,
                                                 decoration: const InputDecoration(
                                                   labelText: "Office Number",
                                                   border: OutlineInputBorder(),
-                                                  ),
-                                                
+                                                ),
+                                                validator: (value) {
+                                                  if (value == null || value.isEmpty) {
+                                                    return 'Please enter a number';
+                                                  }
+                                                  if (int.tryParse(value) == null) {
+                                                    return 'Please enter a valid number';
+                                                  }
+                                                  return null;
+                                                },
                                               ),
                                             ),
                                             const SizedBox(width: 10),
                                             Expanded(
                                               child: TextFormField(
                                                 controller: _faxNoController,
+                                                keyboardType: TextInputType.number,
                                                 decoration: const InputDecoration(
                                                   labelText: "Fax Number",
                                                   border: OutlineInputBorder(),
                                                 ),
-                                                
+                                                validator: (value) {
+                                                  if (value == null || value.isEmpty) {
+                                                    return 'Please enter a number';
+                                                  }
+                                                  if (int.tryParse(value) == null) {
+                                                    return 'Please enter a valid number';
+                                                  }
+                                                  return null;
+                                                },
                                               ),
                                             ),
-                                          
                                           ],
                                         ),
+
                                         const SizedBox(height: 10),
                                         //Contact Number and Email
                                         Row(
@@ -991,6 +1018,9 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                 validator: (value) {
                                                   if (value == null || value.isEmpty) {
                                                     return 'This item is required';
+                                                  }
+                                                  if (int.tryParse(value) == null) {
+                                                    return 'Please enter a valid number';
                                                   }
                                                   return null;
                                                 },
@@ -1248,9 +1278,23 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                               child: TextFormField(
                                                 controller: _lastVisitController,
                                                 decoration: const InputDecoration(
-                                                  labelText: "Latest Dental Visit",
+                                                  labelText: "Latest Dental Visit (YYYY-MM-DD)",
                                                   border: OutlineInputBorder(),
                                                 ),
+                                                readOnly: false, // Make the field non-editable
+                                                onTap: () async {
+                                                  DateTime? pickedDate = await showDatePicker(
+                                                    context: context,
+                                                    initialDate: DateTime.now(),
+                                                    firstDate: DateTime(1900), // Set a range if needed
+                                                    lastDate: DateTime(2100),
+                                                  );
+                                
+                                                  if (pickedDate != null) {
+                                                    String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+                                                    _lastVisitController.text = formattedDate; // Set the selected date
+                                                  }
+                                                },
                                                 
                                               ),
                                             ),
