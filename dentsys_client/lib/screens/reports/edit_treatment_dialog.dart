@@ -130,7 +130,7 @@ class _EditTreatmentDialogState extends State<EditTreatmentDialog> {
         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 36),
       ),
       content: SizedBox(
-        width: 900,
+        width: 1000,
         height: 500,
         child: Row(
           children: [

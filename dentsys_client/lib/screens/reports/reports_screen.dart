@@ -107,6 +107,53 @@ class _ReportsScreenState extends State<ReportsScreen> {
     }
   }
 
+  //dialog box for treatment deletions
+  Future<void> showDeleteConfirmationDialog(BuildContext context, String treatmentId) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // Prevent dismissing by tapping outside the dialog
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text(
+          'Confirm Deletion', 
+          style: TextStyle(
+            fontSize: 24.0,
+            fontWeight: FontWeight.bold,
+            color: Color.fromARGB(255, 66, 43, 21),
+          ),
+        ),
+        content: const Text(
+          'Are you sure you want to delete this treatment?',
+          style: TextStyle(
+            fontSize: 16.0,
+            color: Color.fromARGB(255, 66, 43, 21),
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+            },
+            child: const Text('No'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+              handleDeleteTreatment(treatmentId); // Proceed with deletion
+            },
+            child: const Text(
+              'Yes',
+              style: TextStyle(
+                color: Colors.red,
+              ),
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -483,7 +530,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                                       IconButton(
                                                         icon: const Icon(Icons.delete, color: Colors.red),
                                                         onPressed: () async {
-                                                          handleDeleteTreatment(treatment.id.toString());
+                                                          showDeleteConfirmationDialog(context, treatment.id.toString());
                                                         },
                                                       ),
                                                     ],

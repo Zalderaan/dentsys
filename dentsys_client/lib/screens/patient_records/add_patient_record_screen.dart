@@ -602,12 +602,6 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                           labelText: "Nickname",
                                           border: OutlineInputBorder(),
                                         ),
-                                        validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return 'This item is required';
-                                          }
-                                          return null;
-                                        },
                                       ),
                                     ),
                                   ],
@@ -950,10 +944,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                   border: OutlineInputBorder(),
                                                 ),
                                                 validator: (value) {
-                                                  if (value == null || value.isEmpty) {
-                                                    return 'Please enter a number';
-                                                  }
-                                                  if (int.tryParse(value) == null) {
+                                                  if (int.tryParse(value!) == null) {
                                                     return 'Please enter a valid number';
                                                   }
                                                   return null;
@@ -970,10 +961,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                   border: OutlineInputBorder(),
                                                 ),
                                                 validator: (value) {
-                                                  if (value == null || value.isEmpty) {
-                                                    return 'Please enter a number';
-                                                  }
-                                                  if (int.tryParse(value) == null) {
+                                                  if (int.tryParse(value!) == null) {
                                                     return 'Please enter a valid number';
                                                   }
                                                   return null;
@@ -990,10 +978,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                   border: OutlineInputBorder(),
                                                 ),
                                                 validator: (value) {
-                                                  if (value == null || value.isEmpty) {
-                                                    return 'Please enter a number';
-                                                  }
-                                                  if (int.tryParse(value) == null) {
+                                                  if (int.tryParse(value!) == null) {
                                                     return 'Please enter a valid number';
                                                   }
                                                   return null;

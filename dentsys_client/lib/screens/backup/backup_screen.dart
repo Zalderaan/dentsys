@@ -12,6 +12,55 @@ class BackupScreen extends StatefulWidget {
 }
 
 class _BackupScreenState extends State<BackupScreen> {
+  
+  // Function to show the confirmation dialog
+  Future<void> showRestoreConfirmationDialog(BuildContext context, String filePath) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // Prevent dismissing by tapping outside the dialog
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+              'Confirm Restore', 
+              style: TextStyle(
+              fontSize: 24.0,
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 66, 43, 21),
+            ),
+          ),
+          content: const Text(
+              'Are you sure you want to restore the patient records from this file?',
+              style: TextStyle(
+              fontSize: 16.0,
+              color: Color.fromARGB(255, 66, 43, 21),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('No'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                // Proceed with restore
+                BackupService().restoreDataService(filePath);
+              },
+              child: const Text(
+                'Yes',
+                style: TextStyle(
+                  color: Colors.red,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -67,10 +116,11 @@ class _BackupScreenState extends State<BackupScreen> {
                                       type: FileType.custom,
                                       allowedExtensions: ['sql'],
                                     );
-                                    if (result != null ) {
+                                    if (result != null) {
                                       File file = File(result.files.single.path!);
                                       String filePath = file.path;
-                                      BackupService().restoreDataService(filePath);
+                                      // Show the confirmation dialog before restoring
+                                      showRestoreConfirmationDialog(context, filePath);
                                     } else {
                                       print("No file selected");
                                     }
@@ -92,9 +142,9 @@ class _BackupScreenState extends State<BackupScreen> {
                                   ),
                                 ),
                               ),
-
-                              const SizedBox(width: 10.0),
                               
+                              const SizedBox(width: 10.0),
+
                               Container(
                                 decoration: BoxDecoration(
                                   gradient: const LinearGradient(
@@ -134,9 +184,7 @@ class _BackupScreenState extends State<BackupScreen> {
                     ],
                   ),
                 ),
-
-                
-              ],   
+              ],
             ),
           ),
         ),
@@ -144,4 +192,3 @@ class _BackupScreenState extends State<BackupScreen> {
     );
   }
 }
-
