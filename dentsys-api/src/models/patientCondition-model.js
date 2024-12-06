@@ -93,7 +93,7 @@ class PatientCondition {
 
         try {
             const [conditions_result] = await pool.query(queryStr, [patient_id]); // a patient can have 0 to many medical conditions
-            console.log('conditions_result:', conditions_result);
+            // console.log('conditions_result:', conditions_result);
             return conditions_result || [];
         } catch (error) {
             console.log('Error getting patient conditions from model', error);
@@ -123,9 +123,9 @@ class PatientCondition {
     }
 
     static async removePatientCondition(data) {
-        console.log('data in remove conditions model:', data);
+        // console.log('data in remove conditions model:', data);
         const {patient_id, conditions} = data;
-        console.log('patient_id in remove conditions model:', patient_id);
+        // console.log('patient_id in remove conditions model:', patient_id);
         const deletedConditions = [];
         const connection = await pool.getConnection();
         connection.beginTransaction();

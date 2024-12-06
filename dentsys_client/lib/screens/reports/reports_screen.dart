@@ -879,6 +879,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
         patient_id: details.insurance.patient_id,
         insurance_name: dialogInsuranceNameController.text,
         effective_date: DateFormat('yyyy-MM-dd').format(DateTime.parse(dialogEffectiveDateController.text)),
+        // effective_date: dialogEffectiveDateController.text,
       );
 
       try {
@@ -896,7 +897,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
       final updatedDental = Dental(
         patient_id: details.dental.patient_id,
         previous_dentist: dialogPreviousDentistController.text,
-        last_visit:  DateFormat('yyyy-MM-dd').format(DateTime.parse(dialogLatestVisitController.text)),
+        last_visit: DateFormat('yyyy-MM-dd').format(DateTime.parse(dialogLatestVisitController.text)),
       );
 
       try {
@@ -1134,8 +1135,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
       conditions: falseConditions,
     );
 
-    print ('updPatientConditions: $updPatientConditions');
-    print ('delPatientConditions: $delPatientConditions');
+    // print ('updPatientConditions: $updPatientConditions');
+    // print ('delPatientConditions: $delPatientConditions');
 
     try {
       await conditionsController.addPatientCondition(updPatientConditions);
@@ -1408,10 +1409,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       buildInfoSection("Effective Date", [formatDate(details.insurance.effective_date)]),
                       buildInfoSection("Previous Dentist", [details.dental.previous_dentist]),
                       buildInfoSection("Latest Visit", [formatDate(details.dental.last_visit)]),
-                     
-
-                      
-                     
                     ],
                   ),
                 ),

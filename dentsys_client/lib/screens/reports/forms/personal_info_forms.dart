@@ -184,11 +184,11 @@ class PersonalInfoFormsState extends State<PersonalInfoForms> {
                             labelText: "Birth Date (YYYY-MM-DD)",
                             border: OutlineInputBorder(),
                           ),
-                          readOnly: false, // Make the field non-editable
+                          readOnly: true, // Make the field non-editable
                           onTap: () async {
                             DateTime? pickedDate = await showDatePicker(
                               context: context,
-                              initialDate: DateTime.now(),
+                              initialDate: widget.birthdateController.text.isNotEmpty ? DateFormat('yyyy-MM-dd').parse(widget.birthdateController.text) : DateTime.now(),
                               firstDate: DateTime(1900), // Set a range if needed
                               lastDate: DateTime(2100),
                             );
