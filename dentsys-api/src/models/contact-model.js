@@ -53,6 +53,23 @@ class Contact {
         }
     }
 
+    static async getAllContacts() {
+        const queryStr = `SELECT c.*, CONCAT(p.patient_firstName, ' ', p.patient_lastName) AS patient_fullName
+                          FROM contact c
+                          JOIN patients p ON c.patient_id = p.patient_id`;
+
+        try {
+            const [contacts] = await pool.query(queryStr);
+            if (contacts.length === 0) {
+                throw new Error('No contacts found');
+            }
+            return contacts;
+        } catch (error) {
+            console.log('Error getting all contacts from model', error);
+            throw error;
+        }
+    }
+
     static async getContactByContactId(id) {
         const queryStr = 'SELECT * FROM contact WHERE contact_id = ?';
 

@@ -58,6 +58,24 @@ class Insurance {
         }
     }
 
+    static async getAllInsurance() {
+        const queryStr = `
+            SELECT insurance.*, CONCAT(patients.patient_firstName, ' ', patients.patient_lastName) AS patient_fullName
+            FROM insurance 
+            JOIN patients ON insurance.patient_id = patients.patient_id
+        `;
+        try {
+            const [insurance] = await pool.query(queryStr);
+            if (insurance.length === 0) {
+                throw new Error('No insurance found');
+            }
+            return insurance;
+        } catch (error) {
+            console.log('Error getting all insurance from model', error);
+            throw error;
+        }
+    }
+
     static async updateInsurance(data) {
         console.log('data from model in update insurance', data);
         const {insurance_name, effective_date, patient_id} = data;

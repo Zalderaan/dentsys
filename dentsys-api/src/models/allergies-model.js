@@ -57,6 +57,25 @@ class Allergies {
         }
     }
 
+    static async getAllAllergies() {
+        const queryStr = `
+            SELECT a.*, CONCAT(p.patient_firstName, ' ', patient_lastName) AS patient_fullName
+            FROM allergies a
+            JOIN patients p ON a.patient_id = p.patient_id
+        `;
+        try {
+            const [allergies] = await pool.query(queryStr);
+            if (allergies.length === 0) {
+                throw new Error('No allergies found');
+            }
+
+            return allergies;
+        } catch (error) {
+            console.log('Error getting all allergies from model', error);
+            throw error;
+        }
+    }
+
     static async getByAllergiesId(id) {
         const queryStr = 'SELECT * FROM allergies WHERE allergies_id = ?';
         try {

@@ -76,6 +76,21 @@ class PatientTreatment {
         }
     }
 
+    static async getAllTreatment() {
+        try {
+            const queryStr = `
+                SELECT pt.*, CONCAT(p.patient_firstName, ' ', patient_lastName) AS patient_fullName
+                FROM patient_treatments pt
+                JOIN patients p ON pt.patient_id = p.patient_id
+            `;
+            const [result] = await pool.query(queryStr);
+            return result;
+        } catch (error) {
+            console.error('Error in get all patientTr model:', error);
+            throw error;
+        }
+    }
+
     static async updatePatientTreatment(data) {
         console.log('data in model: ', data);
         try {
