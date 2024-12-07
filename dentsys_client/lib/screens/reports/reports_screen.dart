@@ -123,7 +123,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
           ),
         ),
         content: const Text(
-          'Are you sure you want to delete this treatment?',
+          'Are you sure you want to delete this Treatment?',
           style: TextStyle(
             fontSize: 16.0,
             color: Color.fromARGB(255, 66, 43, 21),
@@ -153,6 +153,50 @@ class _ReportsScreenState extends State<ReportsScreen> {
     },
   );
 }
+
+// dialog confirmation for patient record deletions
+   void _showDeleteConfirmationDialog(BuildContext context, Function onDeleteConfirmed) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+              'Confirm Deletion',
+              style: TextStyle(
+              fontSize: 24.0,
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 66, 43, 21),
+            ),
+          ),
+          content: const Text(
+            'Are you sure you want to delete this Patient Records?',
+             style: TextStyle(
+              fontSize: 16.0,
+              color: Color.fromARGB(255, 66, 43, 21),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                onDeleteConfirmed(); 
+                Navigator.of(context).pop(); 
+              },
+              child: const Text(
+                'Delete',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
 
   @override
@@ -192,15 +236,44 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     ],
                   ),
                   padding: const EdgeInsets.all(20.0),
-                  child: const Row(
+                  child: Row(
                     children: [
-                      Expanded(
+                      const Expanded(
                         child: Text(
                           "Patient Record",
                           style: TextStyle(
                             fontSize: 32.0,
                             fontWeight: FontWeight.bold,
                             color: Color.fromARGB(255, 66, 43, 21),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            _showDeleteConfirmationDialog(context, (){
+                              //function to delete patient records.
+
+                            });
+                          },
+                          icon: const Icon(
+                            Icons.delete,
+                            color: Colors.white,
+                          ),
+                          label: const Text(
+                            "Delete Records",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.transparent,
+                            shadowColor: Colors.transparent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
                           ),
                         ),
                       ),
