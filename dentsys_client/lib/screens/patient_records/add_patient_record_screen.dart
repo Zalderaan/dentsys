@@ -1294,7 +1294,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                     context: context,
                                                     initialDate: DateTime.now(),
                                                     firstDate: DateTime(1900), // Set a range if needed
-                                                    lastDate: DateTime(2100),
+                                                    lastDate: DateTime.now()
                                                   );
                                 
                                                   if (pickedDate != null) {

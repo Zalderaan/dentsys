@@ -58,7 +58,7 @@ class PersonalInfoFormsState extends State<PersonalInfoForms> {
       context: context,
       initialDate: widget.birthdateController.text.isNotEmpty ? DateFormat('yyyy-MM-dd').parse(widget.birthdateController.text) : DateTime.now(),
       firstDate: DateTime(1900), // Set a range if needed
-      lastDate: DateTime(2100),
+      lastDate: DateTime.now(),
     );
 
     if (pickedDate != null) {

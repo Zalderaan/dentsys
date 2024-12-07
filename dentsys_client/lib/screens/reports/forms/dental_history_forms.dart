@@ -23,8 +23,8 @@ class DentalHistoryFormsState extends State<DentalHistoryForms> {
   void pickLatestVisitDate() async {
     DateTime? pickLatestVisitDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1900),
+      initialDate: widget.latestvisitController.text.isNotEmpty ? DateFormat('yyyy-MM-dd').parse(widget.latestvisitController.text) : DateTime.now(),
+      firstDate: DateTime(1500),
       lastDate: DateTime.now(),
     );
     if (pickLatestVisitDate != null) {
@@ -99,17 +99,7 @@ class DentalHistoryFormsState extends State<DentalHistoryForms> {
                           ),
                           readOnly: true, // Make the field non-editable
                           onTap: () async {
-                            DateTime? pickLatestVisitDate = await showDatePicker(
-                              context: context,
-                              initialDate: widget.latestvisitController.text.isNotEmpty ? DateFormat('yyyy-MM-dd').parse(widget.latestvisitController.text) : DateTime.now(),
-                              firstDate: DateTime(1900), // Set a range if needed
-                              lastDate: DateTime(2100),
-                            );
-          
-                            if (pickLatestVisitDate != null) {
-                              String formattedDate = DateFormat('yyyy-MM-dd').format(pickLatestVisitDate);
-                              widget.latestvisitController.text = formattedDate; // Set the selected date
-                            }
+                            pickLatestVisitDate();
                           },
                           validator: (value) {
                             if (value == null || value.isEmpty) {

@@ -104,7 +104,7 @@ class _BackupScreenState extends State<BackupScreen> {
                               Container(
                                 decoration: BoxDecoration(
                                   gradient: const LinearGradient(
-                                    colors: [Color.fromARGB(255, 194, 220, 192), Color.fromARGB(255, 101, 201, 146)],
+                                    colors: [Color.fromARGB(255, 50, 171, 17), Color.fromARGB(255, 22, 21, 66)],
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                   ),
