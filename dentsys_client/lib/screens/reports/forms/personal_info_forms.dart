@@ -109,22 +109,6 @@ class PersonalInfoFormsState extends State<PersonalInfoForms> {
                     children: [
                       Expanded(
                         child: TextFormField(
-                          controller: widget.lastNameController,
-                          decoration: const InputDecoration(
-                            labelText: "Lastname",
-                            border: OutlineInputBorder(),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'This item is required';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: TextFormField(
                           controller: widget.firstNameController,
                           decoration: const InputDecoration(
                             labelText: "Firstname",
@@ -155,6 +139,23 @@ class PersonalInfoFormsState extends State<PersonalInfoForms> {
                         ),
                       ),
                       const SizedBox(width: 10),
+                      Expanded(
+                        child: TextFormField(
+                          controller: widget.lastNameController,
+                          decoration: const InputDecoration(
+                            labelText: "Lastname",
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'This item is required';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                
                       Expanded(
                         child: TextFormField(
                           controller: widget.nicknameController,
