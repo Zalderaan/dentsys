@@ -56,14 +56,14 @@ class PersonalInfoFormsState extends State<PersonalInfoForms> {
   void pickBirthdate() async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
+      initialDate: widget.birthdateController.text.isNotEmpty ? DateFormat('yyyy-MM-dd').parse(widget.birthdateController.text) : DateTime.now(),
+      firstDate: DateTime(1900), // Set a range if needed
+      lastDate: DateTime(2100),
     );
+
     if (pickedDate != null) {
-      setState(() {
-        widget.birthdateController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
-      });
+      String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+      widget.birthdateController.text = formattedDate; // Set the selected date
     }
   }
   @override
@@ -186,17 +186,7 @@ class PersonalInfoFormsState extends State<PersonalInfoForms> {
                           ),
                           readOnly: true, // Make the field non-editable
                           onTap: () async {
-                            DateTime? pickedDate = await showDatePicker(
-                              context: context,
-                              initialDate: widget.birthdateController.text.isNotEmpty ? DateFormat('yyyy-MM-dd').parse(widget.birthdateController.text) : DateTime.now(),
-                              firstDate: DateTime(1900), // Set a range if needed
-                              lastDate: DateTime(2100),
-                            );
-          
-                            if (pickedDate != null) {
-                              String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-                              widget.birthdateController.text = formattedDate; // Set the selected date
-                            }
+                            pickBirthdate(); // Show the date picker
                           },
                           validator: (value) {
                             if (value == null || value.isEmpty) {

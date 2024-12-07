@@ -98,6 +98,15 @@ class _ReportsScreenState extends State<ReportsScreen> {
     }
   }
 
+  void handleDeletePatient(int? patient_id) async {
+    try {
+      await patientController.deletePatient(patient_id);
+      Navigator.pop(context);
+    } catch (error) {
+      print('Error deleting patient: $error');
+    }
+  }
+
   void handleDeleteTreatment(String treatmentId) async {
     try {
       await treatmentController.deleteTreatment(treatmentId);
@@ -155,7 +164,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
 }
 
 // dialog confirmation for patient record deletions
-   void _showDeleteConfirmationDialog(BuildContext context, Function onDeleteConfirmed) {
+  void _showDeleteConfirmationDialog(BuildContext context, Function onDeleteConfirmed) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -170,7 +179,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
           ),
           content: const Text(
             'Are you sure you want to delete this Patient Records?',
-             style: TextStyle(
+            style: TextStyle(
               fontSize: 16.0,
               color: Color.fromARGB(255, 66, 43, 21),
             ),
@@ -256,7 +265,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         child: ElevatedButton.icon(
                           onPressed: () {
                             _showDeleteConfirmationDialog(context, (){
-                              //function to delete patient records.
+                              handleDeletePatient(widget.patient_id);
 
                             });
                           },

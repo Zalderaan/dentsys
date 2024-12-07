@@ -139,11 +139,11 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
     } catch (error) {
       print(error);
 
-      AnimatedSnackBar.material(
-        'Error creating patient: $error',
-        type: AnimatedSnackBarType.error,
-        duration: const Duration(seconds: 5),
-      ).show(context);
+      // AnimatedSnackBar.material(
+      //   'Error creating patient: $error',
+      //   type: AnimatedSnackBarType.error,
+      //   duration: const Duration(seconds: 5),
+      // ).show(context);
     }
   }
   
@@ -454,43 +454,43 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
 
   @override
   void dispose() {
-    _firstNameController.dispose();
-    _lastNameController.dispose();
-    _middleNameController.dispose();
-    _nicknameController.dispose();
-    _dateController.dispose();
-    _ageController.dispose();
-    _religionController.dispose();
-    _nationalityController.dispose();
-    _occupationController.dispose();
-    _parentGuardianController.dispose();
-    _parentGuardianOccupationController.dispose();
-    _referrerController.dispose();
-    _reasonController.dispose();
+    // _firstNameController.dispose();
+    // _lastNameController.dispose();
+    // _middleNameController.dispose();
+    // _nicknameController.dispose();
+    // _dateController.dispose();
+    // _ageController.dispose();
+    // _religionController.dispose();
+    // _nationalityController.dispose();
+    // _occupationController.dispose();
+    // _parentGuardianController.dispose();
+    // _parentGuardianOccupationController.dispose();
+    // _referrerController.dispose();
+    // _reasonController.dispose();
 
-    _emailController.dispose();
-    _homeAddressController.dispose();
-    _homeNoController.dispose();
-    _faxNoController.dispose();
-    _workNoController.dispose();
-    _mobileNoController.dispose();
-    _insuranceNameController.dispose();
-    _insuranceEffectiveDateController.dispose();
+    // _emailController.dispose();
+    // _homeAddressController.dispose();
+    // _homeNoController.dispose();
+    // _faxNoController.dispose();
+    // _workNoController.dispose();
+    // _mobileNoController.dispose();
+    // _insuranceNameController.dispose();
+    // _insuranceEffectiveDateController.dispose();
 
-    _previousDentistController.dispose();
-    _lastVisitController.dispose();
-    _physicianNameController.dispose();
-    _physicianSpecialtyController.dispose();
-    _officeAddressController.dispose();
-    _officeNumberController.dispose();
-    _treatmentDetailsController.dispose();
-    _seriousOperationDetailsController.dispose();
-    _hospitalizedDetailsController.dispose();
-    _medicationDetailsController.dispose();
-    _bleedingTimeController.dispose();
-    _bloodPressureController.dispose();
-    _bloodTypeController.dispose();
-    _otherAllergiesController.dispose();
+    // _previousDentistController.dispose();
+    // _lastVisitController.dispose();
+    // _physicianNameController.dispose();
+    // _physicianSpecialtyController.dispose();
+    // _officeAddressController.dispose();
+    // _officeNumberController.dispose();
+    // _treatmentDetailsController.dispose();
+    // _seriousOperationDetailsController.dispose();
+    // _hospitalizedDetailsController.dispose();
+    // _medicationDetailsController.dispose();
+    // _bleedingTimeController.dispose();
+    // _bloodPressureController.dispose();
+    // _bloodTypeController.dispose();
+    // _otherAllergiesController.dispose();
 
     _dateController.dispose(); // Dispose the controller when the widget is disposed
     super.dispose();
@@ -1165,10 +1165,12 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                     firstDate: DateTime(1900), // Set a range if needed
                                                     lastDate: DateTime(2100),
                                                   );
-                                
-                                                  if (pickedDate != null) {
+
+                                                  if (pickedDate != null && pickedDate.isBefore(DateTime.now())) {
                                                     String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
                                                     _insuranceEffectiveDateController.text = formattedDate; // Set the selected date
+                                                  } else {
+                                                    _insuranceEffectiveDateController.text = ""; // Clear the field if no date is selected  
                                                   }
                                                 },
                                                 
