@@ -60,4 +60,31 @@ class BackupService{
       throw Exception('Error in service: $error');
     }
   }
+
+  Future<void> exportCsvService(String? path) async {
+    final String baseUrl = 'http://localhost:3000/dentsys-api/';
+    try {
+      path = path!.replaceAll('\\', '/');
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/export-patient-data'),
+        headers: headers,
+        body: jsonEncode({
+          'path': path,
+        })
+      );
+
+      if (response.statusCode == 200) {
+        print('Data exported successfully');
+      } else {
+        throw Exception('Failed to export data: ${response.body}');
+      }
+    } catch (error) {
+      print('Error in service: $error');
+      throw Exception('Error in service: $error');
+    }
+  }
 }

@@ -26,6 +26,8 @@ class BackupController {
 
     static async exportPatientData(req, res) {
         try {
+            const customSavePath = req.body.path;
+            console.log('customSavePath in controller: ', customSavePath);
             const workbook = new ExcelJS.Workbook(); // create workbook
             const data = await Backup.exportPatientData(); // get data
 
@@ -160,7 +162,7 @@ class BackupController {
             patientTreatmentsSheet.addRows(data.patientTreatments);
 
             const dateTime = new Date().toISOString().replace(/:/g, '-');
-            const filePath = `C:/Program Files/DentSys/patientData_${dateTime}.xlsx`;
+            const filePath = `${customSavePath || 'C:/Program Files/DentSys'}/patientData_${dateTime}.xlsx`;
             await workbook.xlsx.writeFile(filePath);
             
             await new Promise((resolve, reject) => {

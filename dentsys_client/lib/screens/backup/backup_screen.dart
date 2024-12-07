@@ -189,8 +189,10 @@ class _BackupScreenState extends State<BackupScreen> {
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: ElevatedButton.icon(
-                                    onPressed: () {
-                                      //
+                                    onPressed: () async {
+                                      String? selDir = await FilePicker.platform.getDirectoryPath();
+                                      print("selected directory for csv export: $selDir");
+                                      BackupService().exportCsvService(selDir);
                                     },
                                     icon: const Icon(
                                       Icons.file_download_rounded,

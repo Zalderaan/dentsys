@@ -50,6 +50,7 @@ Source: "C:\xampp\htdocs\dentsys\dentsys_release\Release\screen_retriever_plugin
 Source: "C:\xampp\htdocs\dentsys\dentsys_release\Release\window_manager_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\xampp\htdocs\dentsys\dentsys-api\dentsys-api.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\xampp\htdocs\dentsys\dentsys_release\Release\data\*"; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\xampp\htdocs\dentsys\dentsys-api\src\public\dentsys.sql"; DestDir: "{app}"; Flags: ignoreversion 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
