@@ -13,3 +13,7 @@ package-lock.json
 
 # dentsys_release exe
 dentsys_release/
+
+# dentsys-api exe versions
+dentsys-api/versions/
+dentsys-api/backups/

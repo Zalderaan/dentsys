@@ -157,13 +157,17 @@ class PatientTreatment {
         try {
             const treatment_id = data;
             console.log ('treatment_id:', treatment_id);
+            
+            const treatment = await this.getPatientTreatmentById(treatment_id);
+            
             const queryStr = 'DELETE FROM patient_treatments WHERE treatment_id = ?';
             const [result] = await pool.query(queryStr, treatment_id);
             if (result.affectedRows > 0) {
                 console.log('Patient treatment deleted:', treatment_id);
                 return {
                     message: 'Patient treatment deleted',
-                    treatment_id: treatment_id
+                    treatment_id: treatment_id,
+                    patient_id: treatment.patient_id
                 };
             } else {
                 throw new Error('Failed to delete patient treatment');

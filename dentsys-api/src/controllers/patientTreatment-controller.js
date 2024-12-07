@@ -70,7 +70,9 @@ class PatientTreatmentController {
         try {
             const treatment_id = req.params.id;
             console.log('treatment_id in controller:', treatment_id);
-            const deletedTreatment = await PatientTreatment.deletePatientTreatment(treatment_id);
+            const deletedTreatment = await PatientTreatment.deletePatientTreatment(treatment_id); 
+            const previousTreatment = await PatientTreatment.getBalanceBeforeTreatment(deletedTreatment.patient_id);  // get previous treatment balance
+            await PatientTreatment.cascadeUpdateBalance(deletedTreatment.patient_id, deletedTreatment.treatment_id, previousTreatment); // cascade update balance
             return res.status(200).json({ message: 'Treatment deleted successfully', deletedTreatment });
         } catch (error) {
             console.error('Error in deleteTreatment controller:', error);
