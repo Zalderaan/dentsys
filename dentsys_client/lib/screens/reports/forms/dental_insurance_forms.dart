@@ -25,15 +25,15 @@ class DentalInsuranceFormsState extends State<DentalInsuranceForms> {
   final _dentalInsuranceFormKey =  GlobalKey<FormState>();
 
   void pickEffectiveDate() async {
-    DateTime? pickEffectiveDate = await showDatePicker(
+    DateTime? pickedEffectiveDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(1900),
       lastDate: DateTime.now(),
     );
-    if (pickEffectiveDate != null) {
+    if (pickedEffectiveDate != null) {
       setState(() {
-        widget.effectivedateController.text = DateFormat('yyyy-MM-dd').format(pickEffectiveDate);
+        widget.effectivedateController.text = DateFormat('yyyy-MM-dd').format(pickedEffectiveDate);
       });
     }
   }
@@ -45,7 +45,7 @@ class DentalInsuranceFormsState extends State<DentalInsuranceForms> {
 
   @override
   void dispose() {
-    widget.effectivedateController.dispose(); // Dispose the controller when the widget is disposed
+    // widget.effectivedateController.dispose(); // Dispose the controller when the widget is disposed
     super.dispose();
   }
 
@@ -106,17 +106,17 @@ class DentalInsuranceFormsState extends State<DentalInsuranceForms> {
                             labelText: "Effective Date (MM-DD-YYYY)",
                             border: OutlineInputBorder(),
                           ),
-                          readOnly: false, // Make the field non-editable
+                          readOnly: true, // Make the field non-editable
                           onTap: () async {
-                            DateTime? pickEffectiveDate = await showDatePicker(
+                            DateTime? pickedEffectiveDate = await showDatePicker(
                               context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(1900), // Set a range if needed
+                              initialDate: widget.effectivedateController.text.isNotEmpty ? DateFormat('yyyy-MM-dd').parse(widget.effectivedateController.text) : DateTime.now(),
+                              firstDate: DateTime(1500), // Set a range if needed
                               lastDate: DateTime(2100),
                             );
           
-                            if (pickEffectiveDate != null) {
-                              String formattedDate = DateFormat('MM-dd-yyyy').format(pickEffectiveDate);
+                            if (pickedEffectiveDate != null) {
+                              String formattedDate = DateFormat('yyyy-MM-dd').format(pickedEffectiveDate);
                               widget.effectivedateController.text = formattedDate; // Set the selected date
                             }
                           },

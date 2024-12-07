@@ -96,6 +96,26 @@ class MedicalHistory {
         }
     }
 
+    static async getAllMedicalHistory() {
+        const queryStr = `
+            SELECT mh.*, CONCAT(p.patient_firstName, ' ', patient_lastName) AS patient_fullName
+            FROM medical_history mh
+            JOIN patients p ON mh.patient_id = p.patient_id
+        `;
+        try {
+            const [mh_result] = await pool.query(queryStr);
+            if (mh_result.length === 0) {
+                throw new Error('No medical history found');
+            } else {
+                console.log('All medical history retrieved successfully from model');
+                return mh_result;
+            }
+        } catch (error) {
+            console.log('Error getting all medical history from model', error);
+            throw error;
+        }
+    }
+
     static async updateMedicalHistory(data) {
         console.log('data received in mh model:', data);
         const { medical_physician, medical_physicianSpec, medical_officeAddress, medical_officeNo, medical_goodHealth, medical_isUnderTreatment, 

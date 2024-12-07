@@ -5,6 +5,7 @@ import 'package:dentsys_client/models/procedure_model.dart';
 import 'package:flutter/services.dart';
 import 'package:dentsys_client/models/treatments_model.dart';
 import 'package:dentsys_client/controllers/treatment_controller.dart';
+import 'package:intl/intl.dart';
 
 class EditTreatmentDialog extends StatefulWidget {
   final int patient_id;
@@ -59,7 +60,7 @@ class _EditTreatmentDialogState extends State<EditTreatmentDialog> {
       treatment_charged: calculateTotalPrice(),
       treatment_paid: double.parse(amountPaidController.text), 
       treatment_balance: await calculateEditBalance(),
-      treatment_date: DateTime.now().toString(),
+      treatment_date: DateFormat('yyyy-MM-dd').format(DateTime.now()),
       treatment_toothNo: toothNoController.text,
     );
     try {
@@ -130,7 +131,7 @@ class _EditTreatmentDialogState extends State<EditTreatmentDialog> {
         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 36),
       ),
       content: SizedBox(
-        width: 900,
+        width: 1000,
         height: 500,
         child: Row(
           children: [
@@ -204,10 +205,6 @@ class _EditTreatmentDialogState extends State<EditTreatmentDialog> {
                       labelText: 'Tooth No.',
                       border: UnderlineInputBorder(),
                     ),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
                   ),
 
                   const SizedBox(height: 15),

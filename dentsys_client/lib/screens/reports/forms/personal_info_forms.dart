@@ -11,7 +11,7 @@ class PersonalInfoForms extends StatefulWidget {
   final TextEditingController lastNameController;
   final TextEditingController middleNameController;
   final TextEditingController nicknameController;
-  final TextEditingController sexController;
+  final String? selectedSex;
   final TextEditingController ageController;
   final TextEditingController religionController;
   final TextEditingController nationalityController;
@@ -21,6 +21,7 @@ class PersonalInfoForms extends StatefulWidget {
   final TextEditingController referrerController;
   final TextEditingController reasonController;
   final TextEditingController birthdateController;
+  final Function(String?) onSexChanged;
 
   const PersonalInfoForms({
     super.key, 
@@ -29,7 +30,7 @@ class PersonalInfoForms extends StatefulWidget {
     required this.lastNameController,
     required this.middleNameController,
     required this.nicknameController,
-    required this.sexController,
+    required this.selectedSex,
     required this.ageController,
     required this.birthdateController, 
     required this.religionController,
@@ -39,6 +40,7 @@ class PersonalInfoForms extends StatefulWidget {
     required this.reasonController,
     required this.parentNameController,
     required this.parentOccupationController,
+    required this.onSexChanged,
   });
 
   @override
@@ -54,14 +56,14 @@ class PersonalInfoFormsState extends State<PersonalInfoForms> {
   void pickBirthdate() async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1900),
+      initialDate: widget.birthdateController.text.isNotEmpty ? DateFormat('yyyy-MM-dd').parse(widget.birthdateController.text) : DateTime.now(),
+      firstDate: DateTime(1900), // Set a range if needed
       lastDate: DateTime.now(),
     );
+
     if (pickedDate != null) {
-      setState(() {
-        widget.birthdateController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
-      });
+      String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+      widget.birthdateController.text = formattedDate; // Set the selected date
     }
   }
   @override
@@ -73,6 +75,7 @@ class PersonalInfoFormsState extends State<PersonalInfoForms> {
   @override 
   void initState(){
     super.initState();
+    selectedSex = widget.selectedSex; // initial data for patient sex
   }
 
   @override
@@ -104,22 +107,6 @@ class PersonalInfoFormsState extends State<PersonalInfoForms> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(
-                        child: TextFormField(
-                          controller: widget.lastNameController,
-                          decoration: const InputDecoration(
-                            labelText: "Lastname",
-                            border: OutlineInputBorder(),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'This item is required';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                      const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
                           controller: widget.firstNameController,
@@ -154,6 +141,23 @@ class PersonalInfoFormsState extends State<PersonalInfoForms> {
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
+                          controller: widget.lastNameController,
+                          decoration: const InputDecoration(
+                            labelText: "Lastname",
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'This item is required';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                
+                      Expanded(
+                        child: TextFormField(
                           controller: widget.nicknameController,
                           decoration: const InputDecoration(
                             labelText: "Nickname",
@@ -181,19 +185,9 @@ class PersonalInfoFormsState extends State<PersonalInfoForms> {
                             labelText: "Birth Date (YYYY-MM-DD)",
                             border: OutlineInputBorder(),
                           ),
-                          readOnly: false, // Make the field non-editable
+                          readOnly: true, // Make the field non-editable
                           onTap: () async {
-                            DateTime? pickedDate = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(1900), // Set a range if needed
-                              lastDate: DateTime(2100),
-                            );
-          
-                            if (pickedDate != null) {
-                              String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-                              widget.birthdateController.text = formattedDate; // Set the selected date
-                            }
+                            pickBirthdate(); // Show the date picker
                           },
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -244,6 +238,7 @@ class PersonalInfoFormsState extends State<PersonalInfoForms> {
                           onChanged: (value) {
                             setState(() {
                               selectedSex = value;
+                              widget.onSexChanged(selectedSex);
                             });
                           },
                           validator: (value) {

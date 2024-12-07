@@ -1,11 +1,11 @@
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:dentsys_client/screens/login/app_colors.dart';
-//import 'package:dentsys_client/screens/login/app_styles.dart';
 import 'package:dentsys_client/screens/login/app_icons.dart';
 import 'package:dentsys_client/screens/login/responsive_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
-// users imports
-import '../../controllers/user_controller.dart'; 
+// User imports
+import '../../controllers/user_controller.dart';
 import '../../models/user_model.dart';
 import '../../services/user_service.dart';
 
@@ -25,6 +25,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   late final UserController userController;
   bool _isPasswordVisible = false;
+  String? _usernameError; // Error message for username
+  String? _passwordError; // Error message for password
+  String? _firstnameError;
+  String? _lastnameError;
+  String? _emailError;
 
   @override
   void initState() {
@@ -44,43 +49,99 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Future<void> _handleRegister() async {
-    // get input values
     String firstname = _firstnameController.text.trim();
     String lastname = _lastnameController.text.trim();
     String email = _emailController.text.trim();
     String username = _usernameController.text.trim();
     String password = _passwordController.text.trim();
 
-    // create user instance
-    try {
-      User user = User.registerCons(firstName: firstname, lastName: lastname, email: email, username: username, password: password);
-      String result = await userController.register(user); // Call login method and display result
-      
-      // Navigate to dashboard if login is successful
-      if (result == 'User registered: $username') {
-        Navigator.pushNamed(context, '/login');
-      } else {
-        // Clear input fields
-        ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(result),
-          duration: const Duration(seconds: 3),
-        ),
-      );
-      }
+    setState(() {
+      _usernameError = null;
+      _passwordError = null;
+      _firstnameError = null;
+      _lastnameError = null;
+      _emailError = null;
+    });
 
-    // Show a snackbar with the result
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(result),
-          duration: const Duration(seconds: 3),
-        ),
-      );
-    } catch (error) {
-      print('Error: $error');
+    if (firstname.isEmpty) {
+      setState(() {
+        _firstnameError = "Firstname cannot be empty.";
+      });
+      return;
     }
-  }
 
+    if (lastname.isEmpty) {
+      setState(() {
+        _lastnameError = "Lastname cannot be empty.";
+      });
+      return;
+    }
+
+    if (email.isEmpty) {
+      setState(() {
+        _emailError = "Email cannot be empty.";
+      });
+      return;
+    }
+
+
+    if (username.isEmpty) {
+      setState(() {
+        _usernameError = "Username cannot be empty.";
+      });
+      return;
+    }
+
+    if (password.isEmpty) {
+      setState(() {
+        _passwordError = "Password cannot be empty.";
+      });
+      return;
+    }
+
+    
+
+   try {
+    User user = User.registerCons(
+      firstName: firstname,
+      lastName: lastname,
+      email: email,
+      username: username,
+      password: password,
+    );
+    String result = await userController.register(user);
+
+    if (result == 'User registered: $username') {
+      // Use AnimatedSnackBar for success
+      AnimatedSnackBar.material(
+        'Registration successful! Welcome, $username.',
+        type: AnimatedSnackBarType.success,
+        duration: Duration(seconds: 3),
+        mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+      ).show(context);
+
+      Navigator.pushNamed(context, '/login');
+    } else {
+      // Use AnimatedSnackBar for failure
+      AnimatedSnackBar.material(
+        result,
+        type: AnimatedSnackBarType.error,
+        duration: Duration(seconds: 3),
+        mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+      ).show(context);
+    }
+  } catch (error) {
+    // Use AnimatedSnackBar for error
+    AnimatedSnackBar.material(
+      'Error: $error',
+      type: AnimatedSnackBarType.error,
+      duration: Duration(seconds: 3),
+      mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+    ).show(context);
+  }
+}
+
+  
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -217,6 +278,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                               ),
                             ),
+                             if (_firstnameError != null) // Display error message below field
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0, top: 4.0),
+                                child: Text(
+                                  _firstnameError!,
+                                  style: const TextStyle(
+                                    fontSize: 12.0,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ),
                             const SizedBox(height: 16.0),
 
 
@@ -260,6 +332,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                               ),
                             ),
+                             if (_lastnameError != null) // Display error message below field
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0, top: 4.0),
+                                child: Text(
+                                  _lastnameError!,
+                                  style: const TextStyle(
+                                    fontSize: 12.0,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ),
                             const SizedBox(height: 16.0),
 
 
@@ -303,6 +386,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                               ),
                             ),
+                             if (_emailError != null) // Display error message below field
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0, top: 4.0),
+                                child: Text(
+                                  _emailError!,
+                                  style: const TextStyle(
+                                    fontSize: 12.0,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ),
                             const SizedBox(height: 16.0),
                             
                             // Username input
@@ -345,6 +439,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                               ),
                             ),
+                             if (_usernameError != null) // Display error message below field
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0, top: 4.0),
+                                child: Text(
+                                  _usernameError!,
+                                  style: const TextStyle(
+                                    fontSize: 12.0,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ),
                             const SizedBox(height: 16.0),
 
 
@@ -403,6 +508,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                               ),
                             ),
+                             if (_passwordError != null) // Display error message below field
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0, top: 4.0),
+                                child: Text(
+                                  _passwordError!,
+                                  style: const TextStyle(
+                                    fontSize: 12.0,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ),
                             
                             const SizedBox(height: 12.0),
                            

@@ -76,6 +76,21 @@ class PatientTreatment {
         }
     }
 
+    static async getAllTreatment() {
+        try {
+            const queryStr = `
+                SELECT pt.*, CONCAT(p.patient_firstName, ' ', patient_lastName) AS patient_fullName
+                FROM patient_treatments pt
+                JOIN patients p ON pt.patient_id = p.patient_id
+            `;
+            const [result] = await pool.query(queryStr);
+            return result;
+        } catch (error) {
+            console.error('Error in get all patientTr model:', error);
+            throw error;
+        }
+    }
+
     static async updatePatientTreatment(data) {
         console.log('data in model: ', data);
         try {
@@ -157,13 +172,17 @@ class PatientTreatment {
         try {
             const treatment_id = data;
             console.log ('treatment_id:', treatment_id);
+            
+            const treatment = await this.getPatientTreatmentById(treatment_id);
+            
             const queryStr = 'DELETE FROM patient_treatments WHERE treatment_id = ?';
             const [result] = await pool.query(queryStr, treatment_id);
             if (result.affectedRows > 0) {
                 console.log('Patient treatment deleted:', treatment_id);
                 return {
                     message: 'Patient treatment deleted',
-                    treatment_id: treatment_id
+                    treatment_id: treatment_id,
+                    patient_id: treatment.patient_id
                 };
             } else {
                 throw new Error('Failed to delete patient treatment');

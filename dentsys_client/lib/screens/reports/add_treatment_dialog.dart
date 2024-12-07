@@ -126,7 +126,7 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 36),
       ),
       content: SizedBox(
-        width: 900,
+        width: 1000,
         height: 500,
         child: Row(
           children: [
@@ -201,10 +201,6 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
                       labelText: 'Tooth No.',
                       border: UnderlineInputBorder(),
                     ),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
                   ),
 
                   const SizedBox(height: 15),

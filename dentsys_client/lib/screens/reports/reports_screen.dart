@@ -98,6 +98,18 @@ class _ReportsScreenState extends State<ReportsScreen> {
     }
   }
 
+  void handleDeletePatient(int? patient_id) async {
+    try {
+      await patientController.deletePatient(patient_id);
+      setState(() {
+        patientDetails = null; // Clear patient details
+      });
+    } catch (error) {
+      print('Error deleting patient: $error');
+    }
+  }
+
+
   void handleDeleteTreatment(String treatmentId) async {
     try {
       await treatmentController.deleteTreatment(treatmentId);
@@ -105,6 +117,97 @@ class _ReportsScreenState extends State<ReportsScreen> {
     } catch (error) {
       print('Error deleting treatment: $error');
     }
+  }
+
+  //dialog box for treatment deletions
+  Future<void> showDeleteConfirmationDialog(BuildContext context, String treatmentId) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // Prevent dismissing by tapping outside the dialog
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text(
+          'Confirm Deletion', 
+          style: TextStyle(
+            fontSize: 24.0,
+            fontWeight: FontWeight.bold,
+            color: Color.fromARGB(255, 66, 43, 21),
+          ),
+        ),
+        content: const Text(
+          'Are you sure you want to delete this Treatment?',
+          style: TextStyle(
+            fontSize: 16.0,
+            color: Color.fromARGB(255, 66, 43, 21),
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+            },
+            child: const Text('No'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+              handleDeleteTreatment(treatmentId); // Proceed with deletion
+            },
+            child: const Text(
+              'Yes',
+              style: TextStyle(
+                color: Colors.red,
+              ),
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+// dialog confirmation for patient record deletions
+  void _showDeleteConfirmationDialog(BuildContext context, Function onDeleteConfirmed) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+              'Confirm Deletion',
+              style: TextStyle(
+              fontSize: 24.0,
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 66, 43, 21),
+            ),
+          ),
+          content: const Text(
+            'Are you sure you want to delete this Patient Records?',
+            style: TextStyle(
+              fontSize: 16.0,
+              color: Color.fromARGB(255, 66, 43, 21),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                onDeleteConfirmed(); 
+                Navigator.of(context).pop(); 
+              },
+              child: const Text(
+                'Delete',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
 
@@ -145,15 +248,43 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     ],
                   ),
                   padding: const EdgeInsets.all(20.0),
-                  child: const Row(
+                  child: Row(
                     children: [
-                      Expanded(
+                      const Expanded(
                         child: Text(
                           "Patient Record",
                           style: TextStyle(
                             fontSize: 32.0,
                             fontWeight: FontWeight.bold,
                             color: Color.fromARGB(255, 66, 43, 21),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            _showDeleteConfirmationDialog(context, (){
+                              handleDeletePatient(widget.patient_id);
+                            });
+                          },
+                          icon: const Icon(
+                            Icons.delete,
+                            color: Colors.white,
+                          ),
+                          label: const Text(
+                            "Delete Records",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.transparent,
+                            shadowColor: Colors.transparent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
                           ),
                         ),
                       ),
@@ -483,7 +614,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                                       IconButton(
                                                         icon: const Icon(Icons.delete, color: Colors.red),
                                                         onPressed: () async {
-                                                          handleDeleteTreatment(treatment.id.toString());
+                                                          showDeleteConfirmationDialog(context, treatment.id.toString());
                                                         },
                                                       ),
                                                     ],
@@ -657,9 +788,11 @@ class _ReportsScreenState extends State<ReportsScreen> {
     final TextEditingController _dialogLastNameController = TextEditingController(text: details.patient.lastName);
     final TextEditingController _dialogMiddleNameController = TextEditingController(text: details.patient.middleName);
     final TextEditingController _dialogNicknameController = TextEditingController(text: details.patient.nickname);
-    final TextEditingController _dialogSexController = TextEditingController(text: details.patient.sex);
     final TextEditingController _dialogAgeController = TextEditingController(text: details.patient.age.toString());
-    final TextEditingController _dialogBirthdateController = TextEditingController(text: details.patient.birthDate);
+    final TextEditingController _dialogBirthdateController = 
+        TextEditingController(
+            text: DateFormat('yyyy-MM-dd').format(DateTime.parse(details.patient.birthDate).toLocal()),
+        );
     final TextEditingController _dialogNationalityController = TextEditingController(text: details.patient.nationality);
     final TextEditingController _dialogOccupationController = TextEditingController(text: details.patient.occupation);
     final TextEditingController _dialogReligionController = TextEditingController(text: details.patient.religion);
@@ -667,6 +800,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
     final TextEditingController _dialogReferrerController = TextEditingController(text: details.patient.referrer);
     final TextEditingController _guardianNameController = TextEditingController(text: details.patient.parentName);
     final TextEditingController _guardianOccupationController = TextEditingController(text: details.patient.parentOccupation);
+    late String? _dialogSex = details.patient.sex;
     late PatientController patientController = PatientController();
 
     // contact info
@@ -680,12 +814,18 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
     // insurance
     final TextEditingController dialogInsuranceNameController = TextEditingController(text: details.insurance.insurance_name);
-    final TextEditingController dialogEffectiveDateController = TextEditingController(text: details.insurance.effective_date);
+    final TextEditingController dialogEffectiveDateController = 
+          TextEditingController(
+              text: DateFormat('yyyy-MM-dd').format(DateTime.parse(details.insurance.effective_date).toLocal()),
+          );
     late InsuranceController insuranceController = InsuranceController(); // insurance controller
     
     // dental history
     final TextEditingController dialogPreviousDentistController = TextEditingController(text: details.dental.previous_dentist);
-    final TextEditingController dialogLatestVisitController = TextEditingController(text: details.dental.last_visit);
+    final TextEditingController dialogLatestVisitController =
+          TextEditingController(
+              text: DateFormat('yyyy-MM-dd').format(DateTime.parse(details.dental.last_visit).toLocal()),
+          );
     late DentalController dentalController = DentalController(); // dental controller
 
   // medical history
@@ -761,6 +901,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
   late bool dialogArthritis = details.conditions.any((condition) => condition.condition_id == 35 && condition.patientCondition_status);
   late ConditionsController conditionsController = ConditionsController();
   
+  dynamic retrieveSex(String? updSex) async {
+    _dialogSex = updSex;
+  }
+
   Future<void> saveUpdatePatient() async {
     final updatedPatient = Patient(
       id: details.patient.id,
@@ -768,9 +912,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
       lastName: _dialogLastNameController.text,
       middleName: _dialogMiddleNameController.text,
       nickname: _dialogNicknameController.text,
-      birthDate: _dialogBirthdateController.text,
+      birthDate: DateFormat('yyyy-MM-dd').format(DateTime.parse(_dialogBirthdateController.text)),
       age: int.parse(_dialogAgeController.text),
-      sex: _dialogSexController.text,
+      sex: _dialogSex,
       nationality: _dialogNationalityController.text,
       religion: _dialogReligionController.text,
       occupation: _dialogOccupationController.text,
@@ -818,7 +962,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
       final updatedInsurance = Insurance(
         patient_id: details.insurance.patient_id,
         insurance_name: dialogInsuranceNameController.text,
-        effective_date: dialogEffectiveDateController.text,
+        effective_date: DateFormat('yyyy-MM-dd').format(DateTime.parse(dialogEffectiveDateController.text)),
+        // effective_date: dialogEffectiveDateController.text,
       );
 
       try {
@@ -836,7 +981,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
       final updatedDental = Dental(
         patient_id: details.dental.patient_id,
         previous_dentist: dialogPreviousDentistController.text,
-        last_visit: dialogLatestVisitController.text,
+        last_visit: DateFormat('yyyy-MM-dd').format(DateTime.parse(dialogLatestVisitController.text)),
       );
 
       try {
@@ -1074,8 +1219,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
       conditions: falseConditions,
     );
 
-    print ('updPatientConditions: $updPatientConditions');
-    print ('delPatientConditions: $delPatientConditions');
+    // print ('updPatientConditions: $updPatientConditions');
+    // print ('delPatientConditions: $delPatientConditions');
 
     try {
       await conditionsController.addPatientCondition(updPatientConditions);
@@ -1113,7 +1258,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   lastNameController: _dialogLastNameController,
                   middleNameController: _dialogMiddleNameController,
                   nicknameController: _dialogNicknameController, 
-                  sexController: _dialogSexController,
+                  selectedSex: _dialogSex,
                   ageController: _dialogAgeController,
                   birthdateController: _dialogBirthdateController, 
                   nationalityController: _dialogNationalityController,
@@ -1124,7 +1269,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   parentNameController: _guardianNameController,
                   parentOccupationController: _guardianOccupationController,
                   formKey: dialogPersonalInfoFormKey, 
-                  patient: details.patient
+                  patient: details.patient,
+                  onSexChanged: retrieveSex,
                 ),
                 ContactInfoForms(
                   emailController: _emailController,
@@ -1347,10 +1493,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       buildInfoSection("Effective Date", [formatDate(details.insurance.effective_date)]),
                       buildInfoSection("Previous Dentist", [details.dental.previous_dentist]),
                       buildInfoSection("Latest Visit", [formatDate(details.dental.last_visit)]),
-                     
-
-                      
-                     
                     ],
                   ),
                 ),
@@ -1589,10 +1731,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
   }
 
   // Format the date
-  String formatDate(String dateTime) {
-    DateTime parsedDate = DateTime.parse(dateTime);
-    return DateFormat('yyyy-MM-dd').format(parsedDate);
-  }
+  String formatDate(String utcDate) {
+  final DateTime parsedDate = DateTime.parse(utcDate).toLocal();
+  return DateFormat('yyyy-MM-dd').format(parsedDate);
+}
 
 
   List<String> getTrueAllergies(Allergies allergies) {

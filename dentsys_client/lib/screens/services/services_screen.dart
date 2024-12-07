@@ -90,37 +90,35 @@ class _ServicesScreenState extends State<ServicesScreen> {
     });
   }
 
- 
-
- void _showDeleteConfirmationDialog(BuildContext context, Function onDeleteConfirmed) {
-   showDialog(
-     context: context,
-     builder: (BuildContext context) {
-       return AlertDialog(
-         title: const Text('Confirm Deletion'),
-         content: const Text('Are you sure you want to delete this procedure?'),
-         actions: [
-           TextButton(
-             onPressed: () {
-               Navigator.of(context).pop();
-             },
-             child: const Text('Cancel'),
-           ),
-           TextButton(
-             onPressed: () {
-               onDeleteConfirmed(); 
-               Navigator.of(context).pop(); 
-             },
-             child: const Text(
-               'Delete',
-               style: TextStyle(color: Colors.red),
-             ),
-           ),
-         ],
-       );
-     },
-   );
- }
+  void _showDeleteConfirmationDialog(BuildContext context, Function onDeleteConfirmed) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Deletion'),
+          content: const Text('Are you sure you want to delete this procedure?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                onDeleteConfirmed(); 
+                Navigator.of(context).pop(); 
+              },
+              child: const Text(
+                'Delete',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   void dispose() {
@@ -475,7 +473,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -591,7 +589,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                               labelText: 'Payment Type',
                               border: UnderlineInputBorder(),
                             ),
-                            items: <String>['Fixed', 'Variable', 'Down Payment', 'Unit']
+                            items: <String>['Fixed', 'Variable', 'Down Payment', 'Unit', 'To Be Determined']
                                 .map((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
@@ -826,7 +824,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                               labelText: 'Payment Type',
                               border: UnderlineInputBorder(),
                             ),
-                            items: <String>['Fixed', 'Variable', 'Down Payment', 'Unit']
+                            items: <String>['Fixed', 'Variable', 'Down Payment', 'Unit', 'To Be Determined']
                                 .map((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,

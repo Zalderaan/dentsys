@@ -6,12 +6,14 @@ node_modules/
 
 # IDE-specific files
 .vscode/
+.vs/
 
 # package
 package-lock.json
 
-# dentsys-api exe
-dentsys-api/dentsys-api.exe
-
 # dentsys_release exe
 dentsys_release/
+
+# dentsys-api exe versions
+dentsys-api/versions/
+dentsys-api/backups/

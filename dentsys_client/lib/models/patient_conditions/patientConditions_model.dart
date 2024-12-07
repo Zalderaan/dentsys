@@ -15,7 +15,7 @@ class PatientConditions {
   }
 
   factory PatientConditions.fromJson(Map<String, dynamic> json) {
-    print('received in pcon fromJson: $json');
+    // print('received in pcon fromJson: $json');
     List<Conditions> conditions = [];
     for (var condition in json['newPatientCondition']) {
       conditions.add(Conditions.fromJson(condition));

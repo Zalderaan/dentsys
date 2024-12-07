@@ -23,8 +23,8 @@ class DentalHistoryFormsState extends State<DentalHistoryForms> {
   void pickLatestVisitDate() async {
     DateTime? pickLatestVisitDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1900),
+      initialDate: widget.latestvisitController.text.isNotEmpty ? DateFormat('yyyy-MM-dd').parse(widget.latestvisitController.text) : DateTime.now(),
+      firstDate: DateTime(1500),
       lastDate: DateTime.now(),
     );
     if (pickLatestVisitDate != null) {
@@ -92,24 +92,14 @@ class DentalHistoryFormsState extends State<DentalHistoryForms> {
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
-                          controller: _dateController, // Controller to manage the selected date text
+                          controller: widget.latestvisitController, // Controller to manage the selected date text
                           decoration: const InputDecoration(
                             labelText: "Latest Dental Visit (MM-DD-YYYY)",
                             border: OutlineInputBorder(),
                           ),
-                          readOnly: false, // Make the field non-editable
+                          readOnly: true, // Make the field non-editable
                           onTap: () async {
-                            DateTime? pickLatestVisitDate = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(1900), // Set a range if needed
-                              lastDate: DateTime(2100),
-                            );
-          
-                            if (pickLatestVisitDate != null) {
-                              String formattedDate = DateFormat('MM-dd-yyyy').format(pickLatestVisitDate);
-                              _dateController.text = formattedDate; // Set the selected date
-                            }
+                            pickLatestVisitDate();
                           },
                           validator: (value) {
                             if (value == null || value.isEmpty) {

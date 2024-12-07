@@ -1,3 +1,4 @@
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:dentsys_client/screens/login/app_colors.dart';
 //import 'package:dentsys_client/screens/login/app_styles.dart';
@@ -22,6 +23,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   late final UserController userController;
   bool _isPasswordVisible = false;
+  String? _usernameError; // Error message for username
+  String? _passwordError; // Error message for password
 
   @override
   void initState() {
@@ -38,33 +41,59 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _handleLogin() async {
-    // get input values
     String username = _usernameController.text.trim();
     String password = _passwordController.text.trim();
 
-    // create user instance
-    User user = User.loginCons(username: username, password: password);
+    setState(() {
+      _usernameError = null;
+      _passwordError = null;
+    });
 
-    // Call login method and display result
-    String result = await userController.login(user);
-    print ('handleLogin result: $result');
-
-    // Navigate to dashboard if login is successful
-    if (result == 'User logged in: $username') {
-      Navigator.pushNamed(context, '/dashboard');
-    } else {
-      // Clear input fields
-      _usernameController.clear();
-      _passwordController.clear();
+    if (username.isEmpty) {
+      setState(() {
+        _usernameError = "Username cannot be empty.";
+      });
+      return;
     }
 
-    // Show a snackbar with the result
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(result),
-        duration: const Duration(seconds: 3),
-      ),
-    );
+    if (password.isEmpty) {
+      setState(() {
+        _passwordError = "Password cannot be empty.";
+      });
+      return;
+    }
+
+    User user = User.loginCons(username: username, password: password);
+    String result = await userController.login(user);
+
+    try {
+      if (result == 'User logged in: $username') {
+        Navigator.pushNamed(context, '/dashboard');
+        
+        AnimatedSnackBar.material(
+          'Welcome, $username! You have logged in successfully.',
+          type: AnimatedSnackBarType.success,
+          duration: const Duration(seconds: 3),
+        ).show(context);
+      } else {
+        setState(() {
+          _usernameError = "Invalid username or password.";
+          _passwordError = "Invalid username or password.";
+        });
+
+        AnimatedSnackBar.material(
+          'Login failed: Invalid username or password.',
+          type: AnimatedSnackBarType.error,
+          duration: const Duration(seconds: 3),
+        ).show(context);
+      }
+    } catch (error) {
+      AnimatedSnackBar.material(
+        'An unexpected error occurred: $error',
+        type: AnimatedSnackBarType.error,
+        duration: const Duration(seconds: 5),
+      ).show(context);
+    }
   }
 
   @override
@@ -162,7 +191,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Email input
+                            // Username input
                             Padding(
                               padding: const EdgeInsets.only(left: 8.0),
                               child: Text(
@@ -199,9 +228,21 @@ class _LoginScreenState extends State<LoginScreen> {
                                     color: AppColors.darkBrownColor.withOpacity(0.5),
                                     fontSize: 12.0,
                                   ),
+                                 // errorText: _usernameError, // Show error if any
                                 ),
                               ),
                             ),
+                            if (_usernameError != null) // Display error message below field
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0, top: 4.0),
+                                child: Text(
+                                  _usernameError!,
+                                  style: const TextStyle(
+                                    fontSize: 12.0,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ),
                             const SizedBox(height: 16.0),
                             // Password input
                             Padding(
@@ -233,7 +274,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 obscureText: !_isPasswordVisible,
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
-                                  prefixIcon: Icon(Icons.lock, color: AppColors.darkBrownColor),
+                                  prefixIcon: const Icon(Icons.lock, color: AppColors.darkBrownColor),
                                   suffixIcon: IconButton(
                                     icon: Icon(
                                       _isPasswordVisible
@@ -254,9 +295,21 @@ class _LoginScreenState extends State<LoginScreen> {
                                     color: AppColors.darkBrownColor.withOpacity(0.5),
                                     fontSize: 12.0,
                                   ),
+                                  // errorText: _passwordError, // Show error if any
                                 ),
                               ),
                             ),
+                            if (_passwordError != null) // Display error message below field
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0, top: 4.0),
+                                child: Text(
+                                  _passwordError!,
+                                  style: const TextStyle(
+                                    fontSize: 12.0,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ),
                             const SizedBox(height: 12.0),
                             Align(
                               alignment: Alignment.centerRight,

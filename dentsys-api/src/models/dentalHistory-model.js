@@ -59,6 +59,26 @@ class DentalHistory {
         }
     }
 
+    static async getAllDentalHist() {
+        try {
+            const queryStr = `
+                SELECT dh.*, CONCAT(p.patient_firstName, ' ', patient_lastName) AS patient_fullName
+                FROM dental_history dh
+                JOIN patients p ON dh.patient_id = p.patient_id
+            `;
+            const [dentalHist] = await pool.query(queryStr);
+            if(dentalHist.length === 0) {
+                throw new Error('No dental history found');
+            } else {
+                console.log('All dental history retrieved successfully from model');
+                return dentalHist;
+            }
+        } catch (error) {
+            console.log('Error getting all dental history from model', error);
+            throw error;
+        }
+    }
+
     static async updateDentalHist(data) {
         const {previous_dentist, last_visit, patient_id} = data;
         const queryStr = 'UPDATE dental_history SET dental_previousDentist = ?, dental_lastVisit = ? WHERE patient_id = ?';
