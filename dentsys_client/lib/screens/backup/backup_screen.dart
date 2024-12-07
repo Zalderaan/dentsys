@@ -193,7 +193,7 @@ class _BackupScreenState extends State<BackupScreen> {
                                       //
                                     },
                                     icon: const Icon(
-                                      Icons.backup,
+                                      Icons.file_download_rounded,
                                       color: Colors.white,
                                     ),
                                     label: const Text(
