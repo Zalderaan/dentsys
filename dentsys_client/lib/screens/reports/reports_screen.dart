@@ -98,6 +98,15 @@ class _ReportsScreenState extends State<ReportsScreen> {
     }
   }
 
+  void handleDeletePatient(int? patient_id) async {
+    try {
+      await patientController.deletePatient(patient_id);
+      Navigator.pop(context);
+    } catch (error) {
+      print('Error deleting patient: $error');
+    }
+  }
+
   void handleDeleteTreatment(String treatmentId) async {
     try {
       await treatmentController.deleteTreatment(treatmentId);
@@ -155,7 +164,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
 }
 
 // dialog confirmation for patient record deletions
-   void _showDeleteConfirmationDialog(BuildContext context, Function onDeleteConfirmed) {
+  void _showDeleteConfirmationDialog(BuildContext context, Function onDeleteConfirmed) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -170,7 +179,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
           ),
           content: const Text(
             'Are you sure you want to delete this Patient Records?',
-             style: TextStyle(
+            style: TextStyle(
               fontSize: 16.0,
               color: Color.fromARGB(255, 66, 43, 21),
             ),
@@ -256,7 +265,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         child: ElevatedButton.icon(
                           onPressed: () {
                             _showDeleteConfirmationDialog(context, (){
-                              //function to delete patient records.
+                              handleDeletePatient(widget.patient_id);
 
                             });
                           },
@@ -952,6 +961,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
         patient_id: details.insurance.patient_id,
         insurance_name: dialogInsuranceNameController.text,
         effective_date: DateFormat('yyyy-MM-dd').format(DateTime.parse(dialogEffectiveDateController.text)),
+        // effective_date: dialogEffectiveDateController.text,
       );
 
       try {
@@ -969,7 +979,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
       final updatedDental = Dental(
         patient_id: details.dental.patient_id,
         previous_dentist: dialogPreviousDentistController.text,
-        last_visit:  DateFormat('yyyy-MM-dd').format(DateTime.parse(dialogLatestVisitController.text)),
+        last_visit: DateFormat('yyyy-MM-dd').format(DateTime.parse(dialogLatestVisitController.text)),
       );
 
       try {
@@ -1207,8 +1217,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
       conditions: falseConditions,
     );
 
-    print ('updPatientConditions: $updPatientConditions');
-    print ('delPatientConditions: $delPatientConditions');
+    // print ('updPatientConditions: $updPatientConditions');
+    // print ('delPatientConditions: $delPatientConditions');
 
     try {
       await conditionsController.addPatientCondition(updPatientConditions);
@@ -1481,10 +1491,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       buildInfoSection("Effective Date", [formatDate(details.insurance.effective_date)]),
                       buildInfoSection("Previous Dentist", [details.dental.previous_dentist]),
                       buildInfoSection("Latest Visit", [formatDate(details.dental.last_visit)]),
-                     
-
-                      
-                     
                     ],
                   ),
                 ),

@@ -139,11 +139,11 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
     } catch (error) {
       print(error);
 
-      AnimatedSnackBar.material(
-        'Error creating patient: $error',
-        type: AnimatedSnackBarType.error,
-        duration: const Duration(seconds: 5),
-      ).show(context);
+      // AnimatedSnackBar.material(
+      //   'Error creating patient: $error',
+      //   type: AnimatedSnackBarType.error,
+      //   duration: const Duration(seconds: 5),
+      // ).show(context);
     }
   }
   
@@ -172,11 +172,11 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
     try {
       final createdContact = await contactController.createContact(contact);
 
-      AnimatedSnackBar.material(
-        'Contact created successfully: $createdContact',
-        type: AnimatedSnackBarType.success,
-        duration: const Duration(seconds: 3),
-      ).show(context);
+      // AnimatedSnackBar.material(
+      //   'Contact created successfully: $createdContact',
+      //   type: AnimatedSnackBarType.success,
+      //   duration: const Duration(seconds: 3),
+      // ).show(context);
     } catch (error) {
       AnimatedSnackBar.material(
         'Error creating contact: $error',
@@ -197,11 +197,11 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
     try {
       final createdInsurance = await insuranceController.createInsurance(insurance);
       
-      AnimatedSnackBar.material(
-        'Insurance added successfuly: $createdInsurance',
-        type: AnimatedSnackBarType.success,
-        duration: const Duration(seconds: 3),
-      ).show(context);
+      // AnimatedSnackBar.material(
+      //   'Insurance added successfuly: $createdInsurance',
+      //   type: AnimatedSnackBarType.success,
+      //   duration: const Duration(seconds: 3),
+      // ).show(context);
     } catch (error) {
       AnimatedSnackBar.material(
         'Error creating contact: $error',
@@ -222,11 +222,11 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
     try {
       final createdDental = await dentalController.createDentalHistory(dental);
       
-      AnimatedSnackBar.material(
-        'Dental history added successfuly: $createdDental',
-        type: AnimatedSnackBarType.success,
-        duration: const Duration(seconds: 3),
-      ).show(context);
+      // AnimatedSnackBar.material(
+      //   'Dental history added successfuly: $createdDental',
+      //   type: AnimatedSnackBarType.success,
+      //   duration: const Duration(seconds: 3),
+      // ).show(context);
     } catch (error) {
       AnimatedSnackBar.material(
         'Error creating dental history: $error',
@@ -264,11 +264,11 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
     try {
       final createdMedical = await medicalController.createMedicalHistory(medical);
       
-      AnimatedSnackBar.material(
-        'Medical history added successfuly: $createdMedical',
-        type: AnimatedSnackBarType.success,
-        duration: const Duration(seconds: 3),
-      ).show(context);
+      // AnimatedSnackBar.material(
+      //   'Medical history added successfuly: $createdMedical',
+      //   type: AnimatedSnackBarType.success,
+      //   duration: const Duration(seconds: 3),
+      // ).show(context);
     } catch (error) {
       AnimatedSnackBar.material(
         'Error creating medical history: $error',
@@ -301,11 +301,11 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
     try {
       final createdAllergies = await allergiesController.createAllergy(allergies);
 
-      AnimatedSnackBar.material(
-        'Allergies added successfuly: $createdAllergies',
-        type: AnimatedSnackBarType.success,
-        duration: const Duration(seconds: 3),
-      ).show(context);
+      // AnimatedSnackBar.material(
+      //   'Allergies added successfuly: $createdAllergies',
+      //   type: AnimatedSnackBarType.success,
+      //   duration: const Duration(seconds: 3),
+      // ).show(context);
     } catch (error) {
       AnimatedSnackBar.material(
         'Error creating allergies: $error',
@@ -364,11 +364,11 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
     try {
       final createdPatientConditions = await conditionsController.addPatientCondition(patientConditions);
 
-      AnimatedSnackBar.material(
-        'Patient conditions added successfuly: $createdPatientConditions',
-        type: AnimatedSnackBarType.success,
-        duration: const Duration(seconds: 3),
-      ).show(context);
+      // AnimatedSnackBar.material(
+      //   'Patient conditions added successfuly: $createdPatientConditions',
+      //   type: AnimatedSnackBarType.success,
+      //   duration: const Duration(seconds: 3),
+      // ).show(context);
     } catch (error) {
       AnimatedSnackBar.material(
         'Error creating patient conditions: $error',
@@ -454,6 +454,44 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
 
   @override
   void dispose() {
+    // _firstNameController.dispose();
+    // _lastNameController.dispose();
+    // _middleNameController.dispose();
+    // _nicknameController.dispose();
+    // _dateController.dispose();
+    // _ageController.dispose();
+    // _religionController.dispose();
+    // _nationalityController.dispose();
+    // _occupationController.dispose();
+    // _parentGuardianController.dispose();
+    // _parentGuardianOccupationController.dispose();
+    // _referrerController.dispose();
+    // _reasonController.dispose();
+
+    // _emailController.dispose();
+    // _homeAddressController.dispose();
+    // _homeNoController.dispose();
+    // _faxNoController.dispose();
+    // _workNoController.dispose();
+    // _mobileNoController.dispose();
+    // _insuranceNameController.dispose();
+    // _insuranceEffectiveDateController.dispose();
+
+    // _previousDentistController.dispose();
+    // _lastVisitController.dispose();
+    // _physicianNameController.dispose();
+    // _physicianSpecialtyController.dispose();
+    // _officeAddressController.dispose();
+    // _officeNumberController.dispose();
+    // _treatmentDetailsController.dispose();
+    // _seriousOperationDetailsController.dispose();
+    // _hospitalizedDetailsController.dispose();
+    // _medicationDetailsController.dispose();
+    // _bleedingTimeController.dispose();
+    // _bloodPressureController.dispose();
+    // _bloodTypeController.dispose();
+    // _otherAllergiesController.dispose();
+
     _dateController.dispose(); // Dispose the controller when the widget is disposed
     super.dispose();
   }
@@ -618,7 +656,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                           labelText: "Birth Date (YYYY-MM-DD)",
                                           border: OutlineInputBorder(),
                                         ),
-                                        readOnly: false, // Make the field non-editable
+                                        readOnly: true, // Make the field non-editable
                                         onTap: () async {
                                           DateTime? pickedDate = await showDatePicker(
                                             context: context,
@@ -1119,7 +1157,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                   labelText: "Effective Date (YYYY-MM-DD)",
                                                   border: OutlineInputBorder(),
                                                 ),
-                                                readOnly: false, // Make the field non-editable
+                                                readOnly: true, // Make the field non-editable
                                                 onTap: () async {
                                                   DateTime? pickedDate = await showDatePicker(
                                                     context: context,
@@ -1127,10 +1165,12 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                     firstDate: DateTime(1900), // Set a range if needed
                                                     lastDate: DateTime(2100),
                                                   );
-                                
-                                                  if (pickedDate != null) {
+
+                                                  if (pickedDate != null && pickedDate.isBefore(DateTime.now())) {
                                                     String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
                                                     _insuranceEffectiveDateController.text = formattedDate; // Set the selected date
+                                                  } else {
+                                                    _insuranceEffectiveDateController.text = ""; // Clear the field if no date is selected  
                                                   }
                                                 },
                                                 
@@ -1248,7 +1288,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                   labelText: "Latest Dental Visit (YYYY-MM-DD)",
                                                   border: OutlineInputBorder(),
                                                 ),
-                                                readOnly: false, // Make the field non-editable
+                                                readOnly: true, // Make the field non-editable
                                                 onTap: () async {
                                                   DateTime? pickedDate = await showDatePicker(
                                                     context: context,

@@ -46,7 +46,7 @@ class PatientController {
     }
   }
 
-  Future<void> deletePatient(String patient_id) async {
+  Future<void> deletePatient(int? patient_id) async {
     try {
       await _patientService.deletePatientService(patient_id);
     } catch (error) {

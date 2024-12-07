@@ -40,11 +40,6 @@ class Backup {
         
     }
 
-    static listBackups(){
-        const backupPath = path.join(__dirname, '../../backups');
-        return fs.readdirSync(backupPath);
-    }
-
     static async restoreBackup(backupName){
         try {
             console.log('backupName in model: ', backupName);

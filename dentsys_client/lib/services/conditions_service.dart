@@ -37,7 +37,7 @@ class ConditionsService {
                 body: jsonEncode(patientConditions.toJson()),
             );
             if (response.statusCode == 200) {
-                print('Deleted patient condition');
+                // print('Deleted patient condition');
             } else {
                 throw Exception('Failed to delete patient condition: ${response.body}');
             }
