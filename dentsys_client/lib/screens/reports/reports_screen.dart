@@ -101,11 +101,14 @@ class _ReportsScreenState extends State<ReportsScreen> {
   void handleDeletePatient(int? patient_id) async {
     try {
       await patientController.deletePatient(patient_id);
-      Navigator.pop(context);
+      setState(() {
+        patientDetails = null; // Clear patient details
+      });
     } catch (error) {
       print('Error deleting patient: $error');
     }
   }
+
 
   void handleDeleteTreatment(String treatmentId) async {
     try {
@@ -266,7 +269,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
                           onPressed: () {
                             _showDeleteConfirmationDialog(context, (){
                               handleDeletePatient(widget.patient_id);
-
                             });
                           },
                           icon: const Icon(
