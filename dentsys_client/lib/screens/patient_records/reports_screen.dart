@@ -913,28 +913,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
     }
   });
 
-  Future<void> _selectBirthDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.parse(details.patient.birthDate),
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-    );
-    if (picked != null && picked != DateTime.parse(details.patient.birthDate)) {
-      _dialogBirthdateController.text = DateFormat('yyyy-MM-dd').format(picked);
-    }
-  }
-
-  GestureDetector(
-    onTap: () => _selectBirthDate(context),
-    child: AbsorbPointer(
-      child: TextField(
-        controller: _dialogBirthdateController,
-        decoration: InputDecoration(labelText: 'Birthdate'),
-      ),
-    ),
-  );
-
   Future<void> saveUpdatePatient() async {
     final updatedPatient = Patient(
       id: details.patient.id,
