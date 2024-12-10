@@ -122,6 +122,38 @@ class PatientCondition {
         }
     }
 
+    static async getAllPatientConditions() {
+        const queryStr = `
+            SELECT 
+                pc.*, 
+                CONCAT(p.patient_firstName, ' ', p.patient_lastName) AS patient_fullName,
+                c.condition_name
+            FROM 
+                patient_conditions pc
+            INNER JOIN 
+                patients p 
+            ON 
+                pc.patient_id = p.patient_id
+            INNER JOIN
+                conditions c
+            ON
+                pc.condition_id = c.condition_id;
+        `;
+        try {
+            const [conditions] = await pool.query(queryStr);
+            if (conditions.length === 0) {
+                console.log('No patient conditions found');
+                return conditions;
+            } else {
+                console.log('All patient conditions retrieved successfully');
+                return conditions;
+            }
+        } catch (error) {
+            console.log('Error getting all patient conditions from model', error);
+            throw error;
+        }
+    }
+
     static async removePatientCondition(data) {
         // console.log('data in remove conditions model:', data);
         const {patient_id, conditions} = data;

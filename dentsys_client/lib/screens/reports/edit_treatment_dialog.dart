@@ -205,10 +205,6 @@ class _EditTreatmentDialogState extends State<EditTreatmentDialog> {
                       labelText: 'Tooth No.',
                       border: UnderlineInputBorder(),
                     ),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
                   ),
 
                   const SizedBox(height: 15),

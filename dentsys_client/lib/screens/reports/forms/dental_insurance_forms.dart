@@ -111,7 +111,7 @@ class DentalInsuranceFormsState extends State<DentalInsuranceForms> {
                             DateTime? pickedEffectiveDate = await showDatePicker(
                               context: context,
                               initialDate: widget.effectivedateController.text.isNotEmpty ? DateFormat('yyyy-MM-dd').parse(widget.effectivedateController.text) : DateTime.now(),
-                              firstDate: DateTime(1900), // Set a range if needed
+                              firstDate: DateTime(1500), // Set a range if needed
                               lastDate: DateTime(2100),
                             );
           

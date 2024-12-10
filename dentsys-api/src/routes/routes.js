@@ -79,5 +79,6 @@ router.delete('/delete-treatment/:id', PatientTreatmentController.deleteTreatmen
 // backup routes
 router.post('/backup', BackupController.backup);
 router.post('/restore', BackupController.restore);
+router.post('/export-patient-data', BackupController.exportPatientData);
 
 module.exports = router;

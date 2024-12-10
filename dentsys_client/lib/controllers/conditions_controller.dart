@@ -17,7 +17,7 @@ class ConditionsController {
 
   Future<void> deletePatientCondition(PatientConditions patientConditions) async {
     try {
-      // final deletedPatientCondition = await _conditionsService.deletePatientConditionService(patientConditions);
+      final deletedPatientCondition = await _conditionsService.deletePatientConditionService(patientConditions);
     } catch (error) {
       throw Exception('Error deleting patient condition in frontend controller: $error');
     }

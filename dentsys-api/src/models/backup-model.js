@@ -3,6 +3,16 @@ const path = require('path');
 const { exec } = require('child_process');
 const config = require('../../config/backupConfig.json');
 
+const ExcelJS = require('exceljs');
+const Allergies = require('./allergies-model.js');
+const Contact = require('./contact-model.js');
+const DentalHistory = require('./dentalHistory-model.js');
+const Insurance = require('./insurance-model.js');
+const MedicalHistory = require('./medicalHistory-model.js');
+const Patient = require('./patient-model.js');
+const PatientCondition = require('./patientCondition-model.js');
+const PatientTreatment = require('./patientTreatment-model.js');
+
 class Backup {
     static async performBackup(customPath){
         console.log('customPath in model: ', customPath);
@@ -61,6 +71,32 @@ class Backup {
                 }
                 console.log('Restore successful!');
             });
+        } catch (error) {
+            console.error('Error: ', error);
+            throw error;
+        }
+    }
+
+    static async exportPatientData(){
+        try {
+            const patients = await Patient.getAllPatients();
+            const contacts = await Contact.getAllContacts();
+            const allergies = await Allergies.getAllAllergies();
+            const dentalHistories = await DentalHistory.getAllDentalHist();
+            const insurances = await Insurance.getAllInsurance();
+            const medicalHistories = await MedicalHistory.getAllMedicalHistory();
+            const patientConditions = await PatientCondition.getAllPatientConditions();
+            const patientTreatments = await PatientTreatment.getAllTreatment();
+            return {
+                patients,
+                contacts,
+                allergies,
+                dentalHistories,
+                insurances,
+                medicalHistories,
+                patientConditions,
+                patientTreatments
+            }
         } catch (error) {
             console.error('Error: ', error);
             throw error;
