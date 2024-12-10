@@ -1162,7 +1162,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                   DateTime? pickedDate = await showDatePicker(
                                                     context: context,
                                                     initialDate: DateTime.now(),
-                                                    firstDate: DateTime(1900), // Set a range if needed
+                                                    firstDate: DateTime(1500), // Set a range if needed
                                                     lastDate: DateTime(2100),
                                                   );
 

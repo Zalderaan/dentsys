@@ -262,7 +262,11 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       ),
                       Container(
                         decoration: BoxDecoration(
-                          color: Colors.red,
+                          gradient: const LinearGradient(
+                            colors: [Color.fromARGB(255, 255, 0, 0), Color.fromARGB(255, 22, 21, 66)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: ElevatedButton.icon(

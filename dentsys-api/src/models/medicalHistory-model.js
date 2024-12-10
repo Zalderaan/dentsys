@@ -120,7 +120,7 @@ class MedicalHistory {
         console.log('data received in mh model:', data);
         const { medical_physician, medical_physicianSpec, medical_officeAddress, medical_officeNo, medical_goodHealth, medical_isUnderTreatment, 
             medical_treatmentDetails, medical_seriousOperation, medical_seriousOperationDetails, medical_hospitalized, medical_hospitalizedDetails, medical_isMedication, 
-            medical_medicationDetails, medical_isTobacco, medical_dangerousSubstance, medical_bleedingTime, medical_isPregnant, medical_isNursing, medical_isBirthControl, patient_id } = data;
+            medical_medicationDetails, medical_isTobacco, medical_dangerousSubstance, medical_bleedingTime, medical_bloodPressure, medical_bloodType, medical_isPregnant, medical_isNursing, medical_isBirthControl, patient_id } = data;
 
         const queryStr = `
             UPDATE medical_history 
@@ -141,6 +141,8 @@ class MedicalHistory {
                 medical_isTobacco = ?, 
                 medical_dangerousSubstance = ?, 
                 medical_bleedingTime = ?, 
+                medical_bloodPressure = ?,
+                medical_bloodType = ?,
                 medical_isPregnant = ?, 
                 medical_isNursing = ?, 
                 medical_isBirthControl = ?
@@ -148,7 +150,7 @@ class MedicalHistory {
 
         const values = [medical_physician, medical_physicianSpec, medical_officeAddress, medical_officeNo, medical_goodHealth, medical_isUnderTreatment, 
             medical_treatmentDetails, medical_seriousOperation, medical_seriousOperationDetails, medical_hospitalized, medical_hospitalizedDetails, medical_isMedication, 
-            medical_medicationDetails, medical_isTobacco, medical_dangerousSubstance, medical_bleedingTime, medical_isPregnant, medical_isNursing, medical_isBirthControl, patient_id];
+            medical_medicationDetails, medical_isTobacco, medical_dangerousSubstance, medical_bleedingTime, medical_bloodPressure, medical_bloodType, medical_isPregnant, medical_isNursing, medical_isBirthControl, patient_id];
 
         try {
             const [result] = await pool.query(queryStr, values);
