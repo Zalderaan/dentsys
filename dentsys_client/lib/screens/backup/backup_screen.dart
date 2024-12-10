@@ -12,6 +12,8 @@ class BackupScreen extends StatefulWidget {
 }
 
 class _BackupScreenState extends State<BackupScreen> {
+
+   String selectedFormat = "SQL"; // Default selected format
   
   // Function to show the confirmation dialog
   Future<void> showRestoreConfirmationDialog(BuildContext context, String filePath) async {

@@ -34,6 +34,7 @@ class AddPatientRecordScreen extends StatefulWidget {
 
 class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
   int? _patientId;
+  int _currentStep = 0;
   
   @override
   void initState() {
@@ -105,6 +106,28 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
   // patient conditions info
   final ConditionsController conditionsController = ConditionsController(); // conditions controller
   final TextEditingController _otherConditionsController = TextEditingController();
+
+
+  // Method to validate and move to the next step
+  void _onStepContinue() {
+    if (_currentStep == 0 && _personalInfoFormKey.currentState?.validate() == true) {
+      setState(() {
+        _currentStep += 1;
+        isContactInformationEnabled = true;
+      });
+    } else if (_currentStep == 1 && _contactInformationFormKey.currentState?.validate() == true) {
+      // Proceed to next step or save the form data
+    }
+  }
+
+  // Method to go back to the previous step
+  void _onStepCancel() {
+    if (_currentStep > 0) {
+      setState(() {
+        _currentStep -= 1;
+      });
+    }
+  }
   
 
   Future<void> _handleAddPatient() async {
@@ -380,6 +403,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
 
   String? selectedSex;
   int userAge = 0;
+  // Define flags to enable or disable steps
   bool isContactInformationEnabled = false;
   bool isDentalInsuranceEnabled = false;
   bool isDentalHistoryEnabled = false;
@@ -1200,7 +1224,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                     ],
                                   ),
                                 ),
-                                                            ),
+                               ),
                               ],
                             ),
                         ),
