@@ -109,14 +109,47 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
 
 
   // Method to validate and move to the next step
-  void _onStepContinue() {
+  Future<void> _onStepContinue() async {
     if (_currentStep == 0 && _personalInfoFormKey.currentState?.validate() == true) {
       setState(() {
         _currentStep += 1;
-        isContactInformationEnabled = true;
+        isContactInformationEnabled = true; // Enable the next step
       });
     } else if (_currentStep == 1 && _contactInformationFormKey.currentState?.validate() == true) {
-      // Proceed to next step or save the form data
+      setState(() {
+        _currentStep += 1;
+        isDentalInsuranceEnabled = true; // Enable the next step
+      });
+    } else if (_currentStep == 2 && _dentalInsuranceFormKey.currentState?.validate() == true) {
+      setState(() {
+        _currentStep += 1;
+        isDentalHistoryEnabled = true; // Enable the next step
+      });
+    } else if (_currentStep == 3 && _dentalHistoryFormKey.currentState?.validate() == true) {
+      setState(() {
+        _currentStep += 1;
+        isMedicalHistoryEnabled = true; // Enable the next step
+      });
+    } else if (_currentStep == 4 && _medicalHistoryFormKey.currentState?.validate() == true) {
+      setState(() {
+        _currentStep += 1;
+        isAllergicFormEnabled = true; // Enable the next step
+      });
+    } else if (_currentStep == 5 && _allergicFormKey.currentState?.validate() == true) {
+      setState(() {
+        _currentStep += 1;
+        isDiseasesEnabled = true; // Enable the next step
+      });
+    } else if (_currentStep == 6 && _diseasesFormKey.currentState?.validate() == true) {
+      // All steps completed, or you can handle final action here
+      await _handleAddPatient();
+      await _handleAddContact();
+      await _handleAddInsurance();
+      await _handleAddDental();
+      await _handleAddMedical();
+      await _handleAddAllergies();
+      await _handleAddConditions();
+      
     }
   }
 
@@ -522,48 +555,14 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2), // Shadow color
-                        spreadRadius: 2, // Spread radius
-                        blurRadius: 5, // Blur radius
-                        offset: const Offset(0, 3), // Changes the position of the shadow (x, y)
-                      ),
-                    ],
-                  ),
-                  padding: const EdgeInsets.all(20.0),
-                  child: const Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Add Patient Records",
-                            style: TextStyle(
-                              fontSize: 32.0,
-                              fontWeight: FontWeight.bold,
-                              color: Color.fromARGB(255, 66, 43, 21),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 15.0),
-                // Personal Information Form
-                Form(
+    return Stepper(
+          currentStep: _currentStep,
+          onStepContinue: _onStepContinue,
+          onStepCancel: _onStepCancel,
+          steps: [
+            Step(
+              title: const Text('Personal Information'), // Personal Information Form
+              content: Form(
                   key: _personalInfoFormKey,
                   child: Column(
                     children: [
@@ -897,22 +896,22 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                 ),
                                 const SizedBox(height: 10),
 
-                                //Submit Button
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    ElevatedButton(
-                                      onPressed: () async
-                                      {
-                                        _validateAndEnableNextSection(
-                                          _personalInfoFormKey,
-                                          (isValid) => setState(() => isContactInformationEnabled = isValid),
-                                        );
-                                      },
-                                      child: const Text("Next"),
-                                    ),
-                                  ],
-                                ),
+                                // //Submit Button
+                                // Row(
+                                //   mainAxisAlignment: MainAxisAlignment.end,
+                                //   children: [
+                                //     ElevatedButton(
+                                //       onPressed: () async
+                                //       {
+                                //         _validateAndEnableNextSection(
+                                //           _personalInfoFormKey,
+                                //           (isValid) => setState(() => isContactInformationEnabled = isValid),
+                                //         );
+                                //       },
+                                //       child: const Text("Next"),
+                                //     ),
+                                //   ],
+                                // ),
                               ],
                             ),
                           ),
@@ -921,23 +920,28 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                     ],
                   ),
                 ),
+                isActive: _currentStep >= 0,
+                state: _currentStep == 0 ? StepState.editing : StepState.complete,
+              ),
                 
                 // Contact Information Form
-                const SizedBox(height: 10.0),
-                      Divider(
-                        height: 10,
-                        color: Colors.grey[800],
-                        thickness: 0.5,
-                      ),
-                const SizedBox(height: 10),
-                AbsorbPointer(
-                  absorbing: !isContactInformationEnabled, // Disable if not enabled
-                  child: Opacity(
-                    opacity: isContactInformationEnabled ? 1.0 : 0.5, // Dim if disabled
-                    child: Column(
-                      children: [
+                // const SizedBox(height: 10.0),
+                //       Divider(
+                //         height: 10,
+                //         color: Colors.grey[800],
+                //         thickness: 0.5,
+                //       ),
+                // const SizedBox(height: 10),
+                // AbsorbPointer(
+                //   absorbing: !isContactInformationEnabled, // Disable if not enabled
+                //   child: Opacity(
+                //     opacity: isContactInformationEnabled ? 1.0 : 0.5, // Dim if disabled
+                //     child: Column(
+                //       children: [
                         // (Contact Information  Form)
-                        Form(
+            Step(
+              title: const Text('Contact Information'),
+              content: Form(
                           key: _contactInformationFormKey,
                             child: Column(
                               children: [
@@ -1073,24 +1077,24 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                             ),
                                           ],
                                         ),
-                                        const SizedBox(height: 10),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                            children: [
-                                              //if (isDentalHistoryEnabled)
-                                                ElevatedButton(
-                                                  onPressed: () async {
+                                      //   const SizedBox(height: 10),
+                                      //   Row(
+                                      //     mainAxisAlignment: MainAxisAlignment.end,
+                                      //       children: [
+                                      //         //if (isDentalHistoryEnabled)
+                                      //           ElevatedButton(
+                                      //             onPressed: () async {
 
-                                                    _validateAndEnableNextSection(
-                                                      _contactInformationFormKey,
-                                                      (isValid) => setState(() => isDentalInsuranceEnabled = isValid),
-                                                    );
-                                                  },
-                                                  child: const Text("Next"),
-                                                ),
-                                          // Add more fields as needed for dental history
-                                        ],
-                                      ),
+                                      //               _validateAndEnableNextSection(
+                                      //                 _contactInformationFormKey,
+                                      //                 (isValid) => setState(() => isDentalInsuranceEnabled = isValid),
+                                      //               );
+                                      //             },
+                                      //             child: const Text("Next"),
+                                      //           ),
+                                      //     // Add more fields as needed for dental history
+                                      //   ],
+                                      // ),
                                     ],
                                   ),
                                 ),
@@ -1098,27 +1102,32 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                               ],
                             ),
                         ),
-                      ],
+                      isActive: _currentStep >= 1,
+                      state: _currentStep == 1 ? StepState.editing : StepState.complete,
                     ),
-                  ),
-                ),
+                  
+                  
+                //   ),
+                // ),
                 
-                // Dental Insurance Form
-                const SizedBox(height: 10.0),
-                      Divider(
-                        height: 10,
-                        color: Colors.grey[800],
-                        thickness: 0.5,
-                      ),
-                const SizedBox(height: 10),
-                AbsorbPointer(
-                  absorbing: !isDentalInsuranceEnabled, // Disable if not enabled
-                  child: Opacity(
-                    opacity: isDentalInsuranceEnabled ? 1.0 : 0.5, // Dim if disabled
-                    child: Column(
-                      children: [
+                // // Dental Insurance Form
+                // const SizedBox(height: 10.0),
+                //       Divider(
+                //         height: 10,
+                //         color: Colors.grey[800],
+                //         thickness: 0.5,
+                //       ),
+                // const SizedBox(height: 10),
+                // AbsorbPointer(
+                //   absorbing: !isDentalInsuranceEnabled, // Disable if not enabled
+                //   child: Opacity(
+                //     opacity: isDentalInsuranceEnabled ? 1.0 : 0.5, // Dim if disabled
+                //     child: Column(
+                //       children: [
                         // (Dental History fields)
-                        Form(
+            Step(
+              title: const Text('Dental Insurance'),
+              content: Form(
                           key: _dentalInsuranceFormKey,
                             child: Column(
                               children: [
@@ -1202,25 +1211,25 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                             ),
                                           ],
                                         ),
-                                        const SizedBox(height: 20),
+                                      //   const SizedBox(height: 20),
                                 
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                            children: [
-                                              //if (isDentalHistoryEnabled)
-                                                ElevatedButton(
-                                                  onPressed: () async {
-                                                    _validateAndEnableNextSection(
-                                                      _dentalInsuranceFormKey,
-                                                      (isValid) => setState(() => isDentalHistoryEnabled = isValid),
-                                                    );
+                                      //   Row(
+                                      //     mainAxisAlignment: MainAxisAlignment.end,
+                                      //       children: [
+                                      //         //if (isDentalHistoryEnabled)
+                                      //           ElevatedButton(
+                                      //             onPressed: () async {
+                                      //               _validateAndEnableNextSection(
+                                      //                 _dentalInsuranceFormKey,
+                                      //                 (isValid) => setState(() => isDentalHistoryEnabled = isValid),
+                                      //               );
 
-                                                  },
-                                                  child: const Text("Next"),
-                                                ),
-                                          // Add more fields as needed for dental history
-                                        ],
-                                      ),
+                                      //             },
+                                      //             child: const Text("Next"),
+                                      //           ),
+                                      //     // Add more fields as needed for dental history
+                                      //   ],
+                                      // ),
                                     ],
                                   ),
                                 ),
@@ -1228,29 +1237,32 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                               ],
                             ),
                         ),
-                      ],
+                        isActive: _currentStep >= 2,
+                        state: _currentStep == 2 ? StepState.editing : StepState.complete,
                     ),
                   
-                  ),
-                ),
+                //   ),
+                // ),
                 
 
-                // Dental History Form
-                const SizedBox(height: 10.0),
-                      Divider(
-                        height: 10,
-                        color: Colors.grey[800],
-                        thickness: 0.5,
-                      ),
-                const SizedBox(height: 10),
-                AbsorbPointer(
-                  absorbing: !isDentalHistoryEnabled, // Disable if not enabled
-                  child: Opacity(
-                    opacity: isDentalHistoryEnabled ? 1.0 : 0.5, // Dim if disabled
-                    child: Column(
-                      children: [
+                // // Dental History Form
+                // const SizedBox(height: 10.0),
+                //       Divider(
+                //         height: 10,
+                //         color: Colors.grey[800],
+                //         thickness: 0.5,
+                //       ),
+                // const SizedBox(height: 10),
+                // AbsorbPointer(
+                //   absorbing: !isDentalHistoryEnabled, // Disable if not enabled
+                //   child: Opacity(
+                //     opacity: isDentalHistoryEnabled ? 1.0 : 0.5, // Dim if disabled
+                //     child: Column(
+                //       children: [
                         // (Dental History Form)
-                        Form(
+            Step(
+              title: const Text('Dental History'),
+              content: Form(
                           key: _dentalHistoryFormKey,
                             child: Column(
                               children: [
@@ -1331,54 +1343,58 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                             ),
                                           ],
                                         ),
-                                        const SizedBox(height: 10),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                            children: [
-                                              //if (isDentalHistoryEnabled)
-                                                ElevatedButton(
-                                                  onPressed: () async 
-                                                  {
+                                      //   const SizedBox(height: 10),
+                                      //   Row(
+                                      //     mainAxisAlignment: MainAxisAlignment.end,
+                                      //       children: [
+                                      //         //if (isDentalHistoryEnabled)
+                                      //           ElevatedButton(
+                                      //             onPressed: () async 
+                                      //             {
 
-                                                    _validateAndEnableNextSection(
-                                                      _dentalHistoryFormKey,
-                                                      (isValid) => setState(() => isMedicalHistoryEnabled = isValid),
-                                                    );
-                                                  },
-                                                  child: const Text("Next"),
-                                                ),
-                                          // Add more fields as needed for dental history
-                                        ],
-                                      ),
+                                      //               _validateAndEnableNextSection(
+                                      //                 _dentalHistoryFormKey,
+                                      //                 (isValid) => setState(() => isMedicalHistoryEnabled = isValid),
+                                      //               );
+                                      //             },
+                                      //             child: const Text("Next"),
+                                      //           ),
+                                      //     // Add more fields as needed for dental history
+                                      //   ],
+                                      // ),
                                     ],
                                   ),
                                 ),
-                                                            ),
+                               ),
                               ],
-                            ),
+                          ),
                         ),
-                      ],
+                        isActive: _currentStep >= 3,
+                        state: _currentStep == 3 ? StepState.editing : StepState.complete,
+                      
                     ),
-                  ),
-                ),
+                //   ),
+                // ),
                 
                 
-                // Medical History Form
-                const SizedBox(height: 10.0),
-                      Divider(
-                        height: 10,
-                        color: Colors.grey[800],
-                        thickness: 0.5,
-                      ),
-                const SizedBox(height: 10),
-                AbsorbPointer(
-                  absorbing: !(isDentalHistoryEnabled && isMedicalHistoryEnabled), // Disable if not enabled
-                  child: Opacity(
-                    opacity: (isDentalHistoryEnabled && isMedicalHistoryEnabled) ? 1.0 : 0.5, // Dim if disabled
-                    child: Column(
-                      children: [
+                // // Medical History Form
+                // const SizedBox(height: 10.0),
+                //       Divider(
+                //         height: 10,
+                //         color: Colors.grey[800],
+                //         thickness: 0.5,
+                //       ),
+                // const SizedBox(height: 10),
+                // AbsorbPointer(
+                //   absorbing: !(isDentalHistoryEnabled && isMedicalHistoryEnabled), // Disable if not enabled
+                //   child: Opacity(
+                //     opacity: (isDentalHistoryEnabled && isMedicalHistoryEnabled) ? 1.0 : 0.5, // Dim if disabled
+                //     child: Column(
+                //       children: [
                         // (Medical History fields)
-                        Form(
+            Step(
+              title: const Text('Medical History'),
+              content: Form(
                         key: _medicalHistoryFormKey,
                           child: Container(
                             decoration: BoxDecoration(
@@ -2077,54 +2093,57 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                     ),
                                   ),
 
-                                  const SizedBox(height: 10),
-                                  // Submit Button
-                                  Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                        children: [
-                                          //if (isDentalHistoryEnabled)
-                                            ElevatedButton(
-                                              onPressed: () async {
+                                  // const SizedBox(height: 10),
+                                  // // Submit Button
+                                  // Row(
+                                  //     mainAxisAlignment: MainAxisAlignment.end,
+                                  //       children: [
+                                  //         //if (isDentalHistoryEnabled)
+                                  //           ElevatedButton(
+                                  //             onPressed: () async {
 
-                                                _validateAndEnableNextSection(
-                                                  _medicalHistoryFormKey,
-                                                  (isValid) => setState(() => isAllergicFormEnabled = isValid),
-                                                );
+                                  //               _validateAndEnableNextSection(
+                                  //                 _medicalHistoryFormKey,
+                                  //                 (isValid) => setState(() => isAllergicFormEnabled = isValid),
+                                  //               );
 
-                                              }, 
-                                              child: const Text("Next"),
-                                            ),
-                                      // Add more fields as needed for dental history
-                                    ],
-                                  ),
+                                  //             }, 
+                                  //             child: const Text("Next"),
+                                  //           ),
+                                  //     // Add more fields as needed for dental history
+                                  //   ],
+                                  // ),
                                 ],
                               ),
                             ),
                           ),
                         ),//Form Medical History
-
-                      ],
+                        isActive: _currentStep >= 4,
+                        state: _currentStep == 4 ? StepState.editing : StepState.complete,
+                      
                     ),
-                  ),
-                ),
+                //   ),
+                // ),
               
 
-                //Are you alergic to the following
-                const SizedBox(height: 10.0),
-                      Divider(
-                        height: 10,
-                        color: Colors.grey[800],
-                        thickness: 0.5,
-                      ),
-                const SizedBox(height: 10),
-                AbsorbPointer(
-                  absorbing: !isAllergicFormEnabled, // Disable if not enabled
-                  child: Opacity(
-                    opacity: isAllergicFormEnabled ? 1.0 : 0.5, // Dim if disabled
-                    child: Column(
-                      children: [
+                // //Are you alergic to the following
+                // const SizedBox(height: 10.0),
+                //       Divider(
+                //         height: 10,
+                //         color: Colors.grey[800],
+                //         thickness: 0.5,
+                //       ),
+                // const SizedBox(height: 10),
+                // AbsorbPointer(
+                //   absorbing: !isAllergicFormEnabled, // Disable if not enabled
+                //   child: Opacity(
+                //     opacity: isAllergicFormEnabled ? 1.0 : 0.5, // Dim if disabled
+                //     child: Column(
+                //       children: [
                         // (Allergies Form)
-                        Form(
+            Step(
+              title: const Text('Allergies Form'),
+              content: Form(  
                           key: _allergicFormKey,
                             child: Column(
                               children: [
@@ -2287,23 +2306,23 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                           ],
                                         ),
                                       
-                                          //Submit Button
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.end,
-                                              children: [
-                                                //if (isMedicalHistoryEnabled)
-                                                  ElevatedButton(
-                                                    onPressed: () async {
-                                                      _validateAndEnableNextSection(
-                                                        _allergicFormKey,
-                                                        (isValid) => setState(() => isDiseasesEnabled = isValid),
-                                                      );
-                                                    },
-                                                    child: const Text("Next"),
-                                                  ),
-                                            // Add more fields as needed for dental history
-                                          ],
-                                        ),
+                                        //   //Submit Button
+                                        //   Row(
+                                        //     mainAxisAlignment: MainAxisAlignment.end,
+                                        //       children: [
+                                        //         //if (isMedicalHistoryEnabled)
+                                        //           ElevatedButton(
+                                        //             onPressed: () async {
+                                        //               _validateAndEnableNextSection(
+                                        //                 _allergicFormKey,
+                                        //                 (isValid) => setState(() => isDiseasesEnabled = isValid),
+                                        //               );
+                                        //             },
+                                        //             child: const Text("Next"),
+                                        //           ),
+                                        //     // Add more fields as needed for dental history
+                                        //   ],
+                                        // ),
                                       ],
                                     ),
                                   ),
@@ -2311,27 +2330,30 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                               ],
                             ),
                         ),
-                      ],
+                        isActive: _currentStep >= 5,
+                        state: _currentStep == 5 ? StepState.editing : StepState.complete,
                     ),
-                  ),
-                ),
+                //   ),
+                // ),
                 
                 // Diseases Form
-                const SizedBox(height: 10.0),
-                      Divider(
-                        height: 10,
-                        color: Colors.grey[800],
-                        thickness: 0.5,
-                      ),
-                const SizedBox(height: 10),
-                AbsorbPointer(
-                  absorbing: !isDiseasesEnabled, // Disable if not enabled
-                  child: Opacity(
-                    opacity: isDiseasesEnabled ? 1.0 : 0.5, // Dim if disabled
-                    child: Column(
-                      children: [
+                // const SizedBox(height: 10.0),
+                //       Divider(
+                //         height: 10,
+                //         color: Colors.grey[800],
+                //         thickness: 0.5,
+                //       ),
+                // const SizedBox(height: 10),
+                // AbsorbPointer(
+                //   absorbing: !isDiseasesEnabled, // Disable if not enabled
+                //   child: Opacity(
+                //     opacity: isDiseasesEnabled ? 1.0 : 0.5, // Dim if disabled
+                //     child: Column(
+                //       children: [
                         // (Diseases Form)
-                        Form(
+          Step(
+              title: const Text('Diseases Form'),
+              content: Form(
                           key: _diseasesFormKey,
                             child: Column(
                               children: [
@@ -3091,29 +3113,29 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                             ],
                                           ),
 
-                                        //Submit Button
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                            children: [
-                                                ElevatedButton(
-                                                  onPressed: () async {
-                                                    _validateAndEnableNextSection(
-                                                      _diseasesFormKey,
-                                                      (isValid) => setState(() => isMedicalHistoryEnabled = isValid),
-                                                    );
-                                                    await _handleAddPatient();
-                                                    await _handleAddContact();
-                                                    await _handleAddInsurance();
-                                                    await _handleAddDental();
-                                                    await _handleAddMedical();
-                                                    await _handleAddAllergies();
-                                                    await _handleAddConditions();
-                                                  },
-                                                  child: const Text("Submit All"),
-                                                ),
-                                          // Add more fields as needed for dental history
-                                        ],
-                                      ),
+                                      //   //Submit Button
+                                      //   Row(
+                                      //     mainAxisAlignment: MainAxisAlignment.end,
+                                      //       children: [
+                                      //           ElevatedButton(
+                                      //             onPressed: () async {
+                                      //               _validateAndEnableNextSection(
+                                      //                 _diseasesFormKey,
+                                      //                 (isValid) => setState(() => isMedicalHistoryEnabled = isValid),
+                                      //               );
+                                      //               await _handleAddPatient();
+                                      //               await _handleAddContact();
+                                      //               await _handleAddInsurance();
+                                      //               await _handleAddDental();
+                                      //               await _handleAddMedical();
+                                      //               await _handleAddAllergies();
+                                      //               await _handleAddConditions();
+                                      //             },
+                                      //             child: const Text("Submit All"),
+                                      //           ),
+                                      //     // Add more fields as needed for dental history
+                                      //   ],
+                                      // ),
                                     ],
                                   ),
                                 ),
@@ -3121,20 +3143,11 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                             ],
                           ),
                         ),
-                      ],
+                        isActive: _currentStep >= 6,
+                        state: _currentStep == 6 ? StepState.editing : StepState.complete,
                     ),
-                  ),
-                ),
-                
-                
-
-
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+                    ],
+                  );
   }
 }
 

@@ -211,20 +211,11 @@ class _ReportsScreenState extends State<ReportsScreen> {
   }
 
 
-  @override
-  Widget build(BuildContext context) {
-    
-    // int? patientId = widget.patient_id;
-    // final patient = patientDetails.patient;
-    // final contact = patientDetails.contact;
-    // final dental = patientDetails.dental;
-    // final insurance = patientDetails.insurance;
-    // final medical = patientDetails.medical;
-    // final allergies = patientDetails.allergies;
-    // final conditions = patientDetails.conditions;
-    // print('patient id in reports: $patientId'); //debug line
-    
-    return Material(
+@override
+Widget build(BuildContext context) {
+  return DefaultTabController(
+    length: 2, // Number of tabs
+    child: Material(
       child: SizedBox(
         child: SingleChildScrollView(
           child: Padding(
@@ -232,7 +223,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
                 // TITLE
                 Container(
                   decoration: BoxDecoration(
@@ -267,7 +257,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         ),
                         child: ElevatedButton.icon(
                           onPressed: () {
-                            _showDeleteConfirmationDialog(context, (){
+                            _showDeleteConfirmationDialog(context, () {
                               handleDeletePatient(widget.patient_id);
                             });
                           },
@@ -293,14 +283,117 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 ),
                 const SizedBox(height: 15.0),
 
-                // MAIN ROW CONTAINER FOR DETAILS, TREATMENT, APPOINTMENTS
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    
-                    // DETAILS CONTAINER
-                    Expanded(
-                      child: Container(
+                // TAB BAR
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: const TabBar(
+                    indicatorColor: Colors.brown,
+                    labelColor: Color.fromARGB(255, 66, 43, 21),
+                    unselectedLabelColor: Colors.grey,
+                    tabs: [
+                      Tab(text: "Details"),
+                      Tab(text: "Treatment Record"),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 15.0),
+
+                // TAB BAR VIEW
+                SizedBox(
+                  height: 600, // Set a fixed height for the content
+                  child: TabBarView(
+                    children: [
+                      // Details Tab
+                      SingleChildScrollView(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                spreadRadius: 2,
+                                blurRadius: 5,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  const Expanded(
+                                    child: Text(
+                                      "Details",
+                                      style: TextStyle(
+                                        fontSize: 24.0,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color.fromARGB(255, 66, 43, 21),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      gradient: const LinearGradient(
+                                        colors: [Color(0xFFE2AD5E), Color(0xFF422B15)],
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: ElevatedButton.icon(
+                                      onPressed: () {
+                                        _showEditPatientFormsDialog(
+                                          context,
+                                          patientDetails!,
+                                          () {
+                                            loadPatientDetails();
+                                          },
+                                        );
+                                      },
+                                      icon: const Icon(Icons.edit, color: Colors.white),
+                                      label: const Text(
+                                        "Edit Details",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.transparent,
+                                        shadowColor: Colors.transparent,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10.0),
+                              Divider(height: 10, color: Colors.grey[800], thickness: 0.5),
+                              const SizedBox(height: 10),
+                              patientDetails == null
+                                  ? const Text('No patient data available')
+                                  : buildPatientDetails(patientDetails!),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      // Treatment Record Tab
+                      Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10.0),
@@ -315,88 +408,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         ),
                         padding: const EdgeInsets.all(20.0),
                         child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                const Expanded(
-                                  child: Text(
-                                    "Details",
-                                    style: TextStyle(
-                                      fontSize: 24.0,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color.fromARGB(255, 66, 43, 21),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    gradient: const LinearGradient(
-                                      colors: [Color(0xFFE2AD5E), Color(0xFF422B15)],
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: ElevatedButton.icon(
-                                    onPressed: () {
-                                      _showEditPatientFormsDialog(
-                                        context,
-                                        patientDetails!,
-                                        () {
-                                          // Refresh patient details after update
-                                          loadPatientDetails();
-                                        },
-                                      );
-                                    },
-                                    icon: const Icon(
-                                      Icons.edit,
-                                      color: Colors.white,
-                                    ),
-                                    label: const Text(
-                                      "Edit Details",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.transparent,
-                                      shadowColor: Colors.transparent,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                //const SizedBox(width:400),
-                              ],
-                            ),
-                            const SizedBox(height: 5.0),
-                            Divider(
-                                        height: 10,
-                                        color: Colors.grey[800],
-                                        thickness: 0.5,
-                                      ),
-                            const SizedBox(height: 10),
-                            
-                            
-                            
-                            patientDetails == null
-                                  ? const Text('No patient data available')
-                                  : buildPatientDetails(patientDetails!),
-
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 15.0),
-                 // COLUMN FOR TREATMENT RECORD AND APPOINTMENTS
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                    Expanded(
-                      child: Column(
                         children: [
                           // TREATMENT RECORD CONTAINER
                           Container(
@@ -651,123 +662,21 @@ class _ReportsScreenState extends State<ReportsScreen> {
                               ],
                             ),
                           ),
-
-              
-                          const SizedBox(height: 15.0),
-
-                          // APPOINTMENTS CONTAINER
-                          // Container(
-                          //   decoration: BoxDecoration(
-                          //     color: Colors.white,
-                          //     borderRadius: BorderRadius.circular(10.0),
-                          //     boxShadow: [
-                          //       BoxShadow(
-                          //         color: Colors.black.withOpacity(0.2),
-                          //         spreadRadius: 2,
-                          //         blurRadius: 5,
-                          //         offset: const Offset(0, 3),
-                          //       ),
-                          //     ],
-                          //   ),
-                          //   padding: const EdgeInsets.all(20.0),
-                          //   child: Column(
-                          //     children: [
-                          //       const Row(
-                          //         children: [
-                          //           Text(
-                          //             "Appointments",
-                          //             style: TextStyle(
-                          //               fontSize: 24.0,
-                          //               fontWeight: FontWeight.bold,
-                          //               color: Color.fromARGB(255, 66, 43, 21),
-                          //             ),
-                          //           ),
-                          //         ],
-                          //       ),
-                          //       const SizedBox(height: 5.0),
-                          //             Divider(
-                          //               height: 10,
-                          //               color: Colors.grey[800],
-                          //               thickness: 0.5,
-                          //             ),
-                          //       const SizedBox(height: 10),
-
-                          //       Table(
-                          //         columnWidths: const {
-                          //           0: FlexColumnWidth(3),  // Date-Time
-                          //           1: FlexColumnWidth(4),  // Procedure
-                          //           2: FlexColumnWidth(2),  // Price
-                          //         },
-                          //         border: TableBorder.all(
-                          //           color: Colors.black,
-                          //           width: 1.0,
-                          //         ),
-                          //         children: const [
-                          //           TableRow(
-                                      
-                          //             children: [
-                          //               Padding(
-                          //                 padding: EdgeInsets.all(8.0),
-                          //                 child: Text(
-                          //                   "Date-Time",
-                          //                   style: TextStyle(fontWeight: FontWeight.bold),
-                          //                 ),
-                          //               ),
-                          //               Padding(
-                          //                 padding: EdgeInsets.all(8.0),
-                          //                 child: Text(
-                          //                   "Procedure",
-                          //                   style: TextStyle(fontWeight: FontWeight.bold),
-                          //                 ),
-                          //               ),
-                          //               Padding(
-                          //                 padding: EdgeInsets.all(8.0),
-                          //                 child: Text(
-                          //                   "Price",
-                          //                   style: TextStyle(fontWeight: FontWeight.bold),
-                          //                 ),
-                          //               ),
-                          //             ],
-                          //           ),
-                                    
-                          //           // Example Row (Replace with dynamic data rows as needed)
-                          //           TableRow(
-                          //             children: [
-                          //               Padding(
-                          //                 padding: EdgeInsets.all(8.0),
-                          //                 child: Text("2024-11-10 14:30"),
-                          //               ),
-                          //               Padding(
-                          //                 padding: EdgeInsets.all(8.0),
-                          //                 child: Text("Cleaning"),
-                          //               ),
-                          //               Padding(
-                          //                 padding: EdgeInsets.all(8.0),
-                          //                 child: Text("₱500"),
-                          //               ),
-                          //             ],
-                          //           ),
-                          //           // Additional rows can go here
-                          //         ],
-                          //       ),
-
-
-                          //     ],
-                          //   ),
-                          // ),
                         ],
                       ),
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
         ),
       ),
-    );
-  }
-  
+    ),
+  );
+}
+
   // fetchPatientDetails(int i) {
 
   // }
