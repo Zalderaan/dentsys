@@ -480,7 +480,7 @@ class _PatientRecordsState extends State<PatientRecords> {
   );
 }
 
- Widget buildRecordItem(Patient patient) {
+Widget buildRecordItem(Patient patient) {
   final DateTime now = DateTime.now();
   
   // Handle nullable createdAt

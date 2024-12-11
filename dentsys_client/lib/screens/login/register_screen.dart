@@ -101,7 +101,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     
 
-   try {
+  try {
     User user = User.registerCons(
       firstName: firstname,
       lastName: lastname,
@@ -121,6 +121,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ).show(context);
 
       Navigator.pushNamed(context, '/login');
+    } else if (result == 'Username already exists') {
+      // Use AnimatedSnackBar for failure
+      AnimatedSnackBar.material(
+        'Username already exists. Please try another username.',
+        type: AnimatedSnackBarType.error,
+        duration: Duration(seconds: 3),
+        mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+      ).show(context);
     } else {
       // Use AnimatedSnackBar for failure
       AnimatedSnackBar.material(
