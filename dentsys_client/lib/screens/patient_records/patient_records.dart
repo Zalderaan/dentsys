@@ -109,75 +109,75 @@ class _PatientRecordsState extends State<PatientRecords> {
     });
   }
 
- void computeDashboardData() {
-  patientRecords.then((records) {
-    setState(() {
-      final now = DateTime.now();
+  void computeDashboardData() {
+    patientRecords.then((records) {
+      setState(() {
+        final now = DateTime.now();
 
-      // Count new and old patients
-      numberOfOldPatients = records.where((patient) {
-        final createdAt = DateTime.tryParse(patient.createdAt ?? "");
-        return createdAt != null && now.difference(createdAt).inDays > 30;
-      }).length;
+        // Count new and old patients
+        numberOfOldPatients = records.where((patient) {
+          final createdAt = DateTime.tryParse(patient.createdAt ?? "");
+          return createdAt != null && now.difference(createdAt).inDays > 30;
+        }).length;
 
-      numberOfNewPatients = records.where((patient) {
-        final createdAt = DateTime.tryParse(patient.createdAt ?? "");
-        return createdAt != null && now.difference(createdAt).inDays <= 30;
-      }).length;
-
-      totalPatients = records.length;
-
-      // Find latest new patient (based on createdAt)
-      latestNewPatient = records.lastWhere(
-        (patient) {
+        numberOfNewPatients = records.where((patient) {
           final createdAt = DateTime.tryParse(patient.createdAt ?? "");
           return createdAt != null && now.difference(createdAt).inDays <= 30;
-        },
-        orElse: () => Patient(
-          id: 0,
-          firstName: "No data",
-          lastName: "",
-          createdAt: null, 
-          middleName: '', 
-          birthDate: '', 
-          age: 0, 
-          sex: '',
-          nationality: '', 
-          religion: '', 
-          occupation: '', 
-          reason: '',
-        ),
-      );
+        }).length;
 
-      // Find latest edited patient (based on updatedAt, ignoring createdAt)
-      latestEditedPatient = records.lastWhere(
-        (patient) {
-          final updatedAt = DateTime.tryParse(patient.updatedAt ?? "");
-          final createdAt = DateTime.tryParse(patient.createdAt ?? "");
-          return updatedAt != null && 
-                 (createdAt == null || updatedAt.isAfter(createdAt)) &&
-                 now.difference(updatedAt).inDays <= 30;
-        },
-        orElse: () => Patient(
-          id: 0,
-          firstName: "No data",
-          lastName: "",
-          createdAt: null, 
-          middleName: '', 
-          birthDate: '', 
-          age: 0, 
-          sex: '',
-          nationality: '', 
-          religion: '', 
-          occupation: '', 
-          reason: '',
-        ),
-      );
+        totalPatients = records.length;
+
+        // Find latest new patient (based on createdAt)
+        latestNewPatient = records.lastWhere(
+          (patient) {
+            final createdAt = DateTime.tryParse(patient.createdAt ?? "");
+            return createdAt != null && now.difference(createdAt).inDays <= 30;
+          },
+          orElse: () => Patient(
+            id: 0,
+            firstName: "No data",
+            lastName: "",
+            createdAt: null, 
+            middleName: '', 
+            birthDate: '', 
+            age: 0, 
+            sex: '',
+            nationality: '', 
+            religion: '', 
+            occupation: '', 
+            reason: '',
+          ),
+        );
+
+        // Find latest edited patient (based on updatedAt, ignoring createdAt)
+        latestEditedPatient = records.lastWhere(
+          (patient) {
+            final updatedAt = DateTime.tryParse(patient.updatedAt ?? "");
+            final createdAt = DateTime.tryParse(patient.createdAt ?? "");
+            return updatedAt != null && 
+                  (createdAt == null || updatedAt.isAfter(createdAt)) &&
+                  now.difference(updatedAt).inDays <= 30;
+          },
+          orElse: () => Patient(
+            id: 0,
+            firstName: "No data",
+            lastName: "",
+            createdAt: null, 
+            middleName: '', 
+            birthDate: '', 
+            age: 0, 
+            sex: '',
+            nationality: '', 
+            religion: '', 
+            occupation: '', 
+            reason: '',
+          ),
+        );
+      });
+    }).catchError((error) {
+      print('Error computing dashboard data: $error');
     });
-  }).catchError((error) {
-    print('Error computing dashboard data: $error');
-  });
-}
+  }
 
 
   @override

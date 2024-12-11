@@ -150,18 +150,11 @@ class _MyAppState extends State<MyApp> with WindowListener {
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegisterScreen(),
         '/dashboard': (context) => const DashboardScreen(),
-        '/patient_records': (context) => PatientRecords(
-          onAddPatient: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const AddPatientRecordScreen()),
-            );
-          },
-          onReports: (int? id) {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => ReportsScreen(patient_id: id)),
-            );
-          },
-        ),
+        '/add-patient': (context) => const AddPatientRecordScreen(),
+        '/reports': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as int?; // get the arguments passed to the route
+          return ReportsScreen(patient_id: args);
+        },
       },
     );
   }

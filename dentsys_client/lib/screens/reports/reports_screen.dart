@@ -240,6 +240,15 @@ Widget build(BuildContext context) {
                   padding: const EdgeInsets.all(20.0),
                   child: Row(
                     children: [
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      
+                      const SizedBox(width: 10.0),
+
                       const Expanded(
                         child: Text(
                           "Patient Record",
