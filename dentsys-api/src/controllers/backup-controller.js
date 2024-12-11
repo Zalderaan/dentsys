@@ -17,7 +17,25 @@ class BackupController {
         try{
             const backupName = req.body.path;
             console.log('backupName in controller: ', backupName);
-            await Backup.restoreBackup(backupName);
+            console.log('Creating autosave...');
+            var dateNow = new Date().toISOString().replace(/:/g, '-');
+            var autosaveName = `autosave_${dateNow}.sql`;
+            
+            const autosave = await Backup.performBackup(`C:/Program Files/DentSys/backups/autosaves/${autosaveName}`);
+            if (autosave) {
+                console.log('Autosave successful!');
+            } else {
+                console.error('Autosave failed!');
+            }
+
+            console.log('Restoring backup...');
+            const restorationProcess = await Backup.restoreBackup(backupName);
+            if (restorationProcess) {
+                console.log('Restore successful!');
+            } else { 
+                console.error('Restore failed!');
+            }
+            
             return res.status(200).json({ message: 'Restore successful!' });
         } catch (error) {
             return res.status(500).json({ error: error.message });

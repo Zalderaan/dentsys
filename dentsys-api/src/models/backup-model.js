@@ -23,19 +23,17 @@ class Backup {
             const dbPass = config.dbCredentials.password;
 
             // construct the backup command
-            const timestamp = new Date().toISOString().replace(/:/g, '-');
             const dumpPath = 'C:/xampp/mysql/bin/mysqldump';
             const defaultSavePath = "C:/Program Files/DentSys/backups";
             const savePath = customPath || defaultSavePath;
-            // const dumpCommand = `"${dumpPath}" -u ${dbUser} ${dbName} > "${savePath}/${dbName}_${timestamp}.sql"`;
 
-            // ensure the backup directory exists
-            if(!fs.existsSync(savePath)){
-                fs.mkdirSync(savePath, {recursive: true});
-            }
+            // // ensure the backup directory exists
+            // if(!fs.existsSync(savePath)){
+            //     fs.mkdirSync(savePath, {recursive: true});
+            // }
             
             const dumpProcess = spawn(dumpPath, ['-u', dbUser, dbName], { stdio: ['ignore']});
-            dumpProcess.stdout.pipe(fs.createWriteStream(`${savePath}/${dbName}_${timestamp}.sql`));
+            dumpProcess.stdout.pipe(fs.createWriteStream(savePath));
 
             dumpProcess.on('close', (code) => {
                 if (code === 0) {
@@ -44,20 +42,10 @@ class Backup {
                     console.error(`Backup process exited with code ${code}`);
                 }
             });
-            // // execute
-            // exec(dumpCommand, (err, stdout, stderr) => {
-            //     if(err){
-            //         console.error('Error in exec: ', err.message);
-            //         throw err;
-            //     } else {
-            //         console.log('Backup successful! @ ', savePath);
-            //     }
-            // });
         } catch (error) {
             console.error('Error: ', error);
             throw error;
         }
-        
     }
 
     static async restoreBackup(backupName){
