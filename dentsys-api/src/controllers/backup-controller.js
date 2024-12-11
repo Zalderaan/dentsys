@@ -21,20 +21,11 @@ class BackupController {
             var dateNow = new Date().toISOString().replace(/:/g, '-');
             var autosaveName = `autosave_${dateNow}.sql`;
             
-            const autosave = await Backup.performBackup(`C:/Program Files/DentSys/backups/autosaves/${autosaveName}`);
-            if (autosave) {
-                console.log('Autosave successful!');
-            } else {
-                console.error('Autosave failed!');
-            }
+            console.log('Autosaving...');
+            await Backup.performBackup(`C:/Program Files/DentSys/backups/autosaves/${autosaveName}`);
 
             console.log('Restoring backup...');
-            const restorationProcess = await Backup.restoreBackup(backupName);
-            if (restorationProcess) {
-                console.log('Restore successful!');
-            } else { 
-                console.error('Restore failed!');
-            }
+            await Backup.restoreBackup(backupName);
             
             return res.status(200).json({ message: 'Restore successful!' });
         } catch (error) {

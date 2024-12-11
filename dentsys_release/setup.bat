@@ -22,6 +22,20 @@ set SQL_FILE=./dentsys.sql
 
 :: start mysql service
 net start mysql
+if %ERRORLEVEL% NEQ 0 (
+    echo "Failed to start mysql service"
+    exit /b %ERRORLEVEL%
+)
+
+:: Create db if it doesn't exist
+"%MYSQL_PATH%" -u %DB_USER% -e "CREATE DATABASE IF NOT EXISTS %DB_NAME%;"
+
+if %ERRORLEVEL% NEQ 0 (
+    echo "Failed to create database"
+    exit /b %ERRORLEVEL%
+) else (
+    echo "Database created successfully"
+)
 
 if %ERRORLEVEL% NEQ 0 (
     echo "Failed to start mysql service"
@@ -38,5 +52,7 @@ if %ERRORLEVEL% NEQ 0 (
     echo "Database imported successfully"
 )
 
+:: Stop mysql service
+net stop mysql
 endlocal
 pause

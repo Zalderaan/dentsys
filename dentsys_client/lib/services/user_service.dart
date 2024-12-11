@@ -23,12 +23,12 @@ class UserService {
       if (response.statusCode == 201) {
         // var UserRegRes = jsonDecode(response.body);
         // print('in register $UserRegRes');
-        return User.fromJson(jsonDecode(response.body));
+        return User.fromJson(jsonDecode(response.body.toString()));
       } else {
-        throw Exception('Failed to register user');
+        throw Exception(response.body);
       }
     } catch (error) {
-      throw Exception('Error: $error');
+      throw Exception(error);
     }
   }
 
