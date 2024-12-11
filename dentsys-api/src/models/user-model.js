@@ -41,7 +41,7 @@ class User {
         const usernameQuery = 'SELECT * FROM users WHERE user_username = ?';
         const [usernameResult] = await pool.query(usernameQuery, username);
         if (usernameResult.length > 0) {
-            throw new Error('Username already exists check 1');
+            throw new Error('Username already exists check');
         }
 
         // Hash password

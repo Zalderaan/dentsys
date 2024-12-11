@@ -12,7 +12,9 @@ class BackupScreen extends StatefulWidget {
 }
 
 class _BackupScreenState extends State<BackupScreen> {
-  
+
+  String selectedFormat = "SQL"; // Default selected format
+
   // Function to show the confirmation dialog
   Future<void> showRestoreConfirmationDialog(BuildContext context, String filePath) async {
     return showDialog<void>(
@@ -28,9 +30,9 @@ class _BackupScreenState extends State<BackupScreen> {
               color: Color.fromARGB(255, 66, 43, 21),
             ),
           ),
-          content: const Text(
-              'Are you sure you want to restore the patient records from this file?',
-              style: TextStyle(
+          content: Text(
+              'Are you sure you want to restore the patient records from $filePath?\nThis will overwrite the existing data (unsaved data will be lost).',
+              style: const TextStyle(
               fontSize: 16.0,
               color: Color.fromARGB(255, 66, 43, 21),
             ),
@@ -59,6 +61,47 @@ class _BackupScreenState extends State<BackupScreen> {
         );
       },
     );
+  }
+
+  Future<void> saveBackup() async {
+    try {
+      String sanitizedFileName = 'backup_${DateTime.now().toIso8601String().replaceAll(RegExp(r'[:\-]'), '_').replaceAll('T', '_')}.sql';
+      String? selDir = await FilePicker.platform.saveFile(
+        initialDirectory: "C:\\Program Files\\DentSys\\backups",
+        fileName: sanitizedFileName,
+        allowedExtensions: ['sql'],
+        type: FileType.custom,
+        dialogTitle: "Save Backup",
+      );
+      if (selDir == null) {
+        print("selected directory: $selDir");
+        return;
+      } else { 
+        BackupService().backupDataService(selDir);
+      }
+    } catch (error) {
+      print("Error saving backup: $error");
+    }
+  }
+
+  Future<void> restoreBackup() async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        dialogTitle: "Select Backup File",
+        type: FileType.custom,
+        allowedExtensions: ['sql'],
+      );
+      if (result != null) {
+        File file = File(result.files.single.path!);
+        String filePath = file.path;
+        // Show the confirmation dialog before restoring
+        showRestoreConfirmationDialog(context, filePath);
+      } else {
+        print("No file selected");
+      }
+    } catch (error) {
+      print("Error restoring backup: $error");
+    }
   }
 
   @override
@@ -112,18 +155,7 @@ class _BackupScreenState extends State<BackupScreen> {
                                 ),
                                 child: ElevatedButton.icon(
                                   onPressed: () async {
-                                    FilePickerResult? result = await FilePicker.platform.pickFiles(
-                                      type: FileType.custom,
-                                      allowedExtensions: ['sql'],
-                                    );
-                                    if (result != null) {
-                                      File file = File(result.files.single.path!);
-                                      String filePath = file.path;
-                                      // Show the confirmation dialog before restoring
-                                      showRestoreConfirmationDialog(context, filePath);
-                                    } else {
-                                      print("No file selected");
-                                    }
+                                    restoreBackup();
                                   },
                                   icon: const Icon(
                                     Icons.restore,
@@ -156,9 +188,7 @@ class _BackupScreenState extends State<BackupScreen> {
                                 ),
                                 child: ElevatedButton.icon(
                                   onPressed: () async {
-                                    String? selDir = await FilePicker.platform.getDirectoryPath();
-                                    print("selected directory: $selDir");
-                                    BackupService().backupDataService(selDir);
+                                    saveBackup();
                                   },
                                   icon: const Icon(
                                     Icons.backup,

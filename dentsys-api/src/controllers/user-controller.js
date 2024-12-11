@@ -9,7 +9,15 @@ class UserController {
             return res.status(201).json({ message: 'User created successfully from controller', user: newUser});
         } 
         catch (error) {
+            if (error.code === 'ER_DUP_ENTRY') {
+                return res.status(409).json({ error: 'User already exists' });
+            } else if (error.code === 'ER_NO_DEFAULT_FOR_FIELD') {
+                return res.status(400).json({ error: 'Missing required fields' });
+            } else if (error.code === 'Invalid email format') {
+                return res.status(400).json({ error: 'Email field must be a valid email' });
+            } else {
             res.status(500).json({ error: error.message });
+            }
         }
     }
 

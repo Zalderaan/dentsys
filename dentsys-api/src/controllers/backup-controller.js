@@ -17,7 +17,16 @@ class BackupController {
         try{
             const backupName = req.body.path;
             console.log('backupName in controller: ', backupName);
+            console.log('Creating autosave...');
+            var dateNow = new Date().toISOString().replace(/:/g, '-');
+            var autosaveName = `autosave_${dateNow}.sql`;
+            
+            console.log('Autosaving...');
+            await Backup.performBackup(`C:/Program Files/DentSys/backups/autosaves/${autosaveName}`);
+
+            console.log('Restoring backup...');
             await Backup.restoreBackup(backupName);
+            
             return res.status(200).json({ message: 'Restore successful!' });
         } catch (error) {
             return res.status(500).json({ error: error.message });
