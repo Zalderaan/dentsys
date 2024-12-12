@@ -521,7 +521,7 @@ Widget build(BuildContext context) {
                                               Padding(
                                                 padding: EdgeInsets.all(8.0),
                                                 child: Text(
-                                                  "Tooth/s No.",
+                                                  "Tooth/Teeth No.",
                                                   style: TextStyle(fontWeight: FontWeight.bold),
                                                 ),
                                               ),
@@ -570,7 +570,7 @@ Widget build(BuildContext context) {
                                             ],
                                           ),
                                           // Dynamic Data Rows
-                                          ...patientTreatments!.map((treatment) {
+                                          ...patientTreatments!.reversed.map((treatment) {
                                             return TableRow(
                                               children: [
                                                 Padding(

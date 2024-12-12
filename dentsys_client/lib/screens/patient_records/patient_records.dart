@@ -470,15 +470,24 @@ class _PatientRecordsState extends State<PatientRecords> {
   );
 }
 
-  Widget buildArticleList() {
+Widget buildArticleList() {
+  // Sort currentRecords by createdAt in descending order
+  final sortedRecords = List<Patient>.from(currentRecords)
+    ..sort((a, b) {
+      final DateTime aDate = a.createdAt != null ? DateTime.parse(a.createdAt!) : DateTime(0);
+      final DateTime bDate = b.createdAt != null ? DateTime.parse(b.createdAt!) : DateTime(0);
+      return bDate.compareTo(aDate); // Descending order
+    });
+
   return ListView.builder(
-    itemCount: currentRecords.length,
+    itemCount: sortedRecords.length,
     itemBuilder: (context, index) {
-      final patient = currentRecords[index];
+      final patient = sortedRecords[index];
       return buildRecordItem(patient); // Pass the Patient object directly
     },
   );
 }
+
 
 Widget buildRecordItem(Patient patient) {
   final DateTime now = DateTime.now();

@@ -1,227 +1,192 @@
+import 'dart:io';
+import 'package:dentsys_client/models/patient_model.dart';
+import 'package:dentsys_client/services/patient_service.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
-import 'package:dentsys_client/screens/patient_records/patient_records.dart';
-import 'package:dentsys_client/screens/patient_records/add_patient_record_screen.dart';
-import 'package:dentsys_client/screens/reports/reports_screen.dart';
-import 'package:dentsys_client/screens/services/services_screen.dart';
-import 'package:dentsys_client/screens/backup/backup_screen.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
   @override
-  _DashboardScreenState createState() => _DashboardScreenState();
+  State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  bool isExpanded = false;
-  int selectedIndex = 0;
-  bool showSubItems = false; // Controls visibility of sub-items
-  late List<Widget> _screens;
+  final PatientService _patientService = PatientService();
+  late Future<List<Patient>> patientRecords;
+  List<Patient> filteredRecords = [];
+  int totalPatients = 0;
+  Map<String, int> genderDemographics = {'Male': 0, 'Female': 0};
 
   @override
   void initState() {
     super.initState();
-    _screens = [
-      PatientRecords(
-        onAddPatient: _handleAddPatient,
-        onReports: _handlePatientReports,
-      ),
-      const AddPatientRecordScreen(),
-      const ServicesScreen(),
-      const BackupScreen(),
-    ];
+    loadPatientRecords();
   }
 
-  void _handleAddPatient() {
-    Navigator.of(context).pushNamed('/add-patient');
-  }
+  void loadPatientRecords() async {
+    patientRecords = _patientService.getAllPatientsService();
+    patientRecords.then((records) {
+      setState(() {
+        filteredRecords = records;
+        totalPatients = records.length;
 
-  void _handlePatientReports(int? id) {
-    if (id != null) {
-      print('Selected patient ID: $id');
-      Navigator.of(context).pushNamed('/reports', arguments: id);
-    } else {
-      print('No patient ID provided.');
-    }
-  }
-
-  Future<void> _showLogoutDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Logout'),
-          content: const Text('Are you sure you want to logout?'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Logout'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                _performLogout();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _performLogout() {
-    Navigator.of(context).pushReplacementNamed('/login');
+        // Calculate gender demographics
+        genderDemographics = {'Male': 0, 'Female': 0};
+        for (var patient in records) {
+          if (patient.sex == 1) {
+            genderDemographics['Male'] = genderDemographics['Male']! + 1;
+          } else {
+            genderDemographics['Female'] = genderDemographics['Female']! + 1;
+          }
+        }
+      });
+    }).catchError((error) {
+      print('Error fetching patient records: $error');
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Row(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              color: Color.fromARGB(255, 134, 103, 74),
-              borderRadius: BorderRadius.horizontal(right: Radius.circular(10)),
-            ),
-            child: NavigationRail(
-              selectedIndex: selectedIndex,
-              extended: isExpanded,
-              onDestinationSelected: (int index) {
-                setState(() {
-                  selectedIndex = index;
-                });
-              },
-              labelType: isExpanded
-                  ? NavigationRailLabelType.none
-                  : NavigationRailLabelType.all,
-              backgroundColor: Colors.transparent,
-              groupAlignment: -1.0,
-              leading: Column(
-                children: [
-                  Ink.image(
-                    width: isExpanded ? 150 : 100,
-                    height: isExpanded ? 150 : 100,
-                    fit: BoxFit.fitHeight,
-                    image: const AssetImage('assets/images/YNS Logo1.png'),
+    return Material(
+      child: SizedBox(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // TITLE
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 10),
-                  Text(
-                    'YNS',
+                  padding: const EdgeInsets.all(20.0),
+                  child: const Text(
+                    "Dashboard",
                     style: TextStyle(
-                      fontSize: isExpanded ? 24 : 20,
+                      fontSize: 32.0,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: Color.fromARGB(255, 66, 43, 21),
                     ),
                   ),
-                ],
-              ),
-              trailing: Column(
-                mainAxisAlignment: MainAxisAlignment.end, // Align at the bottom
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.logout, color: Colors.red),
-                    onPressed: _showLogoutDialog,
-                    tooltip: 'Logout',
-                  ),
-                ],
-              ),
-              destinations: const [
-                NavigationRailDestination(
-                  icon: Icon(Icons.person_outline, color: Colors.white),
-                  selectedIcon: Icon(Icons.person, color: Color.fromARGB(255, 130, 99, 4)),
-                  label: Text("Patient Records", style: TextStyle(color: Colors.white)),
-                ),
-                // NavigationRailDestination(
-                //   icon: Icon(Icons.add_box_outlined, color: Colors.white),
-                //   selectedIcon: Icon(Icons.add_box, color: Color.fromARGB(255, 130, 99, 4)),
-                //   label: Text("Add Record", style: TextStyle(color: Colors.white)),
-                // ),
-                // NavigationRailDestination(
-                //   icon: Icon(Icons.report_outlined, color: Colors.white),
-                //   selectedIcon: Icon(Icons.report, color: Color.fromARGB(255, 130, 99, 4)),
-                //   label: Text("Reports", style: TextStyle(color: Colors.white)),
-                // ),
-                NavigationRailDestination(
-                  icon: Icon(Icons.miscellaneous_services_outlined, color: Colors.white),
-                  selectedIcon: Icon(Icons.miscellaneous_services, color: Color.fromARGB(255, 130, 99, 4)),
-                  label: Text("Services", style: TextStyle(color: Colors.white)),
                 ),
 
-                NavigationRailDestination(
-                  icon: Icon(Icons.backup, color: Colors.white),
-                  selectedIcon: Icon(Icons.backup, color: Color.fromARGB(255, 130, 99, 4)),
-                  label:
-                      Text("Backup Records", style: TextStyle(color: Colors.white)),
-                ),
-              ],
-            ),
-          ),
-          const VerticalDivider(thickness: 1, width: 1),
-          Expanded(
-            child: Column(
-              children: [
+                const SizedBox(height: 20),
+
+                // NUMBER OF PATIENTS
                 Container(
-                  color: Colors.white,
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              isExpanded = !isExpanded;
-                            });
-                          },
-                          icon: Icon(
-                            isExpanded ? Icons.menu_open : Icons.menu,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    children: [
+                      const Text(
+                        "Number of Patients",
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 66, 43, 21),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        "$totalPatients",
+                        style: const TextStyle(
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // PIE CHART
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    children: [
+                      const Text(
+                        "Patient Demographics by Gender",
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 66, 43, 21),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      AspectRatio(
+                        aspectRatio: 1.5,
+                        child: PieChart(
+                          PieChartData(
+                            sections: [
+                              PieChartSectionData(
+                                color: Colors.blue,
+                                value: genderDemographics['Male']!.toDouble(),
+                                title: 'Male',
+                                radius: 50,
+                                titleStyle: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              PieChartSectionData(
+                                color: Colors.pink,
+                                value: genderDemographics['Female']!.toDouble(),
+                                title: 'Female',
+                                radius: 50,
+                                titleStyle: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        Row(
-                          children: [
-                            const Icon(Icons.calendar_today, size: 20.0),
-                            const SizedBox(width: 8.0),
-                            Text(
-                              DateFormat('EEEE, MMMM d, yyyy')
-                                  .format(DateTime.now()),
-                              style: const TextStyle(
-                                  fontSize: 14.0, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  // child: _screens[selectedIndex], // Display the selected screen\
-                    child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-                    transitionBuilder: (Widget child, Animation<double> animation) {
-                      return FadeTransition(opacity: animation, child: child);
-                    }, // Display the selected screen
-                    switchInCurve: Curves.easeIn,
-                    switchOutCurve: Curves.easeOut,
-                    layoutBuilder: (currentChild, previousChildren) => Stack(
-                      children: <Widget>[
-                        ...previousChildren,
-                        if (currentChild != null) currentChild,
-                      ],
-                    ),
-                    child: _screens[selectedIndex],
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }

@@ -5,7 +5,7 @@ import 'package:dentsys_client/screens/login/register_screen.dart';
 import 'package:dentsys_client/screens/patient_records/patient_records.dart';
 import 'package:dentsys_client/screens/reports/reports_screen.dart';
 import 'package:dentsys_client/screens/login/login_screen.dart';
-import 'package:dentsys_client/screens/dashboard/dashboard_screen.dart';
+import 'package:dentsys_client/screens/dashboard/navigation_screen.dart';
 import 'package:dentsys_client/screens/patient_records/add_patient_record_screen.dart';
 
 import 'package:dentsys_client/app_start.dart';
@@ -149,7 +149,7 @@ class _MyAppState extends State<MyApp> with WindowListener {
       routes: {
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegisterScreen(),
-        '/dashboard': (context) => const DashboardScreen(),
+        '/dashboard': (context) => const NavigationScreen(),
         '/add-patient': (context) => const AddPatientRecordScreen(),
         '/reports': (context) {
           final args = ModalRoute.of(context)!.settings.arguments as int?; // get the arguments passed to the route

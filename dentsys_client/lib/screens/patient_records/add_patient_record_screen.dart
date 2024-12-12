@@ -33,6 +33,7 @@ class AddPatientRecordScreen extends StatefulWidget {
 }
 
 class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
+  
   int? _patientId;
   int _currentStep = 0;
   
