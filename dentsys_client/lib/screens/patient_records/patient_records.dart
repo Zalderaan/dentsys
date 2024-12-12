@@ -244,57 +244,57 @@ class _PatientRecordsState extends State<PatientRecords> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20.0), // Adds spacing between the title and the row of cards
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            child: buildInfoCard(
-                              "NUMBER OF PATIENTS",
-                              [
-                                "Old: ", "$numberOfOldPatients",
-                                "New: ", "$numberOfNewPatients",
-                                "Total: ", "$totalPatients"
-                              ],
-                              Icons.people,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: buildInfoCard(
-                              "LASTEST UPDATED PATIENT",
-                              [
-                                "Patient Name: ",
-                                latestEditedPatient?.firstName ?? "No data",
-                                "Age: ",
-                                latestEditedPatient?.age.toString() ?? "N/A",
-                                "Sex at Birth: ",
-                                latestEditedPatient?.sex ?? "N/A"
-                              ],
-                              Icons.person,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: buildInfoCard(
-                              "LATEST NEW PATIENT",
-                              latestNewPatient != null
-                                  ? [
-                                      "Patient Name: ", "${latestNewPatient!.firstName} ${latestNewPatient!.lastName}",
-                                      "Age: ", (latestNewPatient!.age).toString(),
-                                      "Sex at Birth: ", (latestNewPatient!.sex).toString(),
-                                      //"Procedure Done: ", latestNewPatient!.lastProcedure ?? "N/A",
-                                      //"Dentist: ", latestNewPatient!.dentistName ?? "N/A",
-                                    ]
-                                  : ["No data available", "", "", "", "", ""],
-                              Icons.person,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
+                      // const SizedBox(height: 20.0), // Adds spacing between the title and the row of cards
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      //   children: [
+                      //     Expanded(
+                      //       child: buildInfoCard(
+                      //         "NUMBER OF PATIENTS",
+                      //         [
+                      //           "Old: ", "$numberOfOldPatients",
+                      //           "New: ", "$numberOfNewPatients",
+                      //           "Total: ", "$totalPatients"
+                      //         ],
+                      //         Icons.people,
+                      //         color: Colors.white,
+                      //       ),
+                      //     ),
+                      //     const SizedBox(width: 10),
+                      //     Expanded(
+                      //       child: buildInfoCard(
+                      //         "LASTEST UPDATED PATIENT",
+                      //         [
+                      //           "Patient Name: ",
+                      //           latestEditedPatient?.firstName ?? "No data",
+                      //           "Age: ",
+                      //           latestEditedPatient?.age.toString() ?? "N/A",
+                      //           "Sex at Birth: ",
+                      //           latestEditedPatient?.sex ?? "N/A"
+                      //         ],
+                      //         Icons.person,
+                      //         color: Colors.white,
+                      //       ),
+                      //     ),
+                      //     const SizedBox(width: 10),
+                      //     Expanded(
+                      //       child: buildInfoCard(
+                      //         "LATEST NEW PATIENT",
+                      //         latestNewPatient != null
+                      //             ? [
+                      //                 "Patient Name: ", "${latestNewPatient!.firstName} ${latestNewPatient!.lastName}",
+                      //                 "Age: ", (latestNewPatient!.age).toString(),
+                      //                 "Sex at Birth: ", (latestNewPatient!.sex).toString(),
+                      //                 //"Procedure Done: ", latestNewPatient!.lastProcedure ?? "N/A",
+                      //                 //"Dentist: ", latestNewPatient!.dentistName ?? "N/A",
+                      //               ]
+                      //             : ["No data available", "", "", "", "", ""],
+                      //         Icons.person,
+                      //         color: Colors.white,
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
                     ],
                   ),
                 ),
