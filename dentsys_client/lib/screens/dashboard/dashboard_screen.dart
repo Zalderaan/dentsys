@@ -28,7 +28,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         onAddPatient: _handleAddPatient,
         onReports: _handlePatientReports,
       ),
-      const AddPatientRecordScreen(),
       const ServicesScreen(),
       const BackupScreen(),
     ];
@@ -137,16 +136,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   selectedIcon: Icon(Icons.person, color: Color.fromARGB(255, 130, 99, 4)),
                   label: Text("Patient Records", style: TextStyle(color: Colors.white)),
                 ),
-                // NavigationRailDestination(
-                //   icon: Icon(Icons.add_box_outlined, color: Colors.white),
-                //   selectedIcon: Icon(Icons.add_box, color: Color.fromARGB(255, 130, 99, 4)),
-                //   label: Text("Add Record", style: TextStyle(color: Colors.white)),
-                // ),
-                // NavigationRailDestination(
-                //   icon: Icon(Icons.report_outlined, color: Colors.white),
-                //   selectedIcon: Icon(Icons.report, color: Color.fromARGB(255, 130, 99, 4)),
-                //   label: Text("Reports", style: TextStyle(color: Colors.white)),
-                // ),
                 NavigationRailDestination(
                   icon: Icon(Icons.miscellaneous_services_outlined, color: Colors.white),
                   selectedIcon: Icon(Icons.miscellaneous_services, color: Color.fromARGB(255, 130, 99, 4)),
