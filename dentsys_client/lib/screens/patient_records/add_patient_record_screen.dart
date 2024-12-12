@@ -26,7 +26,8 @@ import 'package:dentsys_client/models/patient_conditions/conditions_model.dart';
 import 'package:dentsys_client/models/patient_conditions/patientConditions_model.dart';
 
 class AddPatientRecordScreen extends StatefulWidget {
-  const AddPatientRecordScreen({super.key});
+  final VoidCallback onRecordAdded;
+  const AddPatientRecordScreen({super.key, required this.onRecordAdded});
 
   @override
   State<AddPatientRecordScreen> createState() => _AddPatientRecordScreenState();
@@ -150,7 +151,8 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
       await _handleAddMedical();
       await _handleAddAllergies();
       await _handleAddConditions();
-      
+      widget.onRecordAdded();
+      Navigator.pop(context);
     }
   }
 

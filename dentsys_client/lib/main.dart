@@ -150,7 +150,7 @@ class _MyAppState extends State<MyApp> with WindowListener {
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegisterScreen(),
         '/dashboard': (context) => const NavigationScreen(),
-        '/add-patient': (context) => const AddPatientRecordScreen(),
+        // '/add-patient': (context) => const AddPatientRecordScreen(),
         '/reports': (context) {
           final args = ModalRoute.of(context)!.settings.arguments as int?; // get the arguments passed to the route
           return ReportsScreen(patient_id: args);

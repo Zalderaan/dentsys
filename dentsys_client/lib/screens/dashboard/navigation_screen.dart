@@ -28,7 +28,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
     _screens = [
       const DashboardScreen(),
       PatientRecords(
-        onAddPatient: _handleAddPatient,
+        // onAddPatient: _handleAddPatient,
         onReports: _handlePatientReports,
       ),
       //const AddPatientRecordScreen(),
@@ -37,9 +37,9 @@ class _NavigationScreenState extends State<NavigationScreen> {
     ];
   }
 
-  void _handleAddPatient() {
-    Navigator.of(context).pushNamed('/add-patient');
-  }
+  // void _handleAddPatient() {
+  //   Navigator.of(context).pushNamed('/add-patient');
+  // }
 
   void _handlePatientReports(int? id) {
     if (id != null) {
