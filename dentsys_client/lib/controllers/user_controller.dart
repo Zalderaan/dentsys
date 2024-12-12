@@ -15,6 +15,11 @@ class UserController {
       // print('User registered: $registered');
       return 'User registered: ${registered.username}';
     } catch (e) {
+      if (e.toString().contains('Username already exists')) {
+        return 'Username already exists';
+      } else if (e.toString().contains('Invalid email format')) {
+        return 'Invalid email format';
+      }
       return 'Registration failed: $e';
     }
   }

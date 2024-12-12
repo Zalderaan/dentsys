@@ -63,6 +63,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _emailError = null;
     });
 
+    // Validate input fields
     if (firstname.isEmpty) {
       setState(() {
         _firstnameError = "Firstname cannot be empty.";
@@ -82,8 +83,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _emailError = "Email cannot be empty.";
       });
       return;
+    } else if (!_isValidEmail(email)) {
+      setState(() {
+        _emailError = "Invalid email format.";
+      });
+      return;
     }
-
 
     if (username.isEmpty) {
       setState(() {
@@ -97,49 +102,72 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _passwordError = "Password cannot be empty.";
       });
       return;
+    } else if (!_isStrongPassword(password)) {
+      setState(() {
+        _passwordError = "Password should be at least 8 characters long and include a mix of numbers, letters (both upper and lower case).";
+      });
+      return;
     }
 
-    
+    try {
+      User user = User.registerCons(
+        firstName: firstname,
+        lastName: lastname,
+        email: email,
+        username: username,
+        password: password,
+      );
+      String result = await userController.register(user);
 
-   try {
-    User user = User.registerCons(
-      firstName: firstname,
-      lastName: lastname,
-      email: email,
-      username: username,
-      password: password,
-    );
-    String result = await userController.register(user);
+      if (result == 'User registered: $username') {
+        // Use AnimatedSnackBar for success
+        AnimatedSnackBar.material(
+          'Registration successful! Welcome, $username.',
+          type: AnimatedSnackBarType.success,
+          duration: const Duration(seconds: 3),
+          mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+        ).show(context);
 
-    if (result == 'User registered: $username') {
-      // Use AnimatedSnackBar for success
+        Navigator.pushNamed(context, '/login');
+      } else if (result == 'Username already exists') {
+        // Use AnimatedSnackBar for failure
+        AnimatedSnackBar.material(
+          'Username already exists. Please try another username.',
+          type: AnimatedSnackBarType.error,
+          duration: const Duration(seconds: 3),
+          mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+        ).show(context);
+      } else {
+        // Use AnimatedSnackBar for failure with the result as the message
+        AnimatedSnackBar.material(
+          result,
+          type: AnimatedSnackBarType.error,
+          duration: const Duration(seconds: 3),
+          mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+        ).show(context);
+      }
+    } catch (error) {
+      // Use AnimatedSnackBar for error
       AnimatedSnackBar.material(
-        'Registration successful! Welcome, $username.',
-        type: AnimatedSnackBarType.success,
-        duration: Duration(seconds: 3),
-        mobileSnackBarPosition: MobileSnackBarPosition.bottom,
-      ).show(context);
-
-      Navigator.pushNamed(context, '/login');
-    } else {
-      // Use AnimatedSnackBar for failure
-      AnimatedSnackBar.material(
-        result,
+        'Error: $error',
         type: AnimatedSnackBarType.error,
-        duration: Duration(seconds: 3),
+        duration: const Duration(seconds: 3),
         mobileSnackBarPosition: MobileSnackBarPosition.bottom,
       ).show(context);
     }
-  } catch (error) {
-    // Use AnimatedSnackBar for error
-    AnimatedSnackBar.material(
-      'Error: $error',
-      type: AnimatedSnackBarType.error,
-      duration: Duration(seconds: 3),
-      mobileSnackBarPosition: MobileSnackBarPosition.bottom,
-    ).show(context);
   }
-}
+
+  // Helper method to validate email format
+  bool _isValidEmail(String email) {
+    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+    return emailRegex.hasMatch(email);
+  }
+
+  // Helper method to validate password strength
+  bool _isStrongPassword(String password) {
+    final passwordRegex = RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$');
+    return passwordRegex.hasMatch(password);
+  }
 
   
   @override
@@ -484,7 +512,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 obscureText: !_isPasswordVisible,
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
-                                  prefixIcon: Icon(Icons.lock, color: AppColors.darkBrownColor),
+                                  prefixIcon: const Icon(Icons.lock, color: AppColors.darkBrownColor),
                                   suffixIcon: IconButton(
                                     icon: Icon(
                                       _isPasswordVisible

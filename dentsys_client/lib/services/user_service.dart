@@ -23,7 +23,7 @@ class UserService {
       if (response.statusCode == 201) {
         // var UserRegRes = jsonDecode(response.body);
         // print('in register $UserRegRes');
-        return User.fromJson(jsonDecode(response.body.toString()));
+        return User.fromJson(jsonDecode(response.body));
       } else {
         throw Exception(response.body);
       }
