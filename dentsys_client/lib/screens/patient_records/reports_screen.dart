@@ -1,5 +1,6 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 import 'package:dentsys_client/screens/reports/edit_treatment_dialog.dart';
+import 'package:dentsys_client/screens/reports/reports_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -815,17 +816,21 @@ class _ReportsScreenState extends State<ReportsScreen> {
     // insurance
     final TextEditingController dialogInsuranceNameController = TextEditingController(text: details.insurance.insurance_name);
     final TextEditingController dialogEffectiveDateController = 
-          TextEditingController(
-              text: DateFormat('yyyy-MM-dd').format(DateTime.parse(details.insurance.effective_date).toLocal()),
-          );
+    TextEditingController(
+        text: details.insurance.effective_date != null && details.insurance.effective_date.isNotEmpty
+            ? DateFormat('yyyy-MM-dd').format(DateTime.parse(details.insurance.effective_date).toLocal())
+            : "N/A", // Or any placeholder for null/empty date
+    );
     late InsuranceController insuranceController = InsuranceController(); // insurance controller
     
     // dental history
     final TextEditingController dialogPreviousDentistController = TextEditingController(text: details.dental.previous_dentist);
     final TextEditingController dialogLatestVisitController =
-          TextEditingController(
-              text: DateFormat('yyyy-MM-dd').format(DateTime.parse(details.dental.last_visit).toLocal()),
-          );
+    TextEditingController(
+        text: details.dental.last_visit != null && details.dental.last_visit.isNotEmpty
+            ? DateFormat('yyyy-MM-dd').format(DateTime.parse(details.dental.last_visit).toLocal())
+            : "N/A", // Or any placeholder for null/empty date
+    );
     late DentalController dentalController = DentalController(); // dental controller
 
   // medical history
@@ -1739,10 +1744,23 @@ class _ReportsScreenState extends State<ReportsScreen> {
   }
 
   // Format the date
-  String formatDate(String utcDate) {
-  final DateTime parsedDate = DateTime.parse(utcDate).toLocal();
-  return DateFormat('yyyy-MM-dd').format(parsedDate);
+// Function to handle invalid date formatting
+ String getSafeDate(String? utcDate) {
+  // If the database returns null or an empty string, return a placeholder
+  if (utcDate == null || utcDate.isEmpty) {
+    return "N/A"; // Or another placeholder of your choice
+  }
+
+  // Attempt to parse the date, and return a placeholder if parsing fails
+  try {
+    final DateTime parsedDate = DateTime.parse(utcDate).toLocal();
+    return DateFormat('yyyy-MM-dd').format(parsedDate);
+  } catch (e) {
+    // If parsing fails, return a placeholder
+    return "N/A";
+  }
 }
+
 
 
   List<String> getTrueAllergies(Allergies allergies) {
@@ -1763,41 +1781,42 @@ class _ReportsScreenState extends State<ReportsScreen> {
   
   
   //Text Field Builder
-  Widget buildInfoSection(String label, List<String> values) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start, // Align text to the start
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              label.toUpperCase(),
-              style: const TextStyle(
-                fontSize: 12.0,
-                fontWeight: FontWeight.w500,
-                color: Color.fromARGB(255, 66, 43, 21),
-              ),
+ // Building the info section with proper date checks
+Widget buildInfoSection(String label, List<String> values) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start, // Align text to the start
+    children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text(
+            label.toUpperCase(),
+            style: const TextStyle(
+              fontSize: 12.0,
+              fontWeight: FontWeight.w500,
+              color: Color.fromARGB(255, 66, 43, 21),
             ),
-          ],
-        ),
-        const SizedBox(height: 3.0), // Spacing between label and value
-        ...values.map((value) => Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  value,
-                  style: const TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 66, 43, 21),
-                  ),
+          ),
+        ],
+      ),
+      const SizedBox(height: 3.0), // Spacing between label and value
+      ...values.map((value) => Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 66, 43, 21),
                 ),
-              ],
-            )),
-        const SizedBox(height: 15.0), // Spacing between sections
-      ],
-    );
-  }
+              ),
+            ],
+          )),
+      const SizedBox(height: 15.0), // Spacing between sections
+    ],
+  );
+}
 
 
 

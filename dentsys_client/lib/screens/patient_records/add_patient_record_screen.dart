@@ -1046,7 +1046,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                             ),
         
                                             const SizedBox(height: 10),
-                                            //Contact Number and Email
+                                            // Contact Number and Email
                                             Row(
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
@@ -1061,8 +1061,11 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                       if (value == null || value.isEmpty) {
                                                         return 'This item is required';
                                                       }
-                                                      if (int.tryParse(value) == null) {
-                                                        return 'Please enter a valid number';
+                                                      // Regex pattern for Philippine contact numbers
+                                                      String pattern = r'^09\d{9}$'; // Validates +63 followed by 10 digits
+                                                      RegExp regExp = RegExp(pattern);
+                                                      if (!regExp.hasMatch(value)) {
+                                                        return 'Please enter a valid Philippine contact number (e.g. 09XXXXXXXXX)';
                                                       }
                                                       return null;
                                                     },
@@ -1079,6 +1082,12 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                     validator: (value) {
                                                       if (value == null || value.isEmpty) {
                                                         return 'This item is required';
+                                                      }
+                                                      // Regex pattern for validating email format
+                                                      String emailPattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
+                                                      RegExp emailRegExp = RegExp(emailPattern);
+                                                      if (!emailRegExp.hasMatch(value)) {
+                                                        return 'Please enter a valid email address';
                                                       }
                                                       return null;
                                                     },
@@ -1886,30 +1895,42 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                       Row(
                                         children: [
                                           const Text(
-                                            "8. Blood Type ",
+                                            "8. Blood Type",
                                             style: TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold,
-                                                ),
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                           SizedBox(
                                             width: 200, // Adjust width as needed
-                                            child: TextFormField(
-                                              controller: _bloodTypeController,
+                                            child: DropdownButtonFormField<String>(
+                                              value: _bloodTypeController.text.isNotEmpty ? _bloodTypeController.text : null,
                                               decoration: const InputDecoration(
-                                                hintText: "",
+                                                hintText: "Select Blood Type",
                                                 border: UnderlineInputBorder(),
                                                 contentPadding: EdgeInsets.symmetric(horizontal: 5),
                                               ),
+                                              items: [
+                                                'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', 'Rh+'
+                                              ].map<DropdownMenuItem<String>>((String value) {
+                                                return DropdownMenuItem<String>(
+                                                  value: value,
+                                                  child: Text(value),
+                                                );
+                                              }).toList(),
+                                              onChanged: (String? newValue) {
+                                                _bloodTypeController.text = newValue ?? '';
+                                              },
                                               validator: (value) {
-                                              if (value == null || value.isEmpty) {
-                                                return 'This item is required';
-                                              }
-                                              return null;
-                                            },
+                                                if (value == null || value.isEmpty) {
+                                                  return 'This item is required';
+                                                }
+                                                return null;
+                                              },
                                             ),
                                           ),
                                           const SizedBox(width: 10),
+
                                           const Text(
                                             "Blood Pressure ",
                                             style: TextStyle(
