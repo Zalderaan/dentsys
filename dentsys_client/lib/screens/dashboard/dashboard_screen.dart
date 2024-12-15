@@ -5,6 +5,7 @@ import 'package:dentsys_client/controllers/procedure_controller.dart';
 import 'package:dentsys_client/models/procedure_model.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:intl/intl.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -25,6 +26,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int femaleCount = 0;
   List<ChartData> genderChartData = [];
   List<ChartData> ageChartData = [];
+  List<MonthlyPatientData> monthlyPatientData = [];
+  int selectedYear = DateTime.now().year;
 
   @override
   void initState() {
@@ -40,6 +43,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         filteredRecords = records;
         calculateGenderCounts();
         calculateAgeGroups();
+        calculateMonthlyPatientData();
       });
     }).catchError((error) {
       print('Error fetching patient records: $error');
@@ -72,8 +76,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       femaleCount = filteredRecords.where((patient) => patient.sex == "Female").length;
 
       genderChartData = [
-        ChartData('Male', maleCount, Colors.blue),
-        ChartData('Female', femaleCount, Colors.pink),
+        ChartData('Male', maleCount, const Color(0xFF422B15)),
+        ChartData('Female', femaleCount, const Color(0xFFE2AD5E)),
       ];
     });
   }
@@ -101,10 +105,74 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     setState(() {
       ageChartData = ageGroups.entries.map((entry) {
-        return ChartData(entry.key, entry.value, Colors.blue);
+        return ChartData(entry.key, entry.value, const Color(0xFFE2AD5E));
       }).toList();
     });
   }
+
+
+  void calculateMonthlyPatientData() {
+    // Initialize all months with a count of zero
+    Map<String, int> monthCounts = {
+      'Jan': 0,
+      'Feb': 0,
+      'Mar': 0,
+      'Apr': 0,
+      'May': 0,
+      'Jun': 0,
+      'Jul': 0,
+      'Aug': 0,
+      'Sep': 0,
+      'Oct': 0,
+      'Nov': 0,
+      'Dec': 0,
+    };
+
+    // Filter records based on the selected year
+    List<Patient> filteredByYear = filteredRecords.where((patient) {
+      try {
+        if (patient.createdAt != null) {
+          final DateTime createdAt = DateTime.parse(patient.createdAt!);
+          return createdAt.year == selectedYear; // Match the selected year
+        }
+      } catch (e) {
+        print('Error parsing createdAt: $e');
+      }
+      return false;
+    }).toList();
+
+    // Update counts based on actual data
+    for (var patient in filteredByYear) {
+      try {
+        final DateTime createdAt = DateTime.parse(patient.createdAt!);
+        final String month = DateFormat('MMM').format(createdAt);
+        monthCounts[month] = (monthCounts[month] ?? 0) + 1;
+      } catch (e) {
+        print('Error parsing createdAt: $e');
+      }
+    }
+
+    // Sort months in chronological order
+    final sortedMonths = monthCounts.entries.toList()
+      ..sort((a, b) => DateFormat('MMM')
+          .parse(a.key)
+          .month
+          .compareTo(DateFormat('MMM').parse(b.key).month));
+
+    setState(() {
+      monthlyPatientData = sortedMonths
+          .map((entry) => MonthlyPatientData(entry.key, entry.value))
+          .toList();
+    });
+  }
+
+  void changeYear(int year) {
+    setState(() {
+      selectedYear = year;
+      calculateMonthlyPatientData(); // Recalculate data for the new year
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +222,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                 Row(
                   children: [
-                    // NUMBER OF PATIENTS
                     // NUMBER OF PATIENTS AND TREATMENTS
                     Expanded(
                       child: Column(
@@ -185,6 +252,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ),
                                 ),
                                 Divider(height: 10, color: Colors.grey[800], thickness: 0.5),
+                            
                                 Row(
                                   children: [
                                     // Number of Patients Container
@@ -192,10 +260,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       child: Container(
                                         padding: const EdgeInsets.all(10.0),
                                         decoration: BoxDecoration(
-                                          color: Colors.blue[50],
+                                          color: const Color(0xFFE2AD5E),
                                           borderRadius: BorderRadius.circular(10.0),
                                         ),
                                         child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             const Text(
                                               "Number of Patients",
@@ -206,13 +275,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               ),
                                             ),
                                             const SizedBox(height: 10),
-                                            Text(
-                                              filteredRecords.length.toString(),
-                                              style: const TextStyle(
-                                                fontSize: 24.0,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.blue,
-                                              ),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  filteredRecords.length.toString(),
+                                                  style: const TextStyle(
+                                                    fontSize: 24.0,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 10),
+                                                const Icon(
+                                                  Icons.person, // Icon for Number of Patients
+                                                  size: 24.0,
+                                                  color: Colors.white,
+                                                ),
+                                              ],
                                             ),
                                           ],
                                         ),
@@ -224,13 +304,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       child: Container(
                                         padding: const EdgeInsets.all(10.0),
                                         decoration: BoxDecoration(
-                                          color: Colors.green[50],
+                                          color: const Color(0xFFE2AD5E),
                                           borderRadius: BorderRadius.circular(10.0),
                                         ),
                                         child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             const Text(
-                                              "Services Offerred",
+                                              "Services Offered",
                                               style: TextStyle(
                                                 fontSize: 14.0,
                                                 fontWeight: FontWeight.bold,
@@ -238,18 +319,30 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               ),
                                             ),
                                             const SizedBox(height: 10),
-                                            Text(
-                                              servicesOffered.length.toString(), // Assuming treatments are fetched in `servicesOffered`
-                                              style: const TextStyle(
-                                                fontSize: 24.0,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.green,
-                                              ),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  servicesOffered.length.toString(),
+                                                  style: const TextStyle(
+                                                    fontSize: 24.0,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 10),
+                                                const Icon(
+                                                  Icons.medical_services, // Icon for Services Offered
+                                                  size: 24.0,
+                                                  color: Colors.white,
+                                                ),
+                                              ],
                                             ),
                                           ],
                                         ),
                                       ),
                                     ),
+
                                   ],
                                 ),
                               ],
@@ -337,7 +430,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   xValueMapper: (ChartData data, _) => data.label,
                                   yValueMapper: (ChartData data, _) => data.value,
                                   dataLabelSettings: const DataLabelSettings(isVisible: true),
-                                  color: Colors.blue,
+                                  color: const Color(0xFF422B15),
                                 ),
                               ],
                             ),
@@ -400,8 +493,91 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                   ],
                 ),
-              
                 
+                const SizedBox(height: 10),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  "Number of Patients Per Year",
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromARGB(255, 66, 43, 21),
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.arrow_back),
+                                      onPressed: () {
+                                        if (selectedYear > 2000) {
+                                          changeYear(selectedYear - 1);
+                                        }
+                                      },
+                                    ),
+                                    Text(
+                                      '$selectedYear',
+                                      style: const TextStyle(
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.arrow_forward),
+                                      onPressed: () {
+                                        if (selectedYear < DateTime.now().year) {
+                                          changeYear(selectedYear + 1);
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            Divider(height: 10, color: Colors.grey[800], thickness: 0.5),
+                            //Line Chart
+                              SfCartesianChart(
+                              primaryXAxis: CategoryAxis(),
+                              title: ChartTitle(text: 'Patients Admitted Per Year'),
+                              series: <LineSeries<MonthlyPatientData, String>>[
+                                LineSeries<MonthlyPatientData, String>(
+                                  dataSource: monthlyPatientData,
+                                  xValueMapper: (data, _) => data.month,
+                                  yValueMapper: (data, _) => data.count,
+                                  markerSettings: const MarkerSettings(isVisible: true),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+
+
               ],
             ),
           ),
@@ -417,4 +593,11 @@ class ChartData {
   final Color color;
 
   ChartData(this.label, this.value, this.color);
+}
+
+class MonthlyPatientData {
+  final String month;
+  final int count;
+
+  MonthlyPatientData(this.month, this.count);
 }
