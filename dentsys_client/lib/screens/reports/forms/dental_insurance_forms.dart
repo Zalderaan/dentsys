@@ -35,6 +35,10 @@ class DentalInsuranceFormsState extends State<DentalInsuranceForms> {
       setState(() {
         widget.effectivedateController.text = DateFormat('yyyy-MM-dd').format(pickedEffectiveDate);
       });
+    } else {
+      setState(() {
+        widget.effectivedateController.text = '';
+      });
     }
   }
 
@@ -106,7 +110,6 @@ class DentalInsuranceFormsState extends State<DentalInsuranceForms> {
                             labelText: "Effective Date (MM-DD-YYYY)",
                             border: OutlineInputBorder(),
                           ),
-                          readOnly: true, // Make the field non-editable
                           onTap: () async {
                             DateTime? pickedEffectiveDate = await showDatePicker(
                               context: context,

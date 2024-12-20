@@ -1201,7 +1201,6 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                       labelText: "Effective Date (YYYY-MM-DD)",
                                                       border: OutlineInputBorder(),
                                                     ),
-                                                    readOnly: true, // Make the field non-editable
                                                     onTap: () async {
                                                       DateTime? pickedDate = await showDatePicker(
                                                         context: context,
@@ -1335,7 +1334,6 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                       labelText: "Latest Dental Visit (YYYY-MM-DD)",
                                                       border: OutlineInputBorder(),
                                                     ),
-                                                    readOnly: true, // Make the field non-editable
                                                     onTap: () async {
                                                       DateTime? pickedDate = await showDatePicker(
                                                         context: context,
@@ -1376,8 +1374,8 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                         ],
                                       ),
                                     ),
-                                   ),
-                                  ],
+                                  ),
+                                ],
                               ),
                             ),
                             isActive: _currentStep >= 3,

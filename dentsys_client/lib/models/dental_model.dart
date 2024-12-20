@@ -4,7 +4,7 @@ class Dental {
   final int? id;
   final int? patient_id;
   final String previous_dentist;
-  final String last_visit;
+  final String? last_visit;
 
   Dental({
     this.id,

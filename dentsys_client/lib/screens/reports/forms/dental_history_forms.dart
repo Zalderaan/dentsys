@@ -31,6 +31,10 @@ class DentalHistoryFormsState extends State<DentalHistoryForms> {
       setState(() {
         widget.latestvisitController.text = DateFormat('yyyy-MM-dd').format(pickLatestVisitDate);
       });
+    } else {
+      setState(() {
+        widget.latestvisitController.text = '';
+      });
     }
   }
   @override
@@ -97,7 +101,6 @@ class DentalHistoryFormsState extends State<DentalHistoryForms> {
                             labelText: "Latest Dental Visit (MM-DD-YYYY)",
                             border: OutlineInputBorder(),
                           ),
-                          readOnly: true, // Make the field non-editable
                           onTap: () async {
                             pickLatestVisitDate();
                           },

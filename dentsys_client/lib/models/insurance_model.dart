@@ -3,7 +3,7 @@ class Insurance{
   final int? id;
   final int patient_id;
   final String insurance_name;
-  final String effective_date;
+  final String? effective_date;
 
   Insurance({
     this.id,
