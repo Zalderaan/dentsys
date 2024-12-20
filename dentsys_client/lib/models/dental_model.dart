@@ -4,13 +4,13 @@ class Dental {
   final int? id;
   final int? patient_id;
   final String previous_dentist;
-  final String? last_visit;
+  String? last_visit;
 
   Dental({
     this.id,
     this.patient_id,
     required this.previous_dentist,
-    required this.last_visit,
+    this.last_visit,
   });
 
   @override
@@ -33,7 +33,7 @@ class Dental {
     return {
       'patient_id': patient_id,
       'previous_dentist': previous_dentist,
-      'last_visit': last_visit,
+      'last_visit': last_visit?.isNotEmpty == true ? last_visit : null,
     };
   }
 }

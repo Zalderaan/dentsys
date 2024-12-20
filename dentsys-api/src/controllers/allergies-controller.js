@@ -8,8 +8,8 @@ class AllergiesController {
         try {
             const newAllergyId = await Allergy.createAllergies(data);
             const newAllergies = await Allergy.getByAllergiesId(newAllergyId);
-            console.log('new allergy id: ', newAllergyId);
-            console.log('new allergies: ', newAllergies);
+            // console.log('new allergy id: ', newAllergyId);
+            // console.log('new allergies: ', newAllergies);
             // console.log('new allergy: ', newAllergy);
             return res.status(201).json({ message: 'Allergy created successfully from controller', newAllergies });
         } catch (error) {
@@ -31,7 +31,7 @@ class AllergiesController {
     // PUT
     static async updateAllergies(req, res) {
         const data = req.body;
-        console.log('received allergy data in cont backend: ', data);
+        // console.log('received allergy data in cont backend: ', data);
         try {
             const updatedAllergy = await Allergy.updateAllergies(data);
             return res.status(200).json({ message: 'Allergy updated successfully from controller', updatedAllergy });

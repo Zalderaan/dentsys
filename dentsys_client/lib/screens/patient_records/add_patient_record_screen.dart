@@ -1213,7 +1213,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                         String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
                                                         _insuranceEffectiveDateController.text = formattedDate; // Set the selected date
                                                       } else {
-                                                        _insuranceEffectiveDateController.text = ""; // Clear the field if no date is selected  
+                                                        _insuranceEffectiveDateController.clear(); // Clear the field if no date is selected  
                                                       }
                                                     },
                                                     
@@ -1345,6 +1345,8 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                                       if (pickedDate != null) {
                                                         String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
                                                         _lastVisitController.text = formattedDate; // Set the selected date
+                                                      } else {
+                                                        _lastVisitController.clear(); // Clear the field if no date is selected
                                                       }
                                                     },
                                                     

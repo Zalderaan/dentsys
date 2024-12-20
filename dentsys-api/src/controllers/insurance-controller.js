@@ -4,6 +4,7 @@ class InsuranceController {
     // POST
     static async addInsurance(req, res) {
         const data = req.body;
+        console.log("insurance controller data: ", data);
         try {
             const newInsuranceId = await Insurance.createInsurance(data);
             const newInsurance = await Insurance.getByInsuranceId(newInsuranceId)
@@ -18,6 +19,7 @@ class InsuranceController {
         const data = req.params.id;
         try {
             const insurance = await Insurance.getInsurance(data);
+            console.log("insurance controller getInsurance: ", insurance);
             return res.status(200).json({ message: 'Insurance retrieved successfully from controller', insurance});
         } catch (error) {
             res.status(500).json({ error: error.message });
