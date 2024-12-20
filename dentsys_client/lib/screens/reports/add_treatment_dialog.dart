@@ -205,14 +205,32 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
 
                   const SizedBox(height: 15),
                   
-                  TextFormField(
-                    controller: dentistNameController,
+                  DropdownButtonFormField<String>(
+                    value: dentistNameController.text.isNotEmpty ? dentistNameController.text : null,
                     decoration: const InputDecoration(
                       labelText: 'Dentist Name',
                       border: UnderlineInputBorder(),
                     ),
-                    keyboardType: TextInputType.text
-                  )
+                    items: [
+                      'Dr. Ailyn Onilla',
+                      'Dr. Shaina Onilla',
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      dentistNameController.text = newValue ?? '';
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'This item is required';
+                      }
+                      return null;
+                    },
+                  ),
+
                 ],
               ),
             ),

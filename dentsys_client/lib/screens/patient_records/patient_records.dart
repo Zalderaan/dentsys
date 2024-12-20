@@ -473,100 +473,100 @@ class _PatientRecordsState extends State<PatientRecords> {
   );
 }
 
-Widget buildArticleList() {
-  // Sort currentRecords by createdAt in descending order
-  final sortedRecords = List<Patient>.from(currentRecords)
-    ..sort((a, b) {
-      final DateTime aDate = a.createdAt != null ? DateTime.parse(a.createdAt!) : DateTime(0);
-      final DateTime bDate = b.createdAt != null ? DateTime.parse(b.createdAt!) : DateTime(0);
-      return bDate.compareTo(aDate); // Descending order
-    });
+  Widget buildArticleList() {
+    // Sort currentRecords by createdAt in descending order
+    final sortedRecords = List<Patient>.from(currentRecords)
+      ..sort((a, b) {
+        final DateTime aDate = a.createdAt != null ? DateTime.parse(a.createdAt!) : DateTime(0);
+        final DateTime bDate = b.createdAt != null ? DateTime.parse(b.createdAt!) : DateTime(0);
+        return bDate.compareTo(aDate); // Descending order
+      });
 
-  return ListView.builder(
-    itemCount: sortedRecords.length,
-    itemBuilder: (context, index) {
-      final patient = sortedRecords[index];
-      return buildRecordItem(patient); // Pass the Patient object directly
-    },
-  );
-}
+    return ListView.builder(
+      itemCount: sortedRecords.length,
+      itemBuilder: (context, index) {
+        final patient = sortedRecords[index];
+        return buildRecordItem(patient); // Pass the Patient object directly
+      },
+    );
+  }
 
 
-Widget buildRecordItem(Patient patient) {
-  final DateTime now = DateTime.now();
-  
-  // Handle nullable createdAt
-  final DateTime createdAt = patient.createdAt != null
-      ? DateTime.parse(patient.createdAt!)
-      : now; // Default to now if null
-  
-  final bool isOld = now.difference(createdAt).inDays > 30; // Check if older than 30 days
+  Widget buildRecordItem(Patient patient) {
+    final DateTime now = DateTime.now();
+    
+    // Handle nullable createdAt
+    final DateTime createdAt = patient.createdAt != null
+        ? DateTime.parse(patient.createdAt!)
+        : now; // Default to now if null
+    
+    final bool isOld = now.difference(createdAt).inDays > 30; // Check if older than 30 days
 
-  final String label = isOld ? "Old" : "New";
-  final Color labelColor = isOld ? Colors.blue[300]! : Colors.green[300]!;
+    final String label = isOld ? "Old" : "New";
+    final Color labelColor = isOld ? Colors.blue[300]! : Colors.green[300]!;
 
-  return TextButton(
-    onPressed: () {
-      widget.onReports(patient.id);
-    },
-    child: Card(
-      color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              flex: 3,
-              child: Row(
-                children: [
-                  Text(
-                    "${patient.firstName} ${patient.lastName}",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20.0,
-                      color: Colors.brown[900],
+    return TextButton(
+      onPressed: () {
+        widget.onReports(patient.id);
+      },
+      child: Card(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                flex: 3,
+                child: Row(
+                  children: [
+                    Text(
+                      "${patient.firstName} ${patient.lastName}",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0,
+                        color: Colors.brown[900],
+                      ),
+                      textAlign: TextAlign.left,
                     ),
-                    textAlign: TextAlign.left,
-                  ),
-                ],
-              ),
-            ),
-            const Expanded(
-              flex: 1,
-              child: Text(
-                "Patient",
-                style: TextStyle(
-                  color: Colors.brown,
-                  fontWeight: FontWeight.bold,
+                  ],
                 ),
-                textAlign: TextAlign.center,
               ),
-            ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
-                decoration: BoxDecoration(
-                  color: labelColor,
-                  borderRadius: BorderRadius.circular(15),
-                ),
+              const Expanded(
+                flex: 1,
                 child: Text(
-                  label,
-                  style: const TextStyle(
-                    color: Colors.white,
+                  "Patient",
+                  style: TextStyle(
+                    color: Colors.brown,
                     fontWeight: FontWeight.bold,
                   ),
                   textAlign: TextAlign.center,
                 ),
               ),
-            ),
-          ],
+              Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
+                  decoration: BoxDecoration(
+                    color: labelColor,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Text(
+                    label,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
 
 

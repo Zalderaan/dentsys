@@ -311,6 +311,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
                             const SizedBox(height: 24.0),
+                          
                             // Sign In button
                             Center(
                               child: Material(
