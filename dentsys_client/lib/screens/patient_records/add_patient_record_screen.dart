@@ -727,6 +727,7 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                             ),
                                             keyboardType: TextInputType.number, // This ensures only numeric keyboard
                                             inputFormatters: [
+                                              
                                               FilteringTextInputFormatter.digitsOnly, // Allows only digits
                                             ],
                                             onChanged: (value) {
@@ -736,6 +737,10 @@ class _AddPatientRecordScreenState extends State<AddPatientRecordScreen> {
                                             validator: (value) {
                                               if (value == null || value.isEmpty) {
                                                 return 'This item is required';
+                                              }
+                                              int? minAge = 1;
+                                              if ((int.tryParse(value) ?? 0) < minAge) {
+                                                return 'Patient must be at least 1 year old';
                                               }
                                               return null;
                                             },
