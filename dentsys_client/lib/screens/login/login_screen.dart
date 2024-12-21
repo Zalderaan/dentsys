@@ -310,22 +310,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                               ),
-                            const SizedBox(height: 12.0),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: TextButton(
-                                onPressed: () {},
-                                child: Text(
-                                  'Forgot Password?',
-                                  style: GoogleFonts.raleway(
-                                    fontSize: 12.0,
-                                    color: Colors.lightGreen,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 12.0),
+                            const SizedBox(height: 24.0),
+                          
                             // Sign In button
                             Center(
                               child: Material(

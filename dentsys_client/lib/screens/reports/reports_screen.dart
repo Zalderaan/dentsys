@@ -240,6 +240,15 @@ Widget build(BuildContext context) {
                   padding: const EdgeInsets.all(20.0),
                   child: Row(
                     children: [
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      
+                      const SizedBox(width: 10.0),
+
                       const Expanded(
                         child: Text(
                           "Patient Record",
@@ -512,7 +521,7 @@ Widget build(BuildContext context) {
                                               Padding(
                                                 padding: EdgeInsets.all(8.0),
                                                 child: Text(
-                                                  "Tooth/s No.",
+                                                  "Tooth/Teeth No.",
                                                   style: TextStyle(fontWeight: FontWeight.bold),
                                                 ),
                                               ),
@@ -561,7 +570,7 @@ Widget build(BuildContext context) {
                                             ],
                                           ),
                                           // Dynamic Data Rows
-                                          ...patientTreatments!.map((treatment) {
+                                          ...patientTreatments!.reversed.map((treatment) {
                                             return TableRow(
                                               children: [
                                                 Padding(
@@ -729,7 +738,9 @@ Widget build(BuildContext context) {
     final TextEditingController dialogInsuranceNameController = TextEditingController(text: details.insurance.insurance_name);
     final TextEditingController dialogEffectiveDateController = 
           TextEditingController(
-              text: DateFormat('yyyy-MM-dd').format(DateTime.parse(details.insurance.effective_date).toLocal()),
+              text: details.insurance.effective_date != null 
+                  ? DateFormat('yyyy-MM-dd').format(DateTime.parse(details.insurance.effective_date!).toLocal())
+                  : '',
           );
     late InsuranceController insuranceController = InsuranceController(); // insurance controller
     
@@ -737,7 +748,7 @@ Widget build(BuildContext context) {
     final TextEditingController dialogPreviousDentistController = TextEditingController(text: details.dental.previous_dentist);
     final TextEditingController dialogLatestVisitController =
           TextEditingController(
-              text: DateFormat('yyyy-MM-dd').format(DateTime.parse(details.dental.last_visit).toLocal()),
+              text: details.dental.last_visit != null ? DateFormat('yyyy-MM-dd').format(DateTime.parse(details.dental.last_visit!).toLocal()) : '',
           );
     late DentalController dentalController = DentalController(); // dental controller
 
@@ -905,7 +916,7 @@ Widget build(BuildContext context) {
       final updatedInsurance = Insurance(
         patient_id: details.insurance.patient_id,
         insurance_name: dialogInsuranceNameController.text,
-        effective_date: DateFormat('yyyy-MM-dd').format(DateTime.parse(dialogEffectiveDateController.text)),
+        effective_date: dialogEffectiveDateController.text.isNotEmpty ? DateFormat('yyyy-MM-dd').format(DateTime.parse(dialogEffectiveDateController.text)) : '',
         // effective_date: dialogEffectiveDateController.text,
       );
 
@@ -924,7 +935,7 @@ Widget build(BuildContext context) {
       final updatedDental = Dental(
         patient_id: details.dental.patient_id,
         previous_dentist: dialogPreviousDentistController.text,
-        last_visit: DateFormat('yyyy-MM-dd').format(DateTime.parse(dialogLatestVisitController.text)),
+        last_visit: dialogLatestVisitController.text.isNotEmpty ? DateFormat('yyyy-MM-dd').format(DateTime.parse(dialogLatestVisitController.text)) : '',
       );
 
       try {
@@ -1433,9 +1444,9 @@ Widget build(BuildContext context) {
                       buildInfoSection("Fax Number", [details.contact.fax_number]),
                       buildInfoSection("Office Number", [details.contact.work_number]),
                       buildInfoSection("Dental Insurance", [details.insurance.insurance_name]),
-                      buildInfoSection("Effective Date", [formatDate(details.insurance.effective_date)]),
+                      buildInfoSection("Effective Date", [details.insurance.effective_date != null ? formatDate(details.insurance.effective_date!) : 'N/A']),
                       buildInfoSection("Previous Dentist", [details.dental.previous_dentist]),
-                      buildInfoSection("Latest Visit", [formatDate(details.dental.last_visit)]),
+                      buildInfoSection("Latest Visit", [details.dental.last_visit != null ? formatDate(details.dental.last_visit!) : 'N/A']),
                     ],
                   ),
                 ),
@@ -1551,9 +1562,9 @@ Widget build(BuildContext context) {
                   buildInfoSection("Blood Pressure", [details.medical.medical_bloodPressure]),
                   buildInfoSection("Bleeding Time", [details.medical.medical_bleedingTime]),
                   buildInfoSection("Dental Insurance", [details.insurance.insurance_name]),
-                  buildInfoSection("Effective Date", [formatDate(details.insurance.effective_date)]),
+                  buildInfoSection("Effective Date", [details.insurance.effective_date != null ? formatDate(details.insurance.effective_date!) : 'N/A']),
                   buildInfoSection("Previous Dentist", [details.dental.previous_dentist]),
-                  buildInfoSection("Latest Visit", [formatDate(details.dental.last_visit)]),
+                  buildInfoSection("Latest Visit", [details.dental.last_visit != null ? formatDate(details.dental.last_visit!) : 'N/A']),
                   buildInfoSection("Physician", [details.medical.medical_physician]),
                   buildInfoSection("Speciality", [details.medical.medical_physicianSpec.toString()]),
                   buildInfoSection("Office Address", [details.medical.medical_officeAddress]),

@@ -29,7 +29,7 @@ class MedicalHistory {
     }
 
     static async createMedicalHistory(data) {
-        console.log('data received in mh model:', data);
+        // console.log('data received in mh model:', data);
         // extract data
         const { patient_id, medical_physician, medical_physicianSpec, medical_officeAddress, medical_officeNo, medical_goodHealth, medical_isUnderTreatment, 
             medical_treatmentDetails, medical_seriousOperation, medical_seriousOperationDetails, medical_hospitalized, medical_hospitalizedDetails, medical_isMedication, 
@@ -49,7 +49,7 @@ class MedicalHistory {
         try {
             const [medical_result] = await pool.query(queryStr, values);
             const newMH = medical_result.insertId;
-            console.log ('newMH:', newMH);
+            // console.log ('newMH:', newMH);
             if (newMH) {
                 console.log('Medical history created successfully from model', newMH);
                 return newMH;
@@ -71,7 +71,7 @@ class MedicalHistory {
             if (mh_result.length === 0) {
                 throw new Error('Patient medical history not found');
             } else {
-                console.log('Medical history retrieved successfully from model');
+                // console.log('Medical history retrieved successfully from model');
                 return mh_result;
             }
         } catch (error) {
@@ -87,7 +87,7 @@ class MedicalHistory {
             if (mh_result.length === 0) {
                 throw new Error('Patient medical history not found');
             } else {
-                console.log('Medical history retrieved successfully from model');
+                // console.log('Medical history retrieved successfully from model');
                 return mh_result;
             }
         } catch (error) {

@@ -4,6 +4,7 @@ class DentalHistoryController {
     // POST
     static async addDentalHistory(req, res) {
         const data = req.body;
+        console.log("dental history controller data: ", data);
         try {
             const newDentalHistoryId = await DentalHistory.createDentalHist(data);
             const newDentalHistory = await DentalHistory.getDentalHistByDentalId(newDentalHistoryId);
@@ -17,6 +18,7 @@ class DentalHistoryController {
         const data = req.params.id;
         try {
             const dentalHistory = await DentalHistory.getDentalHist(data);
+            console.log("dental history controller getDentalHistory: ", dentalHistory);
             if (dentalHistory.length === 0) throw new Error('Dental history not found');
             return res.status(200).json({ message: 'Dental history retrieved successfully from controller', dentalHistory});
         } catch (error) {

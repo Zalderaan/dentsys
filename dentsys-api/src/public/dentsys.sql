@@ -120,7 +120,7 @@ CREATE TABLE IF NOT EXISTS insurance (
     insurance_id INT AUTO_INCREMENT PRIMARY KEY,
     patient_id INT NOT NULL UNIQUE,
     insurance_name VARCHAR(50) NOT NULL,
-    effective_date DATE NOT NULL,
+    effective_date DATE,
     FOREIGN KEY (patient_id) REFERENCES patients(patient_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS dental_history (
     dental_id INT AUTO_INCREMENT PRIMARY KEY,
     patient_id INT NOT NULL UNIQUE,
     dental_previousDentist VARCHAR(50) NOT NULL,
-    dental_lastVisit DATE NOT NULL,
+    dental_lastVisit DATE,
     FOREIGN KEY (patient_id) REFERENCES patients(patient_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 

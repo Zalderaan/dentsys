@@ -13,7 +13,7 @@ class Allergies {
     }
 
     static async createAllergies(data) {
-        console.log ('data received in allergies model:', data);
+        // console.log ('data received in allergies model:', data);
         const {allergies_anesthetic, allergies_penicillin, allergies_sulfaDrugs, allergies_aspirin, allergies_latex, allergies_others, patient_id} = data;
 
         const queryStr = 'INSERT INTO allergies (allergies_anesthetic, allergies_penicillin, allergies_sulfaDrugs, allergies_aspirin, allergies_latex, allergies_others, patient_id) VALUES (?, ?, ?, ?, ?, ?, ?)';
@@ -23,14 +23,14 @@ class Allergies {
             const [result] = await pool.query(queryStr, values);
             const newAllergies = result.insertId;
             if (newAllergies) {
-                console.log('Allergies created successfully from model', newAllergies);
+                // console.log('Allergies created successfully from model', newAllergies);
                 return newAllergies;
             } else {
                 throw new Error('Error creating allergies');
             }
         } catch (error) {
             if(error.code === 'ER_DUP_ENTRY') {
-                console.log('Allergies already exist');
+                // console.log('Allergies already exist');
                 throw new Error('Allergies already exist');
             }
             console.log('Error creating allergies from model', error);
@@ -88,13 +88,13 @@ class Allergies {
 
             return allergies;
         } catch (error) {
-            console.log('Error getting allergies by id from model', error);
+            // console.log('Error getting allergies by id from model', error);
             throw error;
         }
     }
 
     static async updateAllergies(data) {
-        console.log('data received in allergies model:', data);
+        // console.log('data received in allergies model:', data);
         const {allergies_anesthetic, allergies_penicillin, allergies_sulfaDrugs, allergies_aspirin, allergies_latex, allergies_others, patient_id} = data;
         const queryStr = `
             UPDATE allergies 

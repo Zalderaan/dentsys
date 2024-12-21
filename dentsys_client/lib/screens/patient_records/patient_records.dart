@@ -1,13 +1,14 @@
+import 'package:dentsys_client/screens/patient_records/add_patient_record_screen.dart';
 import 'package:dentsys_client/screens/reports/reports_screen.dart';
 import 'package:flutter/material.dart';
 import  'package:dentsys_client/services/patient_service.dart';
 import 'package:dentsys_client/models/patient_model.dart';
 
 class PatientRecords extends StatefulWidget {
-  final VoidCallback onAddPatient; // Add this parameter
+  // final VoidCallback onAddPatient; // Add this parameter
   final Function(int?) onReports;
 
-  const PatientRecords({super.key, required this.onAddPatient, required this.onReports});
+  const PatientRecords({super.key, required this.onReports});
 
   @override
   State<PatientRecords> createState() => _PatientRecordsState();
@@ -109,75 +110,75 @@ class _PatientRecordsState extends State<PatientRecords> {
     });
   }
 
- void computeDashboardData() {
-  patientRecords.then((records) {
-    setState(() {
-      final now = DateTime.now();
+  void computeDashboardData() {
+    patientRecords.then((records) {
+      setState(() {
+        final now = DateTime.now();
 
-      // Count new and old patients
-      numberOfOldPatients = records.where((patient) {
-        final createdAt = DateTime.tryParse(patient.createdAt ?? "");
-        return createdAt != null && now.difference(createdAt).inDays > 30;
-      }).length;
+        // Count new and old patients
+        numberOfOldPatients = records.where((patient) {
+          final createdAt = DateTime.tryParse(patient.createdAt ?? "");
+          return createdAt != null && now.difference(createdAt).inDays > 30;
+        }).length;
 
-      numberOfNewPatients = records.where((patient) {
-        final createdAt = DateTime.tryParse(patient.createdAt ?? "");
-        return createdAt != null && now.difference(createdAt).inDays <= 30;
-      }).length;
-
-      totalPatients = records.length;
-
-      // Find latest new patient (based on createdAt)
-      latestNewPatient = records.lastWhere(
-        (patient) {
+        numberOfNewPatients = records.where((patient) {
           final createdAt = DateTime.tryParse(patient.createdAt ?? "");
           return createdAt != null && now.difference(createdAt).inDays <= 30;
-        },
-        orElse: () => Patient(
-          id: 0,
-          firstName: "No data",
-          lastName: "",
-          createdAt: null, 
-          middleName: '', 
-          birthDate: '', 
-          age: 0, 
-          sex: '',
-          nationality: '', 
-          religion: '', 
-          occupation: '', 
-          reason: '',
-        ),
-      );
+        }).length;
 
-      // Find latest edited patient (based on updatedAt, ignoring createdAt)
-      latestEditedPatient = records.lastWhere(
-        (patient) {
-          final updatedAt = DateTime.tryParse(patient.updatedAt ?? "");
-          final createdAt = DateTime.tryParse(patient.createdAt ?? "");
-          return updatedAt != null && 
-                 (createdAt == null || updatedAt.isAfter(createdAt)) &&
-                 now.difference(updatedAt).inDays <= 30;
-        },
-        orElse: () => Patient(
-          id: 0,
-          firstName: "No data",
-          lastName: "",
-          createdAt: null, 
-          middleName: '', 
-          birthDate: '', 
-          age: 0, 
-          sex: '',
-          nationality: '', 
-          religion: '', 
-          occupation: '', 
-          reason: '',
-        ),
-      );
+        totalPatients = records.length;
+
+        // Find latest new patient (based on createdAt)
+        latestNewPatient = records.lastWhere(
+          (patient) {
+            final createdAt = DateTime.tryParse(patient.createdAt ?? "");
+            return createdAt != null && now.difference(createdAt).inDays <= 30;
+          },
+          orElse: () => Patient(
+            id: 0,
+            firstName: "No data",
+            lastName: "",
+            createdAt: null, 
+            middleName: '', 
+            birthDate: '', 
+            age: 0, 
+            sex: '',
+            nationality: '', 
+            religion: '', 
+            occupation: '', 
+            reason: '',
+          ),
+        );
+
+        // Find latest edited patient (based on updatedAt, ignoring createdAt)
+        latestEditedPatient = records.lastWhere(
+          (patient) {
+            final updatedAt = DateTime.tryParse(patient.updatedAt ?? "");
+            final createdAt = DateTime.tryParse(patient.createdAt ?? "");
+            return updatedAt != null && 
+                  (createdAt == null || updatedAt.isAfter(createdAt)) &&
+                  now.difference(updatedAt).inDays <= 30;
+          },
+          orElse: () => Patient(
+            id: 0,
+            firstName: "No data",
+            lastName: "",
+            createdAt: null, 
+            middleName: '', 
+            birthDate: '', 
+            age: 0, 
+            sex: '',
+            nationality: '', 
+            religion: '', 
+            occupation: '', 
+            reason: '',
+          ),
+        );
+      });
+    }).catchError((error) {
+      print('Error computing dashboard data: $error');
     });
-  }).catchError((error) {
-    print('Error computing dashboard data: $error');
-  });
-}
+  }
 
 
   @override
@@ -227,7 +228,9 @@ class _PatientRecordsState extends State<PatientRecords> {
                               borderRadius: BorderRadius.circular(8), // Match button shape
                             ),
                             child: ElevatedButton.icon(
-                              onPressed: widget.onAddPatient,
+                              onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => AddPatientRecordScreen(onRecordAdded: loadPatientRecords)));
+                              },
                               icon: const Icon(Icons.add, color: Colors.white),
                               label: const Text(
                                 "Add Patient",
@@ -244,57 +247,57 @@ class _PatientRecordsState extends State<PatientRecords> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20.0), // Adds spacing between the title and the row of cards
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            child: buildInfoCard(
-                              "NUMBER OF PATIENTS",
-                              [
-                                "Old: ", "$numberOfOldPatients",
-                                "New: ", "$numberOfNewPatients",
-                                "Total: ", "$totalPatients"
-                              ],
-                              Icons.people,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: buildInfoCard(
-                              "LASTEST UPDATED PATIENT",
-                              [
-                                "Patient Name: ",
-                                latestEditedPatient?.firstName ?? "No data",
-                                "Age: ",
-                                latestEditedPatient?.age.toString() ?? "N/A",
-                                "Sex at Birth: ",
-                                latestEditedPatient?.sex ?? "N/A"
-                              ],
-                              Icons.person,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: buildInfoCard(
-                              "LATEST NEW PATIENT",
-                              latestNewPatient != null
-                                  ? [
-                                      "Patient Name: ", "${latestNewPatient!.firstName} ${latestNewPatient!.lastName}",
-                                      "Age: ", (latestNewPatient!.age).toString(),
-                                      "Sex at Birth: ", (latestNewPatient!.sex).toString(),
-                                      //"Procedure Done: ", latestNewPatient!.lastProcedure ?? "N/A",
-                                      //"Dentist: ", latestNewPatient!.dentistName ?? "N/A",
-                                    ]
-                                  : ["No data available", "", "", "", "", ""],
-                              Icons.person,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
+                      // const SizedBox(height: 20.0), // Adds spacing between the title and the row of cards
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      //   children: [
+                      //     Expanded(
+                      //       child: buildInfoCard(
+                      //         "NUMBER OF PATIENTS",
+                      //         [
+                      //           "Old: ", "$numberOfOldPatients",
+                      //           "New: ", "$numberOfNewPatients",
+                      //           "Total: ", "$totalPatients"
+                      //         ],
+                      //         Icons.people,
+                      //         color: Colors.white,
+                      //       ),
+                      //     ),
+                      //     const SizedBox(width: 10),
+                      //     Expanded(
+                      //       child: buildInfoCard(
+                      //         "LASTEST UPDATED PATIENT",
+                      //         [
+                      //           "Patient Name: ",
+                      //           latestEditedPatient?.firstName ?? "No data",
+                      //           "Age: ",
+                      //           latestEditedPatient?.age.toString() ?? "N/A",
+                      //           "Sex at Birth: ",
+                      //           latestEditedPatient?.sex ?? "N/A"
+                      //         ],
+                      //         Icons.person,
+                      //         color: Colors.white,
+                      //       ),
+                      //     ),
+                      //     const SizedBox(width: 10),
+                      //     Expanded(
+                      //       child: buildInfoCard(
+                      //         "LATEST NEW PATIENT",
+                      //         latestNewPatient != null
+                      //             ? [
+                      //                 "Patient Name: ", "${latestNewPatient!.firstName} ${latestNewPatient!.lastName}",
+                      //                 "Age: ", (latestNewPatient!.age).toString(),
+                      //                 "Sex at Birth: ", (latestNewPatient!.sex).toString(),
+                      //                 //"Procedure Done: ", latestNewPatient!.lastProcedure ?? "N/A",
+                      //                 //"Dentist: ", latestNewPatient!.dentistName ?? "N/A",
+                      //               ]
+                      //             : ["No data available", "", "", "", "", ""],
+                      //         Icons.person,
+                      //         color: Colors.white,
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
                     ],
                   ),
                 ),
@@ -471,90 +474,99 @@ class _PatientRecordsState extends State<PatientRecords> {
 }
 
   Widget buildArticleList() {
-  return ListView.builder(
-    itemCount: currentRecords.length,
-    itemBuilder: (context, index) {
-      final patient = currentRecords[index];
-      return buildRecordItem(patient); // Pass the Patient object directly
-    },
-  );
-}
+    // Sort currentRecords by createdAt in descending order
+    final sortedRecords = List<Patient>.from(currentRecords)
+      ..sort((a, b) {
+        final DateTime aDate = a.createdAt != null ? DateTime.parse(a.createdAt!) : DateTime(0);
+        final DateTime bDate = b.createdAt != null ? DateTime.parse(b.createdAt!) : DateTime(0);
+        return bDate.compareTo(aDate); // Descending order
+      });
 
- Widget buildRecordItem(Patient patient) {
-  final DateTime now = DateTime.now();
-  
-  // Handle nullable createdAt
-  final DateTime createdAt = patient.createdAt != null
-      ? DateTime.parse(patient.createdAt!)
-      : now; // Default to now if null
-  
-  final bool isOld = now.difference(createdAt).inDays > 30; // Check if older than 30 days
+    return ListView.builder(
+      itemCount: sortedRecords.length,
+      itemBuilder: (context, index) {
+        final patient = sortedRecords[index];
+        return buildRecordItem(patient); // Pass the Patient object directly
+      },
+    );
+  }
 
-  final String label = isOld ? "Old" : "New";
-  final Color labelColor = isOld ? Colors.blue[300]! : Colors.green[300]!;
 
-  return TextButton(
-    onPressed: () {
-      widget.onReports(patient.id);
-    },
-    child: Card(
-      color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              flex: 3,
-              child: Row(
-                children: [
-                  Text(
-                    "${patient.firstName} ${patient.lastName}",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20.0,
-                      color: Colors.brown[900],
+  Widget buildRecordItem(Patient patient) {
+    final DateTime now = DateTime.now();
+    
+    // Handle nullable createdAt
+    final DateTime createdAt = patient.createdAt != null
+        ? DateTime.parse(patient.createdAt!)
+        : now; // Default to now if null
+    
+    final bool isOld = now.difference(createdAt).inDays > 30; // Check if older than 30 days
+
+    final String label = isOld ? "Old" : "New";
+    final Color labelColor = isOld ? Colors.blue[300]! : Colors.green[300]!;
+
+    return TextButton(
+      onPressed: () {
+        widget.onReports(patient.id);
+      },
+      child: Card(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                flex: 3,
+                child: Row(
+                  children: [
+                    Text(
+                      "${patient.firstName} ${patient.lastName}",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0,
+                        color: Colors.brown[900],
+                      ),
+                      textAlign: TextAlign.left,
                     ),
-                    textAlign: TextAlign.left,
-                  ),
-                ],
-              ),
-            ),
-            const Expanded(
-              flex: 1,
-              child: Text(
-                "Patient",
-                style: TextStyle(
-                  color: Colors.brown,
-                  fontWeight: FontWeight.bold,
+                  ],
                 ),
-                textAlign: TextAlign.center,
               ),
-            ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
-                decoration: BoxDecoration(
-                  color: labelColor,
-                  borderRadius: BorderRadius.circular(15),
-                ),
+              const Expanded(
+                flex: 1,
                 child: Text(
-                  label,
-                  style: const TextStyle(
-                    color: Colors.white,
+                  "Patient",
+                  style: TextStyle(
+                    color: Colors.brown,
                     fontWeight: FontWeight.bold,
                   ),
                   textAlign: TextAlign.center,
                 ),
               ),
-            ),
-          ],
+              Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
+                  decoration: BoxDecoration(
+                    color: labelColor,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Text(
+                    label,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
 
 

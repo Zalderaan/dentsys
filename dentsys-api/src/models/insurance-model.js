@@ -36,6 +36,7 @@ class Insurance {
             if (insurance.length === 0) {
                 throw new Error('Patient insurance not found');
             }
+            console.log('Insurance retrieved successfully from model', insurance);
             return insurance;
         } catch (error) {
             console.log('Error getting insurance from model', error);

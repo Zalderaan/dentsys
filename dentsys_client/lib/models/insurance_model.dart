@@ -3,13 +3,13 @@ class Insurance{
   final int? id;
   final int patient_id;
   final String insurance_name;
-  final String effective_date;
+  String? effective_date;
 
   Insurance({
     this.id,
     required this.patient_id,
     required this.insurance_name,
-    required this.effective_date
+    this.effective_date
   });
 
   @override
@@ -22,7 +22,7 @@ class Insurance{
     return {
       "patient_id": patient_id,
       "insurance_name": insurance_name,
-      "effective_date": effective_date
+      'effective_date': effective_date?.isNotEmpty == true ? effective_date : null,
     };
   }
 

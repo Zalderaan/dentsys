@@ -34,7 +34,8 @@ class DentalHistory {
             if(dentalHist.length === 0) {
                 throw new Error('dental history not found');
             } else {
-                console.log('Dental history retrieved successfully from model');
+                // console.log('Dental history retrieved successfully from model');
+                console.log('Dental history retrieved successfully from model', dentalHist);
                 return dentalHist;
             }
         } catch (error) {
@@ -50,7 +51,7 @@ class DentalHistory {
             if(dentalHist.length === 0) {
                 throw new Error('dental history not found');
             } else {
-                console.log('Dental history retrieved successfully from model');
+                // console.log('Dental history retrieved successfully from model');
                 return dentalHist;
             }
         } catch (error) {

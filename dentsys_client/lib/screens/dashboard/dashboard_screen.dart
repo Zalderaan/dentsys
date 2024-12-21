@@ -1,288 +1,603 @@
+import 'dart:io';
+import 'package:dentsys_client/models/patient_model.dart';
+import 'package:dentsys_client/services/patient_service.dart';
+import 'package:dentsys_client/controllers/procedure_controller.dart';
+import 'package:dentsys_client/models/procedure_model.dart';
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:intl/intl.dart';
-
-import 'package:dentsys_client/screens/patient_records/patient_records.dart';
-import 'package:dentsys_client/screens/patient_records/add_patient_record_screen.dart';
-import 'package:dentsys_client/screens/reports/reports_screen.dart';
-import 'package:dentsys_client/screens/services/services_screen.dart';
-import 'package:dentsys_client/screens/backup/backup_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
   @override
-  _DashboardScreenState createState() => _DashboardScreenState();
+  State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  bool isExpanded = false;
-  int selectedIndex = 0;
-  bool showSubItems = false; // Controls visibility of sub-items
-  late List<Widget> _screens;
+  final PatientService _patientService = PatientService();
+  late Future<List<Patient>> patientRecords;
+  List<Patient> filteredRecords = [];
+
+  List<Procedure> servicesOffered = []; // List of all available procedures fetched from the backend
+  Map<String, List<Procedure>> categorizedProcedures = {}; // A map to group procedures by their categories
+
+  int maleCount = 0;
+  int femaleCount = 0;
+  List<ChartData> genderChartData = [];
+  List<ChartData> ageChartData = [];
+  List<MonthlyPatientData> monthlyPatientData = [];
+  int selectedYear = DateTime.now().year;
 
   @override
   void initState() {
     super.initState();
-    _screens = [
-      PatientRecords(
-        onAddPatient: _handleAddPatient,
-        onReports: _handlePatientReports,
-      ),
-      const AddPatientRecordScreen(),
-      const ReportsScreen(),
-      const ServicesScreen(),
-      const BackupScreen(),
-    ];
+    loadPatientRecords();
+    loadProcedures();
   }
 
-  void _handleAddPatient() {
-    setState(() {
-      selectedIndex = 1; // Index for Add Patient Screen
-    });
-  }
-
-  void _handlePatientReports(int? id) {
-    if (id != null) {
-      print('Selected patient ID: $id');
+  void loadPatientRecords() async {
+    patientRecords = _patientService.getAllPatientsService();
+    patientRecords.then((records) {
       setState(() {
-        selectedIndex = 2; // Index for Reports Screen
-        _screens[2] = ReportsScreen(patient_id: id);
+        filteredRecords = records;
+        calculateGenderCounts();
+        calculateAgeGroups();
+        calculateMonthlyPatientData();
       });
-    } else {
-      print('No patient ID provided.');
-    }
-  }
-
-void _handleNavigation(int index) {
-  setState(() {
-    if (showSubItems) {
-      // Adjust indices when sub-items are visible
-      if (index == 0) {
-        selectedIndex = 0; // Patient Records
-      } else if (index == 1) {
-        selectedIndex = 1; // Add Patient
-      } else if (index == 2) {
-        selectedIndex = 2; // Reports
-      } else if (index == 3) {
-        selectedIndex = 3; // Services
-      } else if (index == 4) {
-        selectedIndex = 4; // Backup
-      }
-    } else {
-      // Adjust indices when sub-items are hidden
-      if (index == 0) {
-        selectedIndex = 0; // Patient Records
-      } else if (index == 1) {
-        selectedIndex = 3; // Services
-      } else if (index == 2) {
-        selectedIndex = 4; // Backup
-      }
-    }
-
-    // Toggle `showSubItems` dynamically
-    showSubItems = selectedIndex <= 2; // Show sub-items only for indices 0, 1, or 2
-  });
-}
-
-  void _toggleSubItems() {
-    setState(() {
-      showSubItems = !showSubItems;
-      // Reset index if toggling sub-items affects navigation
-      if (!showSubItems && selectedIndex != 0) {
-        selectedIndex = 0;
-      }
+    }).catchError((error) {
+      print('Error fetching patient records: $error');
     });
   }
 
-  Future<void> _showLogoutDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Logout'),
-          content: const Text('Are you sure you want to logout?'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Logout'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                _performLogout();
-              },
-            ),
-          ],
-        );
-      },
-    );
+  Future<void> loadProcedures() async {
+    final List<Procedure> procedures = await ProcedureController().getAllProcedures();
+    setState(() {
+      servicesOffered = procedures;
+      categorizedProcedures = groupProceduresByCategory(procedures); // Group procedures by category.
+    });
+
+    // print(servicesOffered);
   }
 
-  void _performLogout() {
-    Navigator.of(context).pushReplacementNamed('/login');
+   // Groups procedures by their `category` field. 
+  //Returns a map where the key is the category name, and the value is a list of procedures in that category.
+  Map<String, List<Procedure>> groupProceduresByCategory(List<Procedure> procedures) {
+    Map<String, List<Procedure>> grouped = {};
+    for (var procedure in procedures) {
+      grouped.putIfAbsent(procedure.category, () => []).add(procedure);
+    }
+    return grouped;
   }
+
+  void calculateGenderCounts() {
+    setState(() {
+      maleCount = filteredRecords.where((patient) => patient.sex == "Male").length;
+      femaleCount = filteredRecords.where((patient) => patient.sex == "Female").length;
+
+      genderChartData = [
+        ChartData('Male', maleCount, const Color(0xFF422B15)),
+        ChartData('Female', femaleCount, const Color(0xFFE2AD5E)),
+      ];
+    });
+  }
+
+  void calculateAgeGroups() {
+    // Define age groups (you can adjust the ranges as needed)
+    Map<String, int> ageGroups = {
+      '0-18': 0,
+      '19-35': 0,
+      '36-50': 0,
+      '51+': 0,
+    };
+
+    for (var patient in filteredRecords) {
+      if (patient.age <= 18) {
+        ageGroups['0-18'] = ageGroups['0-18']! + 1;
+      } else if (patient.age >= 19 && patient.age <= 35) {
+        ageGroups['19-35'] = ageGroups['19-35']! + 1;
+      } else if (patient.age >= 36 && patient.age <= 50) {
+        ageGroups['36-50'] = ageGroups['36-50']! + 1;
+      } else {
+        ageGroups['51+'] = ageGroups['51+']! + 1;
+      }
+    }
+
+    setState(() {
+      ageChartData = ageGroups.entries.map((entry) {
+        return ChartData(entry.key, entry.value, const Color(0xFFE2AD5E));
+      }).toList();
+    });
+  }
+
+
+  void calculateMonthlyPatientData() {
+    // Initialize all months with a count of zero
+    Map<String, int> monthCounts = {
+      'Jan': 0,
+      'Feb': 0,
+      'Mar': 0,
+      'Apr': 0,
+      'May': 0,
+      'Jun': 0,
+      'Jul': 0,
+      'Aug': 0,
+      'Sep': 0,
+      'Oct': 0,
+      'Nov': 0,
+      'Dec': 0,
+    };
+
+    // Filter records based on the selected year
+    List<Patient> filteredByYear = filteredRecords.where((patient) {
+      try {
+        if (patient.createdAt != null) {
+          final DateTime createdAt = DateTime.parse(patient.createdAt!);
+          return createdAt.year == selectedYear; // Match the selected year
+        }
+      } catch (e) {
+        print('Error parsing createdAt: $e');
+      }
+      return false;
+    }).toList();
+
+    // Update counts based on actual data
+    for (var patient in filteredByYear) {
+      try {
+        final DateTime createdAt = DateTime.parse(patient.createdAt!);
+        final String month = DateFormat('MMM').format(createdAt);
+        monthCounts[month] = (monthCounts[month] ?? 0) + 1;
+      } catch (e) {
+        print('Error parsing createdAt: $e');
+      }
+    }
+
+    // Sort months in chronological order
+    final sortedMonths = monthCounts.entries.toList()
+      ..sort((a, b) => DateFormat('MMM')
+          .parse(a.key)
+          .month
+          .compareTo(DateFormat('MMM').parse(b.key).month));
+
+    setState(() {
+      monthlyPatientData = sortedMonths
+          .map((entry) => MonthlyPatientData(entry.key, entry.value))
+          .toList();
+    });
+  }
+
+  void changeYear(int year) {
+    setState(() {
+      selectedYear = year;
+      calculateMonthlyPatientData(); // Recalculate data for the new year
+    });
+  }
+
 
   @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    body: Row(
-      children: [
-        Container(
-          decoration: const BoxDecoration(
-            color: Color.fromARGB(255, 134, 103, 74),
-            borderRadius: BorderRadius.horizontal(right: Radius.circular(10)),
-          ),
-          child: NavigationRail(
-            selectedIndex: showSubItems ? selectedIndex : (selectedIndex > 2 ? selectedIndex - 2 : selectedIndex),
-            onDestinationSelected: _handleNavigation,
-            labelType: isExpanded
-                ? NavigationRailLabelType.none
-                : NavigationRailLabelType.all,
-            backgroundColor: Colors.transparent,
-            groupAlignment: -1.0,
-            leading: Column(
+  Widget build(BuildContext context) {
+    return Material(
+      child: SizedBox(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Ink.image(
-                  width: isExpanded ? 150 : 100,
-                  height: isExpanded ? 150 : 100,
-                  fit: BoxFit.fitHeight,
-                  image: const AssetImage('assets/images/YNS Logo1.png'),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  'YNS',
-                  style: TextStyle(
-                    fontSize: isExpanded ? 24 : 20,
-                    fontWeight: FontWeight.bold,
+                // TITLE
+                Container(
+                  decoration: BoxDecoration(
                     color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-            trailing: IconButton(
-              icon: const Icon(Icons.logout, color: Colors.red),
-              onPressed: () => _showLogoutDialog(),
-            ),
-            destinations: [
-              NavigationRailDestination(
-                icon: InkWell(
-                  onTap: _toggleSubItems,
-                  child: const Icon(Icons.person_outline, color: Colors.white),
-                ),
-                selectedIcon:
-                    const Icon(Icons.person, color: Color.fromARGB(255, 130, 99, 4)),
-                label: const Text(
-                  "Patient Records",
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-              if (showSubItems) ...[
-                const NavigationRailDestination(
-                  icon: Padding(
-                    padding: EdgeInsets.only(left: 16.0),
-                    child: Icon(Icons.add_box_outlined, color: Colors.white),
-                  ),
-                  selectedIcon: Padding(
-                    padding: EdgeInsets.only(left: 16.0),
-                    child: Icon(Icons.add_box, color: Color.fromARGB(255, 130, 99, 4)),
-                  ),
-                  label: Text(
-                    "Add Patient",
-                    style: TextStyle(color: Colors.white, fontSize: 12),
-                  ),
-                ),
-                const NavigationRailDestination(
-                  icon: Padding(
-                    padding: EdgeInsets.only(left: 16.0),
-                    child: Icon(Icons.report_outlined, color: Colors.white),
-                  ),
-                  selectedIcon: Padding(
-                    padding: EdgeInsets.only(left: 16.0),
-                    child: Icon(Icons.report, color: Color.fromARGB(255, 130, 99, 4)),
-                  ),
-                  label: Text(
-                    "Reports",
-                    style: TextStyle(color: Colors.white, fontSize: 12),
-                  ),
-                ),
-              ],
-              const NavigationRailDestination(
-                icon: Icon(Icons.miscellaneous_services_outlined, color: Colors.white),
-                selectedIcon: Icon(Icons.miscellaneous_services,
-                    color: Color.fromARGB(255, 130, 99, 4)),
-                label: Text("Services", style: TextStyle(color: Colors.white)),
-              ),
-              const NavigationRailDestination(
-                icon: Icon(Icons.backup, color: Colors.white),
-                selectedIcon: Icon(Icons.backup, color: Color.fromARGB(255, 130, 99, 4)),
-                label:
-                    Text("Backup Records", style: TextStyle(color: Colors.white)),
-              ),
-            ],
-          ),
-        ),
-        const VerticalDivider(thickness: 1, width: 1),
-        Expanded(
-          child: Column(
-            children: [
-              Container(
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0, vertical: 10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            isExpanded = !isExpanded;
-                          });
-                        },
-                        icon: Icon(isExpanded ? Icons.menu_open : Icons.menu),
+                    borderRadius: BorderRadius.circular(10.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: const Offset(0, 3),
                       ),
+                    ],
+                  ),
+                  padding: const EdgeInsets.all(20.0),
+                  child: const Column(
+                    children: [
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Icon(Icons.calendar_today, size: 20.0),
-                          const SizedBox(width: 8.0),
                           Text(
-                            DateFormat('EEEE, MMMM d, yyyy')
-                                .format(DateTime.now()),
-                            style: const TextStyle(
-                                fontSize: 14.0, fontWeight: FontWeight.bold),
+                            "Dashboard",
+                            style: TextStyle(
+                              fontSize: 32.0,
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(255, 66, 43, 21),
+                            ),
                           ),
                         ],
                       ),
                     ],
                   ),
                 ),
-              ),
-              Expanded(
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 300),
-                  transitionBuilder: (Widget child, Animation<double> animation) {
-                    return FadeTransition(opacity: animation, child: child);
-                  },
-                  switchInCurve: Curves.easeIn,
-                  switchOutCurve: Curves.easeOut,
-                  layoutBuilder: (currentChild, previousChildren) => Stack(
-                    children: <Widget>[
-                      ...previousChildren,
-                      if (currentChild != null) currentChild,
-                    ],
-                  ),
-                  child: _screens[selectedIndex],
+
+                const SizedBox(height: 10),
+
+                Row(
+                  children: [
+                    // NUMBER OF PATIENTS AND TREATMENTS
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  spreadRadius: 2,
+                                  blurRadius: 5,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            padding: const EdgeInsets.all(20.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Statistics",
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromARGB(255, 66, 43, 21),
+                                  ),
+                                ),
+                                Divider(height: 10, color: Colors.grey[800], thickness: 0.5),
+                            
+                                Row(
+                                  children: [
+                                    // Number of Patients Container
+                                    Expanded(
+                                      child: Container(
+                                        padding: const EdgeInsets.all(10.0),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFE2AD5E),
+                                          borderRadius: BorderRadius.circular(10.0),
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            const Text(
+                                              "Number of Patients",
+                                              style: TextStyle(
+                                                fontSize: 14.0,
+                                                fontWeight: FontWeight.bold,
+                                                color: Color.fromARGB(255, 66, 43, 21),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 10),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  filteredRecords.length.toString(),
+                                                  style: const TextStyle(
+                                                    fontSize: 24.0,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 10),
+                                                const Icon(
+                                                  Icons.person, // Icon for Number of Patients
+                                                  size: 24.0,
+                                                  color: Colors.white,
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    // Number of Treatments Container
+                                    Expanded(
+                                      child: Container(
+                                        padding: const EdgeInsets.all(10.0),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFE2AD5E),
+                                          borderRadius: BorderRadius.circular(10.0),
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            const Text(
+                                              "Services Offered",
+                                              style: TextStyle(
+                                                fontSize: 14.0,
+                                                fontWeight: FontWeight.bold,
+                                                color: Color.fromARGB(255, 66, 43, 21),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 10),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  servicesOffered.length.toString(),
+                                                  style: const TextStyle(
+                                                    fontSize: 24.0,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 10),
+                                                const Icon(
+                                                  Icons.medical_services, // Icon for Services Offered
+                                                  size: 24.0,
+                                                  color: Colors.white,
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  spreadRadius: 2,
+                                  blurRadius: 5,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            padding: const EdgeInsets.all(20.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Conditions of Patients",
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromARGB(255, 66, 43, 21),
+                                  ),
+                                ),
+                                Divider(height: 10, color: Colors.grey[800], thickness: 0.5),
+                                const Row(
+                                  children: [
+                                   ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(width: 10),
+
+                    // PATIENT DEMOGRAPHICS BY AGE
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          children: [
+                            const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Patient Demographics by Age",
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromARGB(255, 66, 43, 21),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Divider(height: 10, color: Colors.grey[800], thickness: 0.5),
+                            SfCartesianChart(
+                              primaryXAxis: CategoryAxis(),
+                              title: ChartTitle(text: 'Age Distribution'),
+                              series: <ChartSeries>[
+                                ColumnSeries<ChartData, String>(
+                                  dataSource: ageChartData,
+                                  xValueMapper: (ChartData data, _) => data.label,
+                                  yValueMapper: (ChartData data, _) => data.value,
+                                  dataLabelSettings: const DataLabelSettings(isVisible: true),
+                                  color: const Color(0xFF422B15),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(width: 10),
+
+                    // PATIENT DEMOGRAPHICS BY GENDER
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          children: [
+                            const Text(
+                              "Patient Demographics by Gender",
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 66, 43, 21),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            filteredRecords.isEmpty
+                                ? const CircularProgressIndicator() // Show loading indicator while fetching data
+                                : genderChartData.isEmpty
+                                    ? const Text(
+                                        "No data available",
+                                        style: TextStyle(color: Colors.grey),
+                                      )
+                                    : SfCircularChart(
+                                        legend: const Legend(isVisible: true, position: LegendPosition.bottom),
+                                        series: <CircularSeries>[
+                                          PieSeries<ChartData, String>(
+                                            dataSource: genderChartData,
+                                            xValueMapper: (ChartData data, _) => data.label,
+                                            yValueMapper: (ChartData data, _) => data.value,
+                                            dataLabelSettings: const DataLabelSettings(isVisible: true),
+                                            pointColorMapper: (ChartData data, _) => data.color,
+                                          ),
+                                        ],
+                                      ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
+                
+                const SizedBox(height: 10),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  "Number of Patients Per Year",
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromARGB(255, 66, 43, 21),
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.arrow_back),
+                                      onPressed: () {
+                                        if (selectedYear > 2000) {
+                                          changeYear(selectedYear - 1);
+                                        }
+                                      },
+                                    ),
+                                    Text(
+                                      '$selectedYear',
+                                      style: const TextStyle(
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.arrow_forward),
+                                      onPressed: () {
+                                        if (selectedYear < DateTime.now().year) {
+                                          changeYear(selectedYear + 1);
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            Divider(height: 10, color: Colors.grey[800], thickness: 0.5),
+                            //Line Chart
+                              SfCartesianChart(
+                              primaryXAxis: CategoryAxis(),
+                              title: ChartTitle(text: 'Patients Admitted Per Year'),
+                              series: <LineSeries<MonthlyPatientData, String>>[
+                                LineSeries<MonthlyPatientData, String>(
+                                  dataSource: monthlyPatientData,
+                                  xValueMapper: (data, _) => data.month,
+                                  yValueMapper: (data, _) => data.count,
+                                  markerSettings: const MarkerSettings(isVisible: true),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+
+
+              ],
+            ),
           ),
         ),
-      ],
-    ),
-  );
+      ),
+    );
+  }
 }
+
+class ChartData {
+  final String label;
+  final int value;
+  final Color color;
+
+  ChartData(this.label, this.value, this.color);
+}
+
+class MonthlyPatientData {
+  final String month;
+  final int count;
+
+  MonthlyPatientData(this.month, this.count);
 }
