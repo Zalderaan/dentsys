@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:dentsys_client/controllers/procedure_controller.dart';
@@ -17,6 +19,7 @@ class AddTreatmentDialog extends StatefulWidget {
 }
 
 class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
+  final GlobalKey<FormState> _addTreatmentformKey = GlobalKey<FormState>();
   List<String> proceduresDone = []; // List of procedures that have been selected by the user.
   List<Procedure> servicesOffered = []; // List of all available procedures fetched from the backend
   Map<String, List<Procedure>> categorizedProcedures = {}; // A map to group procedures by their categories
@@ -52,7 +55,7 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
       treatment_dentist: dentistNameController.text,
       treatment_charged: calculateTotalPrice(),
       treatment_paid: double.parse(amountPaidController.text), 
-      treatment_balance: await calculateBalance(),
+      treatment_balance: await calTrBal(),
       treatment_date: DateTime.now().toString(),
       treatment_toothNo: toothNoController.text,
     );
@@ -107,6 +110,19 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
     }    
   }
 
+  Future<double> calTrBal() async {
+    try {
+      final total_price = calculateTotalPrice();
+      final amount_paid = double.parse(amountPaidController.text);
+      final balance = total_price - amount_paid;
+      print('balance: $balance');
+      return balance;
+    } catch (error) {
+      print('Error calculating balance: $error');
+      throw Exception('Error calculating balance: $error');// Return a default value in case of an error
+    }
+  }
+
   // Groups procedures by their `category` field. 
   //Returns a map where the key is the category name, and the value is a list of procedures in that category.
   Map<String, List<Procedure>> groupProceduresByCategory(List<Procedure> procedures) {
@@ -133,106 +149,122 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
             // Left Side: Procedure/s Done
             Expanded(
               flex: 1,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Procedure/s Done',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
+              child: Form(
+                key: _addTreatmentformKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Procedure/s Done',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 15),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: proceduresDone.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(proceduresDone[index]),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () {
-                              setState(() {
-                                proceduresDone.removeAt(index);
-                              });
-                            },
-                          ),
+                    const SizedBox(height: 15),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: proceduresDone.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Text(proceduresDone[index]),
+                            trailing: IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () {
+                                setState(() {
+                                  proceduresDone.removeAt(index);
+                                });
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+
+                    // display amount charged
+                    const SizedBox(height: 15),
+                    
+                    TextFormField(
+                      controller: TextEditingController(text: '₱${calculateTotalPrice().toStringAsFixed(2)}'),
+                      readOnly: true,
+                      decoration: const InputDecoration(
+                        labelText: 'Amount Charged',
+                        border: UnderlineInputBorder(), 
+                      ),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                    ),
+
+                    const SizedBox(height: 15),
+
+                    TextFormField(
+                      controller: amountPaidController,
+                      decoration: const InputDecoration(
+                        labelText: 'Amount Paid',
+                        border: UnderlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'This item is required';
+                        } 
+                        double? amountCharged = calculateTotalPrice();
+                        double? amountPaid = double.tryParse(value);
+                        
+                        if (amountPaid != null && amountCharged != null && amountPaid > amountCharged) {
+                          return 'Amount paid should not be greater than the amount charged';
+                        }
+
+                        return null;
+                      },
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        
+                      ],
+                    ),
+
+                    const SizedBox(height: 15),
+                    
+                    TextFormField(
+                      controller: toothNoController,
+                      decoration: const InputDecoration(
+                        labelText: 'Tooth No.',
+                        border: UnderlineInputBorder(),
+                      ),
+                    ),
+
+                    const SizedBox(height: 15),
+                    
+                    DropdownButtonFormField<String>(
+                      value: dentistNameController.text.isNotEmpty ? dentistNameController.text : null,
+                      decoration: const InputDecoration(
+                        labelText: 'Dentist Name',
+                        border: UnderlineInputBorder(),
+                      ),
+                      items: [
+                        'Dr. Ailyn Onilla',
+                        'Dr. Shaina Onilla',
+                      ].map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
                         );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        dentistNameController.text = newValue ?? '';
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'This item is required';
+                        }
+                        return null;
                       },
                     ),
-                  ),
-
-                  // display amount charged
-                  const SizedBox(height: 15),
-                  
-                  TextFormField(
-                    controller: TextEditingController(text: '₱${calculateTotalPrice().toStringAsFixed(2)}'),
-                    readOnly: true,
-                    decoration: const InputDecoration(
-                      labelText: 'Amount Charged',
-                      border: UnderlineInputBorder(), 
-                    ),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
-                  ),
-
-                  const SizedBox(height: 15),
-
-                  TextFormField(
-                    controller: amountPaidController,
-                    decoration: const InputDecoration(
-                      labelText: 'Amount Paid',
-                      border: UnderlineInputBorder(),
-                    ),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
-                  ),
-
-                  const SizedBox(height: 15),
-                  
-                  TextFormField(
-                    controller: toothNoController,
-                    decoration: const InputDecoration(
-                      labelText: 'Tooth No.',
-                      border: UnderlineInputBorder(),
-                    ),
-                  ),
-
-                  const SizedBox(height: 15),
-                  
-                  DropdownButtonFormField<String>(
-                    value: dentistNameController.text.isNotEmpty ? dentistNameController.text : null,
-                    decoration: const InputDecoration(
-                      labelText: 'Dentist Name',
-                      border: UnderlineInputBorder(),
-                    ),
-                    items: [
-                      'Dr. Ailyn Onilla',
-                      'Dr. Shaina Onilla',
-                    ].map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      dentistNameController.text = newValue ?? '';
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'This item is required';
-                      }
-                      return null;
-                    },
-                  ),
-
-                ],
-              ),
+                  ],
+                ),
+              ), 
             ),
 
             const VerticalDivider(
@@ -328,8 +360,19 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
         ElevatedButton(
           child: const Text('Add Treatment'),
           onPressed: () async {
-            await handleAddTreatment();
-            Navigator.of(context).pop();
+            if (proceduresDone.isEmpty) {
+              AnimatedSnackBar.material(
+                'Please select at least one procedure.',
+                type: AnimatedSnackBarType.warning,
+                duration: const Duration(seconds: 3),
+              ).show(context);
+              return;
+            } 
+            
+            if (_addTreatmentformKey.currentState!.validate()) {
+              await handleAddTreatment();
+              Navigator.of(context).pop();
+            }
           },
         ),
       ],
