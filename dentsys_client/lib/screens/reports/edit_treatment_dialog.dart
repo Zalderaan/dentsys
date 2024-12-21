@@ -34,9 +34,9 @@ class _EditTreatmentDialogState extends State<EditTreatmentDialog> {
   @override
   void initState() {
     super.initState();
+    dentistNameController.text = widget.treatment.treatment_dentist;
     amountPaidController.text = widget.treatment.treatment_paid.toString();
     toothNoController.text = widget.treatment.treatment_toothNo;
-    dentistNameController.text = widget.treatment.treatment_dentist;
     proceduresDone = widget.treatment.treatment_prcdName.split(', ');
     loadProcedures();
   }
@@ -112,7 +112,7 @@ class _EditTreatmentDialogState extends State<EditTreatmentDialog> {
     }    
   }
 
-  // Groups procedures by their `category` field. 
+  // Groups procedures by their category field. 
   //Returns a map where the key is the category name, and the value is a list of procedures in that category.
   Map<String, List<Procedure>> groupProceduresByCategory(List<Procedure> procedures) {
     Map<String, List<Procedure>> grouped = {};
@@ -234,6 +234,7 @@ class _EditTreatmentDialogState extends State<EditTreatmentDialog> {
                         return null;
                       },
                     ),
+
                 ],
               ),
             ),
